@@ -16,7 +16,6 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.domain.Server;
-import com.cxy.redisclient.service.ServerService;
 
 public class AddServerDialog extends Dialog {
 
@@ -24,14 +23,9 @@ public class AddServerDialog extends Dialog {
 	private static final int WIDTH = 326;
 	protected Object result = null;
 	protected Shell shlNewServer;
-	private Text text;
-	private Text text_1;
-	private Text text_2;
 	protected Text text_3;
 	protected Text text_4;
 	protected Text text_5;
-
-	private ServerService service = new ServerService();
 	/**
 	 * Create the dialog.
 	 * 

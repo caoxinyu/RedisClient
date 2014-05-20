@@ -11,8 +11,8 @@ public class StringNode extends Node {
 		this.value = value;
 	}
 
-	public StringNode(Server server, int db, String key, String value) {
-		super(server, db, key, NodeType.STRING);
+	public StringNode(String key, String value) {
+		super(key, NodeType.STRING);
 		this.value = value;
 	}
 	

@@ -1,32 +1,18 @@
 package com.cxy.redisclient.domain;
 
 public class Node {
-	private Server server;
-	private int db;
 	private String key;
 	private NodeType type;
-	public Node(Server server, int db, String key, NodeType type) {
+	public Node(String key, NodeType type) {
 		super();
-		this.server = server;
-		this.db = db;
 		this.key = key;
 		this.type = type;
 	}
-	public Server getServer() {
-		return server;
-	}
-	public void setServer(Server server) {
-		this.server = server;
-	}
-	public int getDb() {
-		return db;
-	}
-	public void setDb(int db) {
-		this.db = db;
-	}
+	
 	public String getKey() {
 		return key;
 	}
+
 	public void setKey(String key) {
 		this.key = key;
 	}
@@ -37,5 +23,14 @@ public class Node {
 		this.type = type;
 	}
 	
-	
+	@Override
+	public boolean equals(Object obj) {
+		Node node = (Node) obj;
+		return node.getKey().equals(this.getKey()) && node.getType().equals(this.getType());
+	}
+
+	@Override
+	public int hashCode() {
+		return key.hashCode()+type.hashCode();
+	}
 }

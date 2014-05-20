@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import redis.clients.jedis.Jedis;
 
+import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.domain.Server;
 import com.cxy.redisclient.service.ServerService;
 
@@ -32,4 +33,19 @@ public abstract class JedisClient {
 	}
 	
 	public abstract void command();
+	protected NodeType getNodeType(String key) {
+		String type = jedis.type(key);
+		NodeType nodeType = null ;
+		if(type.equals("string"))
+			nodeType = NodeType.STRING;
+		else if(type.equals("hash"))
+			nodeType = NodeType.HASH;
+		else if(type.equals("list"))
+			nodeType = NodeType.LIST;
+		else if(type.equals("set"))
+			nodeType = NodeType.SET;
+		else 
+			nodeType = NodeType.SORTSET;
+		return nodeType;
+	}
 }
