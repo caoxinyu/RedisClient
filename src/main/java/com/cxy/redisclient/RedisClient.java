@@ -1,7 +1,6 @@
 package com.cxy.redisclient;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -38,6 +37,7 @@ public class RedisClient {
 	private static final String DB_PREFIX = "db";
 	private static final String NODE_TYPE = "type";
 	private static final String NODE_ID = "id";
+	private static final String ITEM_OPENED = "open";
 	protected Shell shlRedisClient;
 	protected Menu menu_server;
 	protected Menu menu;
@@ -126,60 +126,67 @@ public class RedisClient {
 			public void widgetSelected(SelectionEvent e) {
 				TreeItem[] items = tree.getSelection();
 				NodeType type = (NodeType) items[0].getData(NODE_TYPE);
-				//if (!items[0].getExpanded()) {
-					switch (type) {
-					case SERVER:
-						table.removeAll();
-						try {
-							int dbs = service1.listDBs((Integer) items[0]
-									.getData(NODE_ID));
-							for (int i = 0; i < dbs; i++) {
-								TableItem item = new TableItem(table, SWT.NONE);
-								item.setText(new String[] { DB_PREFIX + i,
-										NodeType.DATABASE.toString() });
-								item.setData(NODE_ID, i);
-							}
-
-						} catch (IOException e1) {
-							MessageDialog.openError(shlRedisClient,
-									"exception", e1.getMessage());
+				switch (type) {
+				case SERVER:
+					text.setText(items[0].getText()+":");
+					table.removeAll();
+					try {
+						int dbs = service1.listDBs((Integer) items[0]
+								.getData(NODE_ID));
+						for (int i = 0; i < dbs; i++) {
+							TableItem item = new TableItem(table, SWT.NONE);
+							item.setText(new String[] { DB_PREFIX + i,
+									NodeType.DATABASE.toString() });
+							item.setData(NODE_ID, i);
 						}
-						break;
-					case DATABASE:
-					case CONTAINER:
-						table.removeAll();
+
+					} catch (IOException e1) {
+						MessageDialog.openError(shlRedisClient, "exception",
+								e1.getMessage());
+					}
+					break;
+				case DATABASE:
+				case CONTAINER:
+					ContainerInfo info = new ContainerInfo();
+					parseContainer(items[0], info);
+					String container = (info.getContainer() == null)?"": info.getContainer();
+					text.setText(info.getServerName() + ":" + DB_PREFIX + info.getDb() + ":" + container);
+					table.removeAll();
+
+					Set<Node> cnodes = service2.listContainers(info.getId(),
+							info.getDb(), info.getContainer());
+
+					if (items[0].getData(ITEM_OPENED) == null) {
 						items[0].removeAll();
-						ContainerInfo info = new ContainerInfo();
-						parseContainer(items[0], info);
-						Set<Node> cnodes = service2.listContainers(
-								info.getId(), info.getDb(), info.getContainer());
+
 						for (Node node : cnodes) {
 							TreeItem item = new TreeItem(items[0], SWT.NONE);
 							item.setText(node.getKey());
 							item.setData(NODE_TYPE, node.getType());
 							item.setExpanded(true);
 						}
-						
-						for(Node node: cnodes) {
-							TableItem item = new TableItem(table, SWT.NONE);
-							item.setText(new String[] { node.getKey(),
-									node.getType().toString() });
-						}
-						
-						Set<Node> knodes = service2.listContainerKeys(
-								info.getId(), info.getDb(), info.getContainer());
-						
-						for(Node node: knodes) {
-							TableItem item = new TableItem(table, SWT.NONE);
-							item.setText(new String[] { node.getKey(),
-									node.getType().toString() });
-						}
-						break;
-					default:
-						break;
+
+						items[0].setData(ITEM_OPENED, true);
 					}
+					for (Node node : cnodes) {
+						TableItem item = new TableItem(table, SWT.NONE);
+						item.setText(new String[] { node.getKey(),
+								node.getType().toString() });
+					}
+
+					Set<Node> knodes = service2.listContainerKeys(info.getId(),
+							info.getDb(), info.getContainer());
+
+					for (Node node1 : knodes) {
+						TableItem item = new TableItem(table, SWT.NONE);
+						item.setText(new String[] { node1.getKey(),
+								node1.getType().toString() });
+					}
+					break;
+				default:
+					break;
 				}
-			//}
+			}
 		});
 
 		SashForm sashForm_1 = new SashForm(sashForm, SWT.VERTICAL);
@@ -217,6 +224,7 @@ public class RedisClient {
 		} else if (item.getData(NODE_TYPE) == NodeType.SERVER) {
 			int id = (Integer) item.getData(NODE_ID);
 			info.setId(id);
+			info.setServerName(item.getText());
 			return;
 		}
 	}
@@ -265,6 +273,11 @@ public class RedisClient {
 
 	private void initTable(SashForm sashForm_1) {
 		table = new Table(sashForm_1, SWT.BORDER | SWT.FULL_SELECTION);
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+			}
+		});
 		table.setHeaderVisible(true);
 
 		TableColumn tblclmnName = new TableColumn(table, SWT.NONE);
@@ -526,4 +539,5 @@ public class RedisClient {
 			}
 		}
 	}
+
 }

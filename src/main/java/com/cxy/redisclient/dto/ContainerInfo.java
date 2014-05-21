@@ -2,17 +2,16 @@ package com.cxy.redisclient.dto;
 
 public class ContainerInfo {
 	private int id;
+	private String serverName;
+	public String getServerName() {
+		return serverName;
+	}
+	public void setServerName(String serverName) {
+		this.serverName = serverName;
+	}
 	private int db;
 	private String container;
-	public ContainerInfo(int id, int db, String container) {
-		super();
-		this.id = id;
-		this.db = db;
-		this.container = container;
-	}
-	public ContainerInfo() {
-		// TODO Auto-generated constructor stub
-	}
+	
 	public int getId() {
 		return id;
 	}
