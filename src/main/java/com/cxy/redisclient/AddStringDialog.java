@@ -39,7 +39,7 @@ public class AddStringDialog extends Dialog {
 		setText("SWT Dialog");
 		this.server = server;
 		this.db = db;
-		this.key = key;
+		this.key = key == null?"":key;
 	}
 
 	/**
