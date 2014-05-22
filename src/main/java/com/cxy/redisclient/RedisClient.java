@@ -48,6 +48,10 @@ public class RedisClient {
 	private Table table;
 	private Text text;
 	private Menu menu_DB;
+	private MenuItem mntmRename_1;
+	private MenuItem mntmDelete_2;
+	private MenuItem mntmRename_2;
+	private MenuItem mntmDelete_3;
 
 	/**
 	 * Launch the application.
@@ -129,8 +133,11 @@ public class RedisClient {
 				switch (type) {
 				case SERVER:
 					serverItemSelected(items[0]);
+
 					break;
 				case DATABASE:
+					treeItemSelected(items[0]);
+					break;
 				case CONTAINER:
 					treeItemSelected(items[0]);
 					break;
@@ -210,6 +217,26 @@ public class RedisClient {
 
 		MenuItem mntmHash_1 = new MenuItem(menu_1, SWT.NONE);
 		mntmHash_1.setText("Hash");
+
+		mntmRename_1 = new MenuItem(menu_DB, SWT.NONE);
+		mntmRename_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TreeItem[] items = tree.getSelection();
+				renameContainerSelected(items[0]);
+			}
+		});
+		mntmRename_1.setText("rename");
+
+		mntmDelete_2 = new MenuItem(menu_DB, SWT.NONE);
+		mntmDelete_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TreeItem[] items = tree.getSelection();
+				deleteKeysSelected(items[0]);
+			}
+		});
+		mntmDelete_2.setText("delete");
 	}
 
 	private void initTable(SashForm sashForm_1) {
@@ -283,8 +310,16 @@ public class RedisClient {
 						if (type == NodeType.SERVER)
 							tree.setMenu(menu_server);
 						else if (type == NodeType.DATABASE
-								|| type == NodeType.CONTAINER)
+								|| type == NodeType.CONTAINER) {
+							if (type == NodeType.DATABASE) {
+								mntmRename_1.setEnabled(false);
+								mntmDelete_2.setEnabled(false);
+							} else {
+								mntmRename_1.setEnabled(true);
+								mntmDelete_2.setEnabled(true);
+							}
 							tree.setMenu(menu_DB);
+						}
 
 					}
 				}
@@ -430,6 +465,36 @@ public class RedisClient {
 		MenuItem mntmHash = new MenuItem(menu_5, SWT.NONE);
 		mntmHash.setText("Hash");
 
+		mntmRename_2 = new MenuItem(menu_4, SWT.NONE);
+		mntmRename_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TreeItem[] items = tree.getSelection();
+				if (items.length > 0
+						&& items[0].getData(NODE_TYPE) == NodeType.CONTAINER)
+					renameContainerSelected(items[0]);
+				else
+					MessageDialog.openError(shlRedisClient, "error",
+							"please select a container to rename");
+			}
+		});
+		mntmRename_2.setText("Rename");
+
+		mntmDelete_3 = new MenuItem(menu_4, SWT.NONE);
+		mntmDelete_3.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TreeItem[] items = tree.getSelection();
+				NodeType type = (NodeType) items[0].getData(NODE_TYPE);
+				if(type == NodeType.CONTAINER)
+					deleteKeysSelected(items[0]);
+				else
+					MessageDialog.openError(shlRedisClient, "error",
+							"please select a container to delete");
+			}
+		});
+		mntmDelete_3.setText("Delete");
+
 		MenuItem mntmHelp = new MenuItem(menu, SWT.CASCADE);
 		mntmHelp.setText("Help");
 
@@ -470,9 +535,9 @@ public class RedisClient {
 		treeItem.setText(server.getName());
 		treeItem.setData(NODE_ID, server.getId());
 		treeItem.setData(NODE_TYPE, NodeType.SERVER);
-		
+
 		initDBs(server.getId(), treeItem);
-		
+
 		return treeItem;
 	}
 
@@ -622,8 +687,7 @@ public class RedisClient {
 		text.setText(selectedItem.getText() + ":");
 		table.removeAll();
 		try {
-			int dbs = service1.listDBs((Integer) selectedItem
-					.getData(NODE_ID));
+			int dbs = service1.listDBs((Integer) selectedItem.getData(NODE_ID));
 			for (int i = 0; i < dbs; i++) {
 				TableItem item = new TableItem(table, SWT.NONE);
 				item.setText(new String[] { DB_PREFIX + i,
@@ -634,6 +698,34 @@ public class RedisClient {
 		} catch (IOException e1) {
 			MessageDialog.openError(shlRedisClient, "exception",
 					e1.getMessage());
+		}
+	}
+
+	private void renameContainerSelected(TreeItem item) {
+		ContainerInfo info = new ContainerInfo();
+		parseContainer(item, info);
+
+		RenameKeysDialog dialog = new RenameKeysDialog(shlRedisClient,
+				SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, info.getServerName(),
+				info.getDb(), info.getContainer());
+		String newContainer = (String) dialog.open();
+		if (newContainer != null) {
+			service2.renameContainer(info.getId(), info.getDb(),
+					info.getContainer(), newContainer);
+		}
+		item.getParentItem().setData(ITEM_OPENED, false);
+		treeItemSelected(item.getParentItem());
+	}
+
+	private void deleteKeysSelected(TreeItem item) {
+		boolean ok = MessageDialog.openConfirm(shlRedisClient,
+					"delete keys", "Are you sure delete all keys under it?");
+		if (ok) {
+			ContainerInfo info = new ContainerInfo();
+			parseContainer(item, info);
+			service2.deleteContainer(info.getId(), info.getDb(), info.getContainer());;
+			item.dispose();
+			
 		}
 	}
 }
