@@ -28,6 +28,7 @@ import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.domain.Server;
 import com.cxy.redisclient.dto.ContainerInfo;
+import com.cxy.redisclient.dto.RenameInfo;
 import com.cxy.redisclient.dto.StringInfo;
 import com.cxy.redisclient.service.NodeService;
 import com.cxy.redisclient.service.ServerService;
@@ -708,13 +709,22 @@ public class RedisClient {
 		RenameKeysDialog dialog = new RenameKeysDialog(shlRedisClient,
 				SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, info.getServerName(),
 				info.getDb(), info.getContainer());
-		String newContainer = (String) dialog.open();
-		if (newContainer != null) {
-			service2.renameContainer(info.getId(), info.getDb(),
-					info.getContainer(), newContainer);
+		RenameInfo rinfo = (RenameInfo) dialog.open();
+		
+		if (rinfo != null && !(rinfo.getNewContainer().equals(info.getContainer()))) {
+			Set<String> result = service2.renameContainer(info.getId(), info.getDb(),
+					info.getContainer(), rinfo.getNewContainer(),rinfo.isOverwritten());
+			item.getParentItem().setData(ITEM_OPENED, false);
+			treeItemSelected(item.getParentItem());
+			if(!rinfo.isOverwritten() && result.size() > 0) {
+				String failString = "Rename following keys failed because of exist:\n";
+				for(String container:result)
+					failString += container + "\n";
+				MessageDialog.openConfirm(shlRedisClient,
+						"rename keys result", failString);
+			}
 		}
-		item.getParentItem().setData(ITEM_OPENED, false);
-		treeItemSelected(item.getParentItem());
+		
 	}
 
 	private void deleteKeysSelected(TreeItem item) {

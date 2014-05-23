@@ -4,19 +4,29 @@ public class RenameKey extends JedisClient {
 	private int db;
 	private String oldKey;
 	private String newKey;
+	private boolean overwritten;
+	private Long result;
 	
-	public RenameKey(int id, int db, String oldKey, String newKey) {
+	public Long getResult() {
+		return result;
+	}
+
+	public RenameKey(int id, int db, String oldKey, String newKey, boolean overwritten) {
 		super(id);
 		this.db = db;
 		this.oldKey = oldKey;
 		this.newKey = newKey;
+		this.overwritten = overwritten;
 				
 	}
 
 	@Override
 	public void command() {
 		jedis.select(db);
-		jedis.rename(oldKey, newKey);
+		if(overwritten)
+			jedis.rename(oldKey, newKey);
+		else
+			result = jedis.renamenx(oldKey, newKey);
 	}
 
 }

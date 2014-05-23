@@ -1,5 +1,6 @@
 package com.cxy.redisclient.service;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.cxy.redisclient.domain.Node;
@@ -48,15 +49,22 @@ public class NodeService {
 		return command.getKeys();
 	}
 	
-	public void renameContainer(int id, int db, String oldContainer, String newContainer) {
+	public Set<String> renameContainer(int id, int db, String oldContainer, String newContainer, boolean overwritten) {
+		Set<String> failContainer = new HashSet<String>();
+		
 		ListContainerAllKeys command = new ListContainerAllKeys(id, db, oldContainer);
 		command.execute();
 		Set<Node> nodes = command.getKeys();
 		
 		for(Node node: nodes) {
-			RenameKey command1 = new RenameKey(id, db, node.getKey(), node.getKey().replaceFirst(oldContainer, newContainer));
+			String newKey = node.getKey().replaceFirst(oldContainer, newContainer);
+			RenameKey command1 = new RenameKey(id, db, node.getKey(), newKey, overwritten);
 			command1.execute();
+			if(!overwritten && command1.getResult() == 0)
+				failContainer.add(newKey);
 		}
+		
+		return failContainer;
 	}
 	
 	public void deleteContainer(int id, int db, String container) {

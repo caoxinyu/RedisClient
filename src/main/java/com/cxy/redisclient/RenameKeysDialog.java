@@ -15,13 +15,14 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
+import com.cxy.redisclient.dto.RenameInfo;
+
 public class RenameKeysDialog extends Dialog {
 
 	protected Object result = null;
 	protected Shell shlRenameKeys;
 	private static final int HEIGHT = 201;
 	private static final int WIDTH = 326;
-	private Text text_1;
 	private Text text_2;
 	private String server;
 	private int db;
@@ -82,21 +83,14 @@ public class RenameKeysDialog extends Dialog {
 		lblKey.setText("Server");
 		lblKey.setBounds(10, 13, 45, 13);
 		
-		Label lblValue = new Label(composite, SWT.NONE);
-		lblValue.setText("Old key");
-		lblValue.setBounds(10, 41, 45, 13);
-		
-		text_1 = new Text(composite, SWT.BORDER);
-		text_1.setEnabled(false);
-		text_1.setBounds(62, 38, 220, 19);
-		text_1.setText(oldContainer);
-		
 		Label lblNewKey = new Label(composite, SWT.NONE);
 		lblNewKey.setText("New key");
-		lblNewKey.setBounds(10, 69, 45, 13);
+		lblNewKey.setBounds(10, 44, 45, 13);
 		
 		text_2 = new Text(composite, SWT.BORDER);
-		text_2.setBounds(62, 66, 220, 19);
+		text_2.setBounds(62, 41, 220, 19);
+		text_2.setText(oldContainer);
+		text_2.setFocus();
 		
 		Label label_1 = new Label(composite, SWT.NONE);
 		label_1.setBounds(61, 13, 45, 13);
@@ -110,16 +104,22 @@ public class RenameKeysDialog extends Dialog {
 		label_3.setBounds(223, 13, 45, 13);
 		label_3.setText(String.valueOf(db));
 		
+		final Button btnCheckButton = new Button(composite, SWT.CHECK);
+		btnCheckButton.setSelection(true);
+		btnCheckButton.setBounds(10, 69, 272, 16);
+		btnCheckButton.setText("Overwritten if exists");
+		
 		Button button = new Button(shlRenameKeys, SWT.NONE);
 		button.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				String newContainer = text_2.getText();
+				boolean overwritten = btnCheckButton.getSelection(); 
 				
 				if( newContainer.length() == 0){
-					MessageDialog.openError(shlRenameKeys, "error","please input string information!");
+					MessageDialog.openError(shlRenameKeys, "error","please input new key name!");
 				} else {
-					result = newContainer;
+					result = new RenameInfo(newContainer, overwritten);
 					shlRenameKeys.dispose();
 				}
 			}
@@ -138,5 +138,4 @@ public class RenameKeysDialog extends Dialog {
 		button_1.setBounds(188, 144, 68, 23);
 
 	}
-
 }

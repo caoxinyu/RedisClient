@@ -49,7 +49,7 @@ public class NodeTest extends TestCase {
 	
 	public void testRenameContainer() throws IOException {
 		NodeService service2 = new NodeService();
-		service2.renameContainer(1, 0, "com:", "COM:");
+		service2.renameContainer(1, 0, "com:", "COM:", true);
 		
 	}
 	
