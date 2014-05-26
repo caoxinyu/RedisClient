@@ -12,4 +12,5 @@ Features
 ===========
 
 Windows Explorer style UI
+
 Multiple Redis version adaptive
