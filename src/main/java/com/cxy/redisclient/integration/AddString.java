@@ -1,12 +1,14 @@
 package com.cxy.redisclient.integration;
 
+import com.cxy.redisclient.domain.RedisVersion;
 
-public class AddKey extends JedisClient {
+
+public class AddString extends JedisCommand {
 	private int db;
 	private String key;
 	private String value;
 	
-	public AddKey(int id, int db, String key, String value) {
+	public AddString(int id, int db, String key, String value) {
 		super(id);
 		this.db = db;
 		this.key = key;
@@ -17,6 +19,11 @@ public class AddKey extends JedisClient {
 	public void command() {
 		jedis.select(db);
 		jedis.set(key, value);
+	}
+
+	@Override
+	public RedisVersion getVersion() {
+		return RedisVersion.REDIS_1_0;
 	}
 
 }

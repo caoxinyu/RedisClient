@@ -6,8 +6,9 @@ import java.util.Set;
 
 import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
+import com.cxy.redisclient.domain.RedisVersion;
 
-public class ListContainerKeys extends JedisClient {
+public class ListContainerKeys extends JedisCommand {
 	private int db;
 	private String key;
 	private Set<Node> keys = new HashSet<Node>();
@@ -46,6 +47,11 @@ public class ListContainerKeys extends JedisClient {
 				keys.add(node);
 			}
 		}
+	}
+
+	@Override
+	public RedisVersion getVersion() {
+		return RedisVersion.REDIS_1_0;
 	}
 
 }

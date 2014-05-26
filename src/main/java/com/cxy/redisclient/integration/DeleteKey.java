@@ -1,7 +1,9 @@
 package com.cxy.redisclient.integration;
 
+import com.cxy.redisclient.domain.RedisVersion;
 
-public class DeleteKey extends JedisClient {
+
+public class DeleteKey extends JedisCommand {
 	private int db;
 	private String key;
 	
@@ -15,6 +17,11 @@ public class DeleteKey extends JedisClient {
 	public void command() {
 		jedis.select(db);
 		jedis.del(key);
+	}
+
+	@Override
+	public RedisVersion getVersion() {
+		return RedisVersion.REDIS_1_0;
 	}
 
 }

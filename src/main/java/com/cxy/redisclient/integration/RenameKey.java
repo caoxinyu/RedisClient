@@ -1,6 +1,8 @@
 package com.cxy.redisclient.integration;
 
-public class RenameKey extends JedisClient {
+import com.cxy.redisclient.domain.RedisVersion;
+
+public class RenameKey extends JedisCommand {
 	private int db;
 	private String oldKey;
 	private String newKey;
@@ -27,6 +29,11 @@ public class RenameKey extends JedisClient {
 			jedis.rename(oldKey, newKey);
 		else
 			result = jedis.renamenx(oldKey, newKey);
+	}
+
+	@Override
+	public RedisVersion getVersion() {
+		return RedisVersion.REDIS_1_0;
 	}
 
 }

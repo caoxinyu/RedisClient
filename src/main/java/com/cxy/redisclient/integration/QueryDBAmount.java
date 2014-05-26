@@ -2,7 +2,9 @@ package com.cxy.redisclient.integration;
 
 import java.util.List;
 
-public class QueryDBAmount extends JedisClient {
+import com.cxy.redisclient.domain.RedisVersion;
+
+public class QueryDBAmount extends JedisCommand {
 	private int dbAmount;
 	
 	public int getDbAmount() {
@@ -22,6 +24,11 @@ public class QueryDBAmount extends JedisClient {
 		} catch (Exception e) {
 			dbAmount = 0;
 		} 
+	}
+
+	@Override
+	public RedisVersion getVersion() {
+		return RedisVersion.REDIS_2_0;
 	}
 
 }

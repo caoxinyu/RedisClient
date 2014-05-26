@@ -4,23 +4,23 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.cxy.redisclient.domain.Node;
-import com.cxy.redisclient.integration.AddKey;
+import com.cxy.redisclient.integration.AddString;
 import com.cxy.redisclient.integration.DeleteKey;
 import com.cxy.redisclient.integration.ListContainerAllKeys;
 import com.cxy.redisclient.integration.ListContainerKeys;
 import com.cxy.redisclient.integration.ListContainers;
 import com.cxy.redisclient.integration.ListKeys;
-import com.cxy.redisclient.integration.ReadKey;
+import com.cxy.redisclient.integration.ReadString;
 import com.cxy.redisclient.integration.RenameKey;
 
 public class NodeService {
-	public void addKey(int id, int db, String key, String value) {
-		AddKey command = new AddKey(id, db, key ,value);
+	public void addString(int id, int db, String key, String value) {
+		AddString command = new AddString(id, db, key ,value);
 		command.execute();
 	}
 	
-	public String readKey(int id, int db, String key) {
-		ReadKey command = new ReadKey(id, db, key);
+	public String readString(int id, int db, String key) {
+		ReadString command = new ReadString(id, db, key);
 		command.execute();
 		return command.getValue();
 	}
