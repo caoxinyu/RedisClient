@@ -11,13 +11,13 @@ import com.cxy.redisclient.integration.QueryDBAmount;
 public class ServerService {
 
 	public int add(String name, String host, String port) throws IOException {
-		int id = Integer.parseInt(ConfigFile.readServerMaxId()) + 1;
+		int id = Integer.parseInt(ConfigFile.readMaxId(ConfigFile.SERVER_MAXID)) + 1;
 
 		ConfigFile.write(ConfigFile.NAME + id, name);
 		ConfigFile.write(ConfigFile.HOST + id, host);
 		ConfigFile.write(ConfigFile.PORT + id, port);
 
-		int amount = Integer.parseInt(ConfigFile.readServerAmount()) + 1;
+		int amount = Integer.parseInt(ConfigFile.readAmount(ConfigFile.SERVER_AMOUNT)) + 1;
 		ConfigFile.write(ConfigFile.SERVER_AMOUNT, String.valueOf(amount));
 		ConfigFile.write(ConfigFile.SERVER_MAXID, String.valueOf(id));
 		
@@ -25,7 +25,7 @@ public class ServerService {
 	}
 
 	public void delete(int id) throws IOException {
-		int amount = Integer.parseInt(ConfigFile.readServerAmount());
+		int amount = Integer.parseInt(ConfigFile.readAmount(ConfigFile.SERVER_AMOUNT));
 
 		ConfigFile.delete(ConfigFile.NAME + id);
 		ConfigFile.delete(ConfigFile.HOST + id);
@@ -58,7 +58,7 @@ public class ServerService {
 	}
 
 	public List<Server> listAll() throws IOException {
-		int amount = Integer.parseInt(ConfigFile.readServerMaxId());
+		int amount = Integer.parseInt(ConfigFile.readMaxId(ConfigFile.SERVER_MAXID));
 		List<Server> servers = new ArrayList<Server>();
 		for (int i = 1; i <= amount; i++) {
 			Server server = listById(i);

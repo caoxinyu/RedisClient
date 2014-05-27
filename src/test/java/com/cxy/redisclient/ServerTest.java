@@ -28,7 +28,7 @@ public class ServerTest extends TestCase {
 		
 		server.add("test4", "127.0.0.1", "8800");
 		
-		id = Integer.parseInt(ConfigFile.readServerMaxId());
+		id = Integer.parseInt(ConfigFile.readMaxId(ConfigFile.SERVER_MAXID));
 		name = ConfigFile.read(ConfigFile.NAME + id);
 		addr = ConfigFile.read(ConfigFile.HOST + id);
 		port = ConfigFile.read(ConfigFile.PORT + id);
@@ -40,19 +40,19 @@ public class ServerTest extends TestCase {
 	}
 	
 	public void testDelete() throws IOException {
-		int oldamount = Integer.parseInt(ConfigFile.readServerAmount());
-		int id = Integer.parseInt(ConfigFile.readServerMaxId());
+		int oldamount = Integer.parseInt(ConfigFile.readAmount(ConfigFile.SERVER_AMOUNT));
+		int id = Integer.parseInt(ConfigFile.readMaxId(ConfigFile.SERVER_MAXID));
 		ServerService server = new ServerService();
 		server.delete(id);
 		
-		int newamount = Integer.parseInt(ConfigFile.readServerAmount());
+		int newamount = Integer.parseInt(ConfigFile.readAmount(ConfigFile.SERVER_AMOUNT));
 		assertEquals(oldamount, newamount+1);
 	}
 
 	public void testList() throws IOException {
 		ServerService service = new ServerService();
 		service.add("testtest", "localhost", "88888");
-		int id = Integer.parseInt(ConfigFile.readServerMaxId());
+		int id = Integer.parseInt(ConfigFile.readMaxId(ConfigFile.SERVER_MAXID));
 		
 		Server server = service.listById(id);
 		assertEquals("testtest", server.getName());
@@ -63,12 +63,12 @@ public class ServerTest extends TestCase {
 		ServerService service = new ServerService();
 		List<Server> servers = service.listAll();
 		
-		int amount = Integer.parseInt(ConfigFile.readServerAmount());
+		int amount = Integer.parseInt(ConfigFile.readAmount(ConfigFile.SERVER_AMOUNT));
 		assertEquals(amount, servers.size());
 	}
 	
 	public void testUpdate() throws IOException {
-		int id = Integer.parseInt(ConfigFile.readServerMaxId());
+		int id = Integer.parseInt(ConfigFile.readMaxId(ConfigFile.SERVER_MAXID));
 		
 		ServerService service = new ServerService();
 		service.add("test update", "test addr", "test port");

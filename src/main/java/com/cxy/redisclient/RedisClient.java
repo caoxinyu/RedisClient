@@ -1,6 +1,7 @@
 package com.cxy.redisclient;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -24,12 +25,14 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
+import com.cxy.redisclient.domain.Favorite;
 import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.domain.Server;
 import com.cxy.redisclient.dto.ContainerInfo;
 import com.cxy.redisclient.dto.RenameInfo;
 import com.cxy.redisclient.dto.StringInfo;
+import com.cxy.redisclient.service.FavoriteService;
 import com.cxy.redisclient.service.NodeService;
 import com.cxy.redisclient.service.ServerService;
 
@@ -39,6 +42,7 @@ public class RedisClient {
 	private static final String NODE_TYPE = "type";
 	private static final String NODE_ID = "id";
 	private static final String ITEM_OPENED = "open";
+	private static final String FAVORITE = "favorite";
 	protected Shell shlRedisClient;
 	protected Menu menu_server;
 	protected Menu menu;
@@ -46,6 +50,7 @@ public class RedisClient {
 	protected Menu menu_null;
 	protected ServerService service1 = new ServerService();
 	protected NodeService service2 = new NodeService();
+	protected FavoriteService service3 = new FavoriteService();
 	private Table table;
 	private Text text;
 	private Menu menu_DB;
@@ -53,7 +58,7 @@ public class RedisClient {
 	private MenuItem mntmDelete_2;
 	private MenuItem mntmRename_2;
 	private MenuItem mntmDelete_3;
-	
+
 	/**
 	 * Launch the application.
 	 * 
@@ -238,15 +243,15 @@ public class RedisClient {
 			}
 		});
 		mntmDelete_2.setText("delete");
-		
+
 		new MenuItem(menu_DB, SWT.SEPARATOR);
-		
+
 		MenuItem mntmCut = new MenuItem(menu_DB, SWT.NONE);
 		mntmCut.setText("cut");
-		
+
 		MenuItem mntmCopy_1 = new MenuItem(menu_DB, SWT.NONE);
 		mntmCopy_1.setText("copy");
-		
+
 		MenuItem mntmPaste_1 = new MenuItem(menu_DB, SWT.NONE);
 		mntmPaste_1.setEnabled(false);
 		mntmPaste_1.setText("paste");
@@ -400,7 +405,7 @@ public class RedisClient {
 		mntmDelete_1.setText("Remove");
 
 		new MenuItem(menu_1, SWT.SEPARATOR);
-		
+
 		MenuItem mntmProperties = new MenuItem(menu_1, SWT.NONE);
 		mntmProperties.setText("Properties");
 
@@ -413,11 +418,11 @@ public class RedisClient {
 		});
 		mntmExit.setText("Exit");
 
-		MenuItem mntmTool = new MenuItem(menu, SWT.CASCADE);
-		mntmTool.setText("Data");
+		MenuItem mntmData = new MenuItem(menu, SWT.CASCADE);
+		mntmData.setText("Data");
 
-		Menu menu_4 = new Menu(mntmTool);
-		mntmTool.setMenu(menu_4);
+		Menu menu_4 = new Menu(mntmData);
+		mntmData.setMenu(menu_4);
 
 		MenuItem mntmAdd = new MenuItem(menu_4, SWT.CASCADE);
 		mntmAdd.setText("New");
@@ -474,7 +479,7 @@ public class RedisClient {
 			public void widgetSelected(SelectionEvent e) {
 				TreeItem[] items = tree.getSelection();
 				NodeType type = (NodeType) items[0].getData(NODE_TYPE);
-				if(type == NodeType.CONTAINER)
+				if (type == NodeType.CONTAINER)
 					deleteKeysSelected(items[0]);
 				else
 					MessageDialog.openError(shlRedisClient, "error",
@@ -482,57 +487,109 @@ public class RedisClient {
 			}
 		});
 		mntmDelete_3.setText("Delete");
-				
-						MenuItem menuItem = new MenuItem(menu_4, SWT.SEPARATOR);
-		
-				MenuItem mntmcut = new MenuItem(menu_4, SWT.NONE);
-				mntmcut.setText("&Cut");
-				
-						MenuItem mntmCopy = new MenuItem(menu_4, SWT.NONE);
-						mntmCopy.setText("C&opy");
-						
-								MenuItem mntmPaste = new MenuItem(menu_4, SWT.NONE);
-								mntmPaste.setText("&Paste");
-								
-										MenuItem menuItem_1 = new MenuItem(menu_4, SWT.SEPARATOR);
-										
-												MenuItem mntmFind = new MenuItem(menu_4, SWT.NONE);
-												mntmFind.setText("Find");
-												
-														MenuItem mntmReplace = new MenuItem(menu_4, SWT.NONE);
-														mntmReplace.setText("Find next");
-														
-														new MenuItem(menu_4, SWT.SEPARATOR);
-														
-														MenuItem mntmImport = new MenuItem(menu_4, SWT.NONE);
-														mntmImport.setText("Import");
-														
-														MenuItem mntmExport = new MenuItem(menu_4, SWT.NONE);
-														mntmExport.setText("Export");
-														
-														new MenuItem(menu_4, SWT.SEPARATOR);
-														
-														MenuItem mntmRefresh_1 = new MenuItem(menu_4, SWT.NONE);
-														mntmRefresh_1.setText("Refresh");
-		
+
+		new MenuItem(menu_4, SWT.SEPARATOR);
+
+		MenuItem mntmcut = new MenuItem(menu_4, SWT.NONE);
+		mntmcut.setText("&Cut");
+
+		MenuItem mntmCopy = new MenuItem(menu_4, SWT.NONE);
+		mntmCopy.setText("C&opy");
+
+		MenuItem mntmPaste = new MenuItem(menu_4, SWT.NONE);
+		mntmPaste.setText("&Paste");
+
+		new MenuItem(menu_4, SWT.SEPARATOR);
+
+		MenuItem mntmFind = new MenuItem(menu_4, SWT.NONE);
+		mntmFind.setText("Find");
+
+		MenuItem mntmReplace = new MenuItem(menu_4, SWT.NONE);
+		mntmReplace.setText("Find next");
+
+		new MenuItem(menu_4, SWT.SEPARATOR);
+
+		MenuItem mntmImport = new MenuItem(menu_4, SWT.NONE);
+		mntmImport.setText("Import");
+
+		MenuItem mntmExport = new MenuItem(menu_4, SWT.NONE);
+		mntmExport.setText("Export");
+
+		new MenuItem(menu_4, SWT.SEPARATOR);
+
+		MenuItem mntmRefresh_1 = new MenuItem(menu_4, SWT.NONE);
+		mntmRefresh_1.setText("Refresh");
+
 		MenuItem mntmFavorites = new MenuItem(menu, SWT.CASCADE);
 		mntmFavorites.setText("Favorites");
-		
+
 		Menu menu_7 = new Menu(mntmFavorites);
 		mntmFavorites.setMenu(menu_7);
-		
+
 		MenuItem mntmAdd_1 = new MenuItem(menu_7, SWT.NONE);
 		mntmAdd_1.setText("Add");
-		
+
 		MenuItem mntmOrganize = new MenuItem(menu_7, SWT.NONE);
-		mntmOrganize.setText("Organize");
+		mntmOrganize.setText("Remove");
+
+		try {
+			List<Favorite> favorites = service3.listAll();
+			if(favorites.size() > 0){
+				new MenuItem(menu_7, SWT.SEPARATOR);
+				for(Favorite favorite:favorites) {
+					final MenuItem menuItem = new MenuItem(menu_7, SWT.NONE);
+					menuItem.setText(favorite.getFavorite());
+					menuItem.setData(FAVORITE, favorite);
+					menuItem.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							Favorite favorite = (Favorite)menuItem.getData(FAVORITE);
+							int sid = favorite.getServerID();
+							
+							TreeItem[] treeItems = tree.getItems();
+							for(TreeItem treeItem: treeItems) {
+								int serverId = (Integer) treeItem.getData(NODE_ID);
+								if(serverId == sid) {
+									tree.setSelection(treeItem);
+									String[] containers = favorite.getFavorite().split(":");
+									TreeItem[] dbItems = treeItem.getItems();
+									for(TreeItem dbItem:dbItems) {
+										if(dbItem.getText().equals(containers[1])) {
+											tree.setSelection(dbItem);
+											treeItemSelected(dbItem);
+											TreeItem[] dataItems = dbItem.getItems();
+											for(int i = 2; i < containers.length; i++) {
+												for(TreeItem dataItem: dataItems){
+													if(dataItem.getText().equals(containers[2])){
+														tree.setSelection(dataItem);
+														treeItemSelected(dataItem);
+														dataItems = dataItem.getItems();
+														break;
+													}
+												}
+												
+											}
+										}		
+									}
+									
+								}
+							}
+								
+						}
+					});
+				}
+			}
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
-		MenuItem mntmTool_1 = new MenuItem(menu, SWT.CASCADE);
-		mntmTool_1.setText("Tool");
-		
-		Menu menu_6 = new Menu(mntmTool_1);
-		mntmTool_1.setMenu(menu_6);
-		
+		MenuItem mntmTool = new MenuItem(menu, SWT.CASCADE);
+		mntmTool.setText("Tool");
+
+		Menu menu_6 = new Menu(mntmTool);
+		mntmTool.setMenu(menu_6);
+
 		MenuItem mntmPubsub = new MenuItem(menu_6, SWT.NONE);
 		mntmPubsub.setText("Pub/Sub");
 
@@ -751,32 +808,36 @@ public class RedisClient {
 				SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, info.getServerName(),
 				info.getDb(), info.getContainer());
 		RenameInfo rinfo = (RenameInfo) dialog.open();
-		
-		if (rinfo != null && !(rinfo.getNewContainer().equals(info.getContainer()))) {
-			Set<String> result = service2.renameContainer(info.getId(), info.getDb(),
-					info.getContainer(), rinfo.getNewContainer(),rinfo.isOverwritten());
+
+		if (rinfo != null
+				&& !(rinfo.getNewContainer().equals(info.getContainer()))) {
+			Set<String> result = service2.renameContainer(info.getId(),
+					info.getDb(), info.getContainer(), rinfo.getNewContainer(),
+					rinfo.isOverwritten());
 			item.getParentItem().setData(ITEM_OPENED, false);
 			treeItemSelected(item.getParentItem());
-			if(!rinfo.isOverwritten() && result.size() > 0) {
+			if (!rinfo.isOverwritten() && result.size() > 0) {
 				String failString = "Rename following keys failed because of exist:\n";
-				for(String container:result)
+				for (String container : result)
 					failString += container + "\n";
-				MessageDialog.openConfirm(shlRedisClient,
-						"rename keys result", failString);
+				MessageDialog.openConfirm(shlRedisClient, "rename keys result",
+						failString);
 			}
 		}
-		
+
 	}
 
 	private void deleteKeysSelected(TreeItem item) {
-		boolean ok = MessageDialog.openConfirm(shlRedisClient,
-					"delete keys", "Are you sure delete all keys under it?");
+		boolean ok = MessageDialog.openConfirm(shlRedisClient, "delete keys",
+				"Are you sure delete all keys under it?");
 		if (ok) {
 			ContainerInfo info = new ContainerInfo();
 			parseContainer(item, info);
-			service2.deleteContainer(info.getId(), info.getDb(), info.getContainer());;
+			service2.deleteContainer(info.getId(), info.getDb(),
+					info.getContainer());
+			;
 			item.dispose();
-			
+
 		}
 	}
 }

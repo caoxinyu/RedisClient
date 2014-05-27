@@ -18,6 +18,11 @@ public class ConfigFile {
 	public static final String NAME = "name";
 	public static final String SERVER_AMOUNT = "server_amount";
 	public static final String SERVER_MAXID = "server_maxid";
+	
+	public static final String FAVORITE = "favorite";
+	public static final String FAVORITE_SERVER = "favorite_server";
+	public static final String FAVORITE_AMOUNT = "favorite_amount";
+	public static final String FAVORITE_MAXID = "favorite_maxid";
 
 	public static String read(String key) throws IOException {
 		Properties props = getProperty();
@@ -26,8 +31,8 @@ public class ConfigFile {
 
 	}
 
-	public static String readServerAmount() throws IOException {
-		String servers = read(ConfigFile.SERVER_AMOUNT);
+	public static String readAmount(String amount) throws IOException {
+		String servers = read(amount);
 		if (servers == null)
 			return "0";
 		else
@@ -35,12 +40,12 @@ public class ConfigFile {
 
 	}
 	
-	public static String readServerMaxId() throws IOException {
-		String servers = read(ConfigFile.SERVER_MAXID);
-		if (servers == null)
+	public static String readMaxId(String maxid) throws IOException {
+		String id = read(maxid);
+		if (id == null)
 			return "0";
 		else
-			return servers;
+			return id;
 
 	}
 	
