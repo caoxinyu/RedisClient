@@ -100,7 +100,7 @@ public class AddStringDialog extends Dialog {
 		text_2.setBounds(62, 66, 220, 19);
 		
 		Label label_1 = new Label(composite, SWT.NONE);
-		label_1.setBounds(61, 13, 45, 13);
+		label_1.setBounds(61, 13, 89, 13);
 		label_1.setText(server);
 		
 		Label lblDatabase = new Label(composite, SWT.NONE);

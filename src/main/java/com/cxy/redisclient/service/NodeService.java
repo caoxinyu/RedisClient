@@ -7,9 +7,12 @@ import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.integration.AddString;
 import com.cxy.redisclient.integration.DeleteKey;
 import com.cxy.redisclient.integration.ListContainerAllKeys;
+import com.cxy.redisclient.integration.ListContainerAllKeys28;
+import com.cxy.redisclient.integration.ListContainerAllKeysFactory;
 import com.cxy.redisclient.integration.ListContainerKeys;
 import com.cxy.redisclient.integration.ListContainers;
 import com.cxy.redisclient.integration.ListKeys;
+import com.cxy.redisclient.integration.QueryServerVersion;
 import com.cxy.redisclient.integration.ReadString;
 import com.cxy.redisclient.integration.RenameKey;
 
@@ -52,7 +55,7 @@ public class NodeService {
 	public Set<String> renameContainer(int id, int db, String oldContainer, String newContainer, boolean overwritten) {
 		Set<String> failContainer = new HashSet<String>();
 		
-		ListContainerAllKeys command = new ListContainerAllKeys(id, db, oldContainer);
+		ListContainerAllKeys command = new ListContainerAllKeysFactory(id, db, oldContainer).getListContainerAllKeys();
 		command.execute();
 		Set<Node> nodes = command.getKeys();
 		
@@ -68,7 +71,7 @@ public class NodeService {
 	}
 	
 	public void deleteContainer(int id, int db, String container) {
-		ListContainerAllKeys command = new ListContainerAllKeys(id, db, container);
+		ListContainerAllKeys command = new ListContainerAllKeysFactory(id, db, container).getListContainerAllKeys();
 		command.execute();
 		Set<Node> nodes = command.getKeys();
 		
@@ -76,5 +79,11 @@ public class NodeService {
 			DeleteKey command1 = new DeleteKey(id, db, node.getKey());
 			command1.execute();
 		}
+	}
+	
+	public String listServerInfo(int id) {
+		QueryServerVersion command = new QueryServerVersion(id);
+		command.execute();
+		return command.getVersionInfo();
 	}
 }

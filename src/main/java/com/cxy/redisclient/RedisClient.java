@@ -563,7 +563,8 @@ public class RedisClient {
 	}
 
 	private void initDBs(int server, TreeItem serverItem) throws IOException {
-		for (int i = 0; i < service1.listDBs(server); i++) {
+		int amount = service1.listDBs(server);
+		for (int i = 0; i < amount; i++) {
 			TreeItem dbItem = new TreeItem(serverItem, SWT.NONE);
 			dbItem.setText(DB_PREFIX + i);
 			dbItem.setData(NODE_ID, i);

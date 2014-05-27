@@ -6,12 +6,11 @@ import java.util.Set;
 
 import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
-import com.cxy.redisclient.domain.RedisVersion;
 
-public class ListContainerAllKeys extends JedisCommand {
-	private int db;
-	private String container;
-	private Set<Node> keys = new HashSet<Node>();
+public abstract class ListContainerAllKeys extends JedisCommand {
+	protected int db;
+	protected String container;
+	protected Set<Node> keys = new HashSet<Node>();
 	
 	public Set<Node> getKeys() {
 		return keys;
@@ -23,12 +22,11 @@ public class ListContainerAllKeys extends JedisCommand {
 		this.container = container;
 	}
 
+	
 	@Override
 	public void command() {
 		jedis.select(db);
-		Set<String> nodekeys = null;
-		assert(container != null);
-		nodekeys = jedis.keys(container + "*");
+		Set<String> nodekeys = getResult();
 		
 		Iterator<String> it = nodekeys.iterator();
 		while (it.hasNext()) {
@@ -39,10 +37,7 @@ public class ListContainerAllKeys extends JedisCommand {
 			keys.add(node);
 		}
 	}
-
-	@Override
-	public RedisVersion getVersion() {
-		return RedisVersion.REDIS_1_0;
-	}
-
+	protected abstract Set<String> getResult();
+	
+	
 }

@@ -75,5 +75,9 @@ public class NodeTest extends TestCase {
 		
 		
 	}
+	public void testInfo() {
+		NodeService service2 = new NodeService();
+		service2.listServerInfo(1);
+	}
 
 }

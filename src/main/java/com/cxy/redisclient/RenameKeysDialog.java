@@ -93,7 +93,7 @@ public class RenameKeysDialog extends Dialog {
 		text_2.setFocus();
 		
 		Label label_1 = new Label(composite, SWT.NONE);
-		label_1.setBounds(61, 13, 45, 13);
+		label_1.setBounds(61, 13, 89, 13);
 		label_1.setText(server);
 		
 		Label lblDatabase = new Label(composite, SWT.NONE);
