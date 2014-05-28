@@ -15,28 +15,23 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
-import com.cxy.redisclient.dto.RenameInfo;
+import com.cxy.redisclient.domain.Favorite;
 
-public class RenameKeysDialog extends Dialog {
+public class RenameFavoriteDialog extends Dialog {
 
-	protected Object result = null;
+	protected Object result;
 	protected Shell shell;
-	private Text text_2;
-	private String server;
-	private int db;
-	private String oldContainer;
-	
+	private Favorite oldFavorite;
+	private Text text;
 	/**
 	 * Create the dialog.
 	 * @param parent
 	 * @param style
 	 */
-	public RenameKeysDialog(Shell parent, int style,String server, int db, String oldContainer) {
+	public RenameFavoriteDialog(Shell parent, int style, Favorite favorite) {
 		super(parent, style);
 		setText("SWT Dialog");
-		this.server = server;
-		this.db = db;
-		this.oldContainer = oldContainer;
+		this.oldFavorite = favorite;
 	}
 
 	/**
@@ -62,8 +57,8 @@ public class RenameKeysDialog extends Dialog {
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
 		shell.setSize(326, 201);
-		shell.setText("Rename Keys");
-		
+		shell.setText("Update favorite");
+
 		Rectangle screenSize = shell.getParent().getBounds();
 		Rectangle shellSize = shell.getBounds();
 		shell.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
@@ -73,53 +68,41 @@ public class RenameKeysDialog extends Dialog {
 		tabFolder.setBounds(10, 10, 300, 121);
 		
 		TabItem tbtmString = new TabItem(tabFolder, SWT.NONE);
-		tbtmString.setText("String");
+		tbtmString.setText("Favorite");
 		
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tbtmString.setControl(composite);
 		
-		Label lblKey = new Label(composite, SWT.NONE);
-		lblKey.setText("Server");
-		lblKey.setBounds(10, 13, 45, 13);
-		
 		Label lblNewKey = new Label(composite, SWT.NONE);
-		lblNewKey.setText("New key");
-		lblNewKey.setBounds(10, 44, 45, 13);
+		lblNewKey.setText("Name");
+		lblNewKey.setBounds(10, 13, 45, 13);
 		
-		text_2 = new Text(composite, SWT.BORDER);
-		text_2.setBounds(62, 41, 220, 19);
-		text_2.setText(oldContainer);
+		final Text text_2 = new Text(composite, SWT.BORDER);
+		text_2.setText(oldFavorite.getName());
+		text_2.setBounds(62, 10, 220, 19);
 		text_2.selectAll();
 		text_2.setFocus();
 		
-		Label label_1 = new Label(composite, SWT.NONE);
-		label_1.setBounds(61, 13, 89, 13);
-		label_1.setText(server);
+		Label lblFavorite = new Label(composite, SWT.NONE);
+		lblFavorite.setText("Favorite");
+		lblFavorite.setBounds(10, 55, 45, 13);
 		
-		Label lblDatabase = new Label(composite, SWT.NONE);
-		lblDatabase.setText("Database");
-		lblDatabase.setBounds(156, 13, 45, 13);
+		text = new Text(composite, SWT.BORDER);
+		text.setEditable(false);
+		text.setText(oldFavorite.getFavorite());
+		text.setBounds(62, 52, 220, 19);
 		
-		Label label_3 = new Label(composite, SWT.NONE);
-		label_3.setBounds(223, 13, 45, 13);
-		label_3.setText(String.valueOf(db));
-		
-		final Button btnCheckButton = new Button(composite, SWT.CHECK);
-		btnCheckButton.setSelection(true);
-		btnCheckButton.setBounds(10, 69, 272, 16);
-		btnCheckButton.setText("Overwritten if exists");
 		
 		Button button = new Button(shell, SWT.NONE);
 		button.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				String newContainer = text_2.getText();
-				boolean overwritten = btnCheckButton.getSelection(); 
+				String name = text_2.getText();
 				
-				if( newContainer.length() == 0){
-					MessageDialog.openError(shell, "error","please input new key name!");
+				if( name.length() == 0 ){
+					MessageDialog.openError(shell, "error","please input favorite name!");
 				} else {
-					result = new RenameInfo(newContainer, overwritten);
+					result = name;
 					shell.dispose();
 				}
 			}
@@ -136,6 +119,7 @@ public class RenameKeysDialog extends Dialog {
 		});
 		button_1.setText("Cancel");
 		button_1.setBounds(188, 144, 68, 23);
-
+		
 	}
+
 }

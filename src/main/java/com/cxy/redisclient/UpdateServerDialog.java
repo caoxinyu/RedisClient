@@ -16,8 +16,12 @@ public class UpdateServerDialog extends AddServerDialog {
 		// TODO Auto-generated method stub
 		super.createContents();
 		text_3.setText(server.getName());
+		text_3.selectAll();
+		text_3.setFocus();
 		text_4.setText(server.getHost());
+		text_4.selectAll();
 		text_5.setText(server.getPort());
+		text_5.selectAll();
 	}
 
 	@Override

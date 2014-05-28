@@ -13,9 +13,9 @@ public class FavoriteTest extends TestCase {
 	
 	public void testAdd() throws IOException {
 		FavoriteService service = new FavoriteService();
-		service.add(1, "local 2.6.12:db0:Login:");
-		service.add(1, "local 2.6.12:db0:com:");
-		service.add(1, "local 2.6.12:db0:tag:");
+		service.add(1,"login", "local 2.6.12:db0:Login:");
+		service.add(1, "com", "local 2.6.12:db0:com:");
+		service.add(1, "tag", "local 2.6.12:db0:tag:");
 	}
 
 	public void testDelete() throws IOException {
@@ -26,7 +26,7 @@ public class FavoriteTest extends TestCase {
 
 	public void testListById() throws IOException {
 		FavoriteService service = new FavoriteService();
-		int fid = service.add(1, "local 2.6.12:db0:key:");
+		int fid = service.add(1,"key", "local 2.6.12:db0:key:");
 
 		Favorite favorite = service.listById(fid);
 		assertTrue(favorite.getFavorite().equals("local 2.6.12:db0:key:"));

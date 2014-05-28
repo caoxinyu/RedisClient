@@ -20,6 +20,7 @@ public class ConfigFile {
 	public static final String SERVER_MAXID = "server_maxid";
 	
 	public static final String FAVORITE = "favorite";
+	public static final String FAVORITE_NAME = "favorite_name";
 	public static final String FAVORITE_SERVER = "favorite_server";
 	public static final String FAVORITE_AMOUNT = "favorite_amount";
 	public static final String FAVORITE_MAXID = "favorite_maxid";

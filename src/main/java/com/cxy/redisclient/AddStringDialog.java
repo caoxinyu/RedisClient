@@ -19,10 +19,8 @@ import com.cxy.redisclient.dto.StringInfo;
 
 public class AddStringDialog extends Dialog {
 
-	private static final int HEIGHT = 201;
-	private static final int WIDTH = 326;
 	protected Object result;
-	protected Shell shlAddString;
+	protected Shell shell;
 	private Text text_1;
 	private Text text_2;
 	private String server;
@@ -48,10 +46,10 @@ public class AddStringDialog extends Dialog {
 	 */
 	public Object open() {
 		createContents();
-		shlAddString.open();
-		shlAddString.layout();
+		shell.open();
+		shell.layout();
 		Display display = getParent().getDisplay();
-		while (!shlAddString.isDisposed()) {
+		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
@@ -63,15 +61,16 @@ public class AddStringDialog extends Dialog {
 	 * Create contents of the dialog.
 	 */
 	private void createContents() {
-		shlAddString = new Shell(getParent(), getStyle());
-		shlAddString.setSize(WIDTH, HEIGHT);
-		shlAddString.setText("Add String");
+		shell = new Shell(getParent(), getStyle());
+		shell.setSize(326, 201);
+		shell.setText("Add String");
 		
-		Rectangle screenSize = shlAddString.getParent().getBounds();
-		shlAddString.setLocation(screenSize.x + screenSize.width / 2 - WIDTH / 2,
-				screenSize.y + screenSize.height / 2 - HEIGHT / 2);
+		Rectangle screenSize = shell.getParent().getBounds();
+		Rectangle shellSize = shell.getBounds();
+		shell.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
+				screenSize.y + screenSize.height / 2 - shellSize.height / 2);
 		
-		TabFolder tabFolder = new TabFolder(shlAddString, SWT.NONE);
+		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
 		tabFolder.setBounds(10, 10, 300, 121);
 		
 		TabItem tbtmString = new TabItem(tabFolder, SWT.NONE);
@@ -91,6 +90,8 @@ public class AddStringDialog extends Dialog {
 		text_1 = new Text(composite, SWT.BORDER);
 		text_1.setBounds(62, 38, 220, 19);
 		text_1.setText(key);
+		text_1.selectAll();
+		text_1.setFocus();
 		
 		Label label = new Label(composite, SWT.NONE);
 		label.setText("Value");
@@ -111,7 +112,7 @@ public class AddStringDialog extends Dialog {
 		label_3.setBounds(223, 13, 45, 13);
 		label_3.setText(String.valueOf(db));
 		
-		Button button = new Button(shlAddString, SWT.NONE);
+		Button button = new Button(shell, SWT.NONE);
 		button.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
@@ -119,21 +120,21 @@ public class AddStringDialog extends Dialog {
 				String value = text_2.getText();
 				
 				if( key.length() == 0 || value.length() == 0){
-					MessageDialog.openError(shlAddString, "error","please input string information!");
+					MessageDialog.openError(shell, "error","please input string information!");
 				} else {
 					result = new StringInfo(key, value);
-					shlAddString.dispose();
+					shell.dispose();
 				}
 			}
 		});
 		button.setText("OK");
 		button.setBounds(61, 144, 68, 23);
 		
-		Button button_1 = new Button(shlAddString, SWT.NONE);
+		Button button_1 = new Button(shell, SWT.NONE);
 		button_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				shlAddString.dispose();
+				shell.dispose();
 			}
 		});
 		button_1.setText("Cancel");

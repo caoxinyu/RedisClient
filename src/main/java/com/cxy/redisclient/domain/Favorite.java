@@ -3,12 +3,20 @@ package com.cxy.redisclient.domain;
 public class Favorite {
 	private int fid;
 	private int serverID;
+	private String name;
 	private String favorite;
-	public Favorite(int fid, int serverID, String favorite) {
+	public Favorite(int fid, int serverID, String name, String favorite) {
 		super();
 		this.fid = fid;
 		this.serverID = serverID;
+		this.name = name;
 		this.favorite = favorite;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 	public int getFid() {
 		return fid;

@@ -22,7 +22,7 @@ public class AddServerDialog extends Dialog {
 	private static final int HEIGHT = 201;
 	private static final int WIDTH = 326;
 	protected Object result = null;
-	protected Shell shlNewServer;
+	protected Shell shell;
 	protected Text text_3;
 	protected Text text_4;
 	protected Text text_5;
@@ -44,10 +44,10 @@ public class AddServerDialog extends Dialog {
 	 */
 	public Object open() {
 		createContents();
-		shlNewServer.open();
-		shlNewServer.layout();
+		shell.open();
+		shell.layout();
 		Display display = getParent().getDisplay();
-		while (!shlNewServer.isDisposed()) {
+		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
@@ -59,15 +59,16 @@ public class AddServerDialog extends Dialog {
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shlNewServer = new Shell(getParent(), getStyle());
-		shlNewServer.setSize(WIDTH, HEIGHT);
-		shlNewServer.setText(getTitle());
+		shell = new Shell(getParent(), getStyle());
+		shell.setSize(WIDTH, HEIGHT);
+		shell.setText(getTitle());
 
-		Rectangle screenSize = shlNewServer.getParent().getBounds();
-		shlNewServer.setLocation(screenSize.x + screenSize.width / 2 - WIDTH / 2,
-				screenSize.y + screenSize.height / 2 - HEIGHT / 2);
+		Rectangle screenSize = shell.getParent().getBounds();
+		Rectangle shellSize = shell.getBounds();
+		shell.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
+				screenSize.y + screenSize.height / 2 - shellSize.height / 2);
 		
-		TabFolder tabFolder = new TabFolder(shlNewServer, SWT.NONE);
+		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
 		tabFolder.setBounds(10, 10, 300, 121);
 		
 		TabItem tbtmServerInformation = new TabItem(tabFolder, SWT.NONE);
@@ -82,6 +83,7 @@ public class AddServerDialog extends Dialog {
 		
 		text_3 = new Text(composite, SWT.BORDER);
 		text_3.setBounds(45, 12, 237, 19);
+		text_3.setFocus();
 		
 		Label lblHost = new Label(composite, SWT.NONE);
 		lblHost.setBounds(10, 43, 29, 13);
@@ -92,13 +94,14 @@ public class AddServerDialog extends Dialog {
 		
 		text_5 = new Text(composite, SWT.BORDER);
 		text_5.setText("6379");
+		text_5.selectAll();
 		text_5.setBounds(45, 68, 237, 19);
 		
 		Label lblPort = new Label(composite, SWT.NONE);
 		lblPort.setText("Port");
 		lblPort.setBounds(10, 71, 30, 13);
 		
-		Button btnOk = new Button(shlNewServer, SWT.NONE);
+		Button btnOk = new Button(shell, SWT.NONE);
 		btnOk.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent arg0) {
@@ -106,10 +109,10 @@ public class AddServerDialog extends Dialog {
 				String host = text_4.getText();
 				String port = text_5.getText();
 				if(name.length() == 0 || host.length() == 0 || port.length() == 0)
-					MessageDialog.openError(shlNewServer, "error","please input server information!");
+					MessageDialog.openError(shell, "error","please input server information!");
 				else {
 					result = new Server(0, name, host, port);
-					shlNewServer.dispose();
+					shell.dispose();
 				}
 					
 					
@@ -118,11 +121,11 @@ public class AddServerDialog extends Dialog {
 		btnOk.setBounds(61, 144, 68, 23);
 		btnOk.setText("OK");
 		
-		Button btnCancel = new Button(shlNewServer, SWT.NONE);
+		Button btnCancel = new Button(shell, SWT.NONE);
 		btnCancel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent arg0) {
-				shlNewServer.dispose();
+				shell.dispose();
 			}
 		});
 		btnCancel.setBounds(188, 144, 68, 23);
