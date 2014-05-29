@@ -160,9 +160,7 @@ public class RedisClient {
 
 		initTable(sashForm_1);
 
-		TabFolder tabFolder = new TabFolder(sashForm_1, SWT.NONE);
-
-		sashForm_1.setWeights(new int[] { 1, 1 });
+		sashForm_1.setWeights(new int[] { 1 });
 
 		sashForm.setWeights(new int[] { 1, 3 });
 		sashForm_2.setWeights(new int[] { 22, 368 });
