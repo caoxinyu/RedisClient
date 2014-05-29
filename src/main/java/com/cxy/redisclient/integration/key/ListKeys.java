@@ -1,4 +1,4 @@
-package com.cxy.redisclient.integration;
+package com.cxy.redisclient.integration.key;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -7,6 +7,7 @@ import java.util.Set;
 import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.domain.RedisVersion;
+import com.cxy.redisclient.integration.JedisCommand;
 
 public class ListKeys extends JedisCommand {
 	private int db;

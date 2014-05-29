@@ -52,4 +52,20 @@ public abstract class JedisCommand {
 			nodeType = NodeType.SORTSET;
 		return nodeType;
 	}
+	protected long getSize(String key) {
+		Long size;
+		
+		String type = jedis.type(key);
+		if (type.equals("string"))
+			size = (long) 1;
+		else if (type.equals("hash"))
+			size = jedis.hlen(key);
+		else if (type.equals("list"))
+			size = jedis.llen(key);
+		else if (type.equals("set"))
+			size = jedis.scard(key);
+		else
+			size = jedis.zcard(key);
+		return size;
+	}
 }

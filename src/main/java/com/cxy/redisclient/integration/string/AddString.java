@@ -1,22 +1,25 @@
-package com.cxy.redisclient.integration;
+package com.cxy.redisclient.integration.string;
 
 import com.cxy.redisclient.domain.RedisVersion;
+import com.cxy.redisclient.integration.JedisCommand;
 
 
-public class DeleteKey extends JedisCommand {
+public class AddString extends JedisCommand {
 	private int db;
 	private String key;
+	private String value;
 	
-	public DeleteKey(int id, int db, String key) {
+	public AddString(int id, int db, String key, String value) {
 		super(id);
 		this.db = db;
 		this.key = key;
+		this.value = value;
 	}
 
 	@Override
 	public void command() {
 		jedis.select(db);
-		jedis.del(key);
+		jedis.set(key, value);
 	}
 
 	@Override

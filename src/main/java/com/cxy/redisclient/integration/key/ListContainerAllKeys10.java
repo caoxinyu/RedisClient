@@ -1,4 +1,4 @@
-package com.cxy.redisclient.integration;
+package com.cxy.redisclient.integration.key;
 
 import java.util.Set;
 

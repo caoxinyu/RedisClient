@@ -1,4 +1,4 @@
-package com.cxy.redisclient.integration;
+package com.cxy.redisclient.integration.key;
 
 import static redis.clients.jedis.ScanParams.SCAN_POINTER_START;
 

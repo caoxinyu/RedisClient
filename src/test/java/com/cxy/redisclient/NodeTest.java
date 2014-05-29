@@ -6,6 +6,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import com.cxy.redisclient.domain.DataNode;
 import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.service.NodeService;
@@ -39,7 +40,7 @@ public class NodeTest extends TestCase {
 	
 	public void testListContainerKeys() throws IOException {
 		NodeService service2 = new NodeService();
-		Set<Node> nodes = service2.listContainerKeys(1, 0, "sns:post:1:");
+		Set<DataNode> nodes = service2.listContainerKeys(1, 0, "sns:post:1:");
 		assertEquals(nodes.size(), 2);
 		
 		nodes = service2.listContainerKeys(1, 0, null);
@@ -76,7 +77,7 @@ public class NodeTest extends TestCase {
 	}
 	public void testInfo() {
 		NodeService service2 = new NodeService();
-		service2.listServerInfo(1);
+		service2.listServerVersion(1);
 	}
 
 }

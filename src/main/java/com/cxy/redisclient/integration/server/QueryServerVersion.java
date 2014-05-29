@@ -1,6 +1,7 @@
-package com.cxy.redisclient.integration;
+package com.cxy.redisclient.integration.server;
 
 import com.cxy.redisclient.domain.RedisVersion;
+import com.cxy.redisclient.integration.JedisCommand;
 
 public class QueryServerVersion extends JedisCommand {
 	private String version;

@@ -1,19 +1,20 @@
-package com.cxy.redisclient.integration;
+package com.cxy.redisclient.integration.key;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.cxy.redisclient.domain.Node;
+import com.cxy.redisclient.domain.DataNode;
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.domain.RedisVersion;
+import com.cxy.redisclient.integration.JedisCommand;
 
 public class ListContainerKeys extends JedisCommand {
 	private int db;
 	private String key;
-	private Set<Node> keys = new HashSet<Node>();
+	private Set<DataNode> keys = new HashSet<DataNode>();
 	
-	public Set<Node> getKeys() {
+	public Set<DataNode> getKeys() {
 		return keys;
 	}
 
@@ -42,8 +43,9 @@ public class ListContainerKeys extends JedisCommand {
 			String[] ckey = nextKey.substring(length).split(":");
 			if (ckey.length == 1) {
 				NodeType nodeType = getNodeType(nextKey);
-
-				Node node = new Node(ckey[0], nodeType);
+				long size = getSize(nextKey);
+				
+				DataNode node = new DataNode(ckey[0], nodeType, size);
 				keys.add(node);
 			}
 		}

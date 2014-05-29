@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.cxy.redisclient.domain.Server;
 import com.cxy.redisclient.integration.ConfigFile;
-import com.cxy.redisclient.integration.QueryDBAmount;
+import com.cxy.redisclient.integration.server.QueryDBAmount;
 
 public class ServerService {
 

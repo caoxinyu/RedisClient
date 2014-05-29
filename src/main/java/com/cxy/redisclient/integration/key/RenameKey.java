@@ -1,6 +1,7 @@
-package com.cxy.redisclient.integration;
+package com.cxy.redisclient.integration.key;
 
 import com.cxy.redisclient.domain.RedisVersion;
+import com.cxy.redisclient.integration.JedisCommand;
 
 public class RenameKey extends JedisCommand {
 	private int db;

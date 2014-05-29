@@ -1,18 +1,14 @@
-package com.cxy.redisclient.integration;
+package com.cxy.redisclient.integration.key;
 
 import com.cxy.redisclient.domain.RedisVersion;
+import com.cxy.redisclient.integration.JedisCommand;
 
 
-public class ReadString extends JedisCommand {
+public class DeleteKey extends JedisCommand {
 	private int db;
 	private String key;
-	private String value;
 	
-	public String getValue() {
-		return value;
-	}
-
-	public ReadString(int id, int db, String key) {
+	public DeleteKey(int id, int db, String key) {
 		super(id);
 		this.db = db;
 		this.key = key;
@@ -21,7 +17,7 @@ public class ReadString extends JedisCommand {
 	@Override
 	public void command() {
 		jedis.select(db);
-		value = jedis.get(key);
+		jedis.del(key);
 	}
 
 	@Override

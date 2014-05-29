@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.cxy.redisclient.domain.RedisVersion;
+import com.cxy.redisclient.integration.server.QueryServerVersion;
 
 public abstract class JedisCommandFactory {
 	private int id;

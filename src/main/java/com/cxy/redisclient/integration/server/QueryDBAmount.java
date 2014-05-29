@@ -1,8 +1,9 @@
-package com.cxy.redisclient.integration;
+package com.cxy.redisclient.integration.server;
 
 import java.util.List;
 
 import com.cxy.redisclient.domain.RedisVersion;
+import com.cxy.redisclient.integration.JedisCommand;
 
 public class QueryDBAmount extends JedisCommand {
 	private int dbAmount;

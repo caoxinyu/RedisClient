@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
+import com.cxy.redisclient.domain.DataNode;
 import com.cxy.redisclient.domain.Favorite;
 import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
@@ -247,6 +248,17 @@ public class RedisClient {
 		mntmDelete_2.setText("delete");
 
 		new MenuItem(menu_DB, SWT.SEPARATOR);
+		
+		MenuItem mntmAddToFavorites = new MenuItem(menu_DB, SWT.NONE);
+		mntmAddToFavorites.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				addFavorite();
+			}
+		});
+		mntmAddToFavorites.setText("add to favorites");
+		
+		new MenuItem(menu_DB, SWT.SEPARATOR);
 
 		MenuItem mntmCut = new MenuItem(menu_DB, SWT.NONE);
 		mntmCut.setText("cut");
@@ -278,6 +290,10 @@ public class RedisClient {
 
 					}
 				}
+			}
+			@Override
+			public void mouseDown(MouseEvent e) {
+				
 			}
 		});
 		table.setHeaderVisible(true);
@@ -532,15 +548,7 @@ public class RedisClient {
 		mntmAdd_Favorite.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TreeItem[] items = tree.getSelection();
-				if (items.length > 0 && items[0].getData(NODE_TYPE) != NodeType.SERVER)
-					addFavoriteSelected(items[0]);
-				else
-					MessageDialog.openError(shlRedisClient, "error",
-							"please select favorite to add");
-				
-				removeFavoriteMenuItem();
-				addFavoriteMenuItem();
+				addFavorite();
 			}
 		});
 		mntmAdd_Favorite.setText("Add");
@@ -597,7 +605,7 @@ public class RedisClient {
 		mntmAbout.setText("About");
 	}
 
-	protected void removeFavoriteMenuItem() {
+	private void removeFavoriteMenuItem() {
 		int num = menu_7.getItemCount();
 		if(num > 2) {
 			MenuItem[] items = menu_7.getItems();
@@ -608,7 +616,7 @@ public class RedisClient {
 		
 	}
 
-	protected void addFavoriteMenuItem() {
+	private void addFavoriteMenuItem() {
 		try {
 			List<Favorite> favorites = service3.listAll();
 			if(favorites.size() > 0){
@@ -662,7 +670,7 @@ public class RedisClient {
 		}
 	}
 
-	protected void addFavoriteSelected(TreeItem item)  {
+	private void addFavoriteSelected(TreeItem item)  {
 		ContainerInfo cinfo = new ContainerInfo();
 		parseContainer(item, cinfo);
 		AddFavoriteDialog dialog = new AddFavoriteDialog(shlRedisClient,
@@ -825,13 +833,13 @@ public class RedisClient {
 					node.getType().toString() });
 		}
 
-		Set<Node> knodes = service2.listContainerKeys(info.getId(),
+		Set<DataNode> knodes = service2.listContainerKeys(info.getId(),
 				info.getDb(), info.getContainer());
 
-		for (Node node1 : knodes) {
+		for (DataNode node1 : knodes) {
 			TableItem item = new TableItem(table, SWT.NONE);
 			item.setText(new String[] { node1.getKey(),
-					node1.getType().toString() });
+					node1.getType().toString(), String.valueOf(node1.getSize()) });
 		}
 	}
 
@@ -908,5 +916,17 @@ public class RedisClient {
 			item.dispose();
 
 		}
+	}
+
+	private void addFavorite() {
+		TreeItem[] items = tree.getSelection();
+		if (items.length > 0 && items[0].getData(NODE_TYPE) != NodeType.SERVER)
+			addFavoriteSelected(items[0]);
+		else
+			MessageDialog.openError(shlRedisClient, "error",
+					"please select favorite to add");
+		
+		removeFavoriteMenuItem();
+		addFavoriteMenuItem();
 	}
 }

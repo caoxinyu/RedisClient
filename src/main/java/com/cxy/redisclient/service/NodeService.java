@@ -3,17 +3,18 @@ package com.cxy.redisclient.service;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.cxy.redisclient.domain.DataNode;
 import com.cxy.redisclient.domain.Node;
-import com.cxy.redisclient.integration.AddString;
-import com.cxy.redisclient.integration.DeleteKey;
-import com.cxy.redisclient.integration.ListContainerAllKeys;
-import com.cxy.redisclient.integration.ListContainerAllKeysFactory;
-import com.cxy.redisclient.integration.ListContainerKeys;
-import com.cxy.redisclient.integration.ListContainers;
-import com.cxy.redisclient.integration.ListKeys;
-import com.cxy.redisclient.integration.QueryServerVersion;
-import com.cxy.redisclient.integration.ReadString;
-import com.cxy.redisclient.integration.RenameKey;
+import com.cxy.redisclient.integration.key.DeleteKey;
+import com.cxy.redisclient.integration.key.ListContainerAllKeys;
+import com.cxy.redisclient.integration.key.ListContainerAllKeysFactory;
+import com.cxy.redisclient.integration.key.ListContainerKeys;
+import com.cxy.redisclient.integration.key.ListContainers;
+import com.cxy.redisclient.integration.key.ListKeys;
+import com.cxy.redisclient.integration.key.RenameKey;
+import com.cxy.redisclient.integration.server.QueryServerVersion;
+import com.cxy.redisclient.integration.string.AddString;
+import com.cxy.redisclient.integration.string.ReadString;
 
 public class NodeService {
 	public void addString(int id, int db, String key, String value) {
@@ -45,7 +46,7 @@ public class NodeService {
 		
 	}
 	
-	public Set<Node> listContainerKeys(int id, int db, String key) {
+	public Set<DataNode> listContainerKeys(int id, int db, String key) {
 		ListContainerKeys command = new ListContainerKeys(id, db, key);
 		command.execute();
 		return command.getKeys();
@@ -80,7 +81,7 @@ public class NodeService {
 		}
 	}
 	
-	public String listServerInfo(int id) {
+	public String listServerVersion(int id) {
 		QueryServerVersion command = new QueryServerVersion(id);
 		command.execute();
 		return command.getVersionInfo();
