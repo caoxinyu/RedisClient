@@ -5,7 +5,7 @@ import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-public abstract class RedisDialog extends Dialog {
+public abstract class RedisClientDialog extends Dialog {
 
 	protected Object result;
 	protected Shell shell;
@@ -15,7 +15,7 @@ public abstract class RedisDialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public RedisDialog(Shell parent, int style) {
+	public RedisClientDialog(Shell parent, int style) {
 		super(parent, style);
 		setText("SWT Dialog");
 	}

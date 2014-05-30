@@ -1,6 +1,5 @@
 package com.cxy.redisclient;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -40,34 +39,34 @@ import com.cxy.redisclient.service.ServerService;
 
 public class RedisClient {
 	private static Shell shlRedisClient;
-	
+
 	private static final String DB_PREFIX = "db";
 	private static final String NODE_TYPE = "type";
 	private static final String NODE_ID = "id";
 	private static final String ITEM_OPENED = "open";
 	private static final String FAVORITE = "favorite";
-	
+
 	private Tree tree;
 	private Table table;
 	private Text text;
-	
+
 	private Menu menu_server;
 	private Menu menu;
 	private Menu menu_null;
 	private Menu menu_DB;
-	private Menu menu_7;
+	private Menu menu_favorite;
 
 	private MenuItem mntmRename_1;
 	private MenuItem mntmDelete_2;
 	private MenuItem mntmRename_2;
 	private MenuItem mntmDelete_3;
 	private MenuItem mntmAdd_Favorite;
-	
+
 	private ServerService service1 = new ServerService();
 	private NodeService service2 = new NodeService();
 	private FavoriteService service3 = new FavoriteService();
 	private ListService service4 = new ListService();
-	
+
 	/**
 	 * Launch the application.
 	 * 
@@ -231,8 +230,7 @@ public class RedisClient {
 		mntmRename_1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TreeItem[] items = tree.getSelection();
-				renameContainerSelected(items[0]);
+				renameContainerSelected();
 			}
 		});
 		mntmRename_1.setText("rename");
@@ -506,13 +504,7 @@ public class RedisClient {
 		mntmRename_2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TreeItem[] items = tree.getSelection();
-				if (items.length > 0
-						&& items[0].getData(NODE_TYPE) == NodeType.CONTAINER)
-					renameContainerSelected(items[0]);
-				else
-					MessageDialog.openError(shlRedisClient, "error",
-							"please select a container to rename");
+				renameContainerSelected();
 			}
 		});
 		mntmRename_2.setText("Rename");
@@ -567,10 +559,10 @@ public class RedisClient {
 		MenuItem mntmFavorites = new MenuItem(menu, SWT.CASCADE);
 		mntmFavorites.setText("Favorites");
 
-		menu_7 = new Menu(mntmFavorites);
-		mntmFavorites.setMenu(menu_7);
+		menu_favorite = new Menu(mntmFavorites);
+		mntmFavorites.setMenu(menu_favorite);
 
-		mntmAdd_Favorite = new MenuItem(menu_7, SWT.NONE);
+		mntmAdd_Favorite = new MenuItem(menu_favorite, SWT.NONE);
 		mntmAdd_Favorite.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -579,7 +571,7 @@ public class RedisClient {
 		});
 		mntmAdd_Favorite.setText("Add");
 
-		MenuItem mntmOrganize = new MenuItem(menu_7, SWT.NONE);
+		MenuItem mntmOrganize = new MenuItem(menu_favorite, SWT.NONE);
 		mntmOrganize.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -605,6 +597,23 @@ public class RedisClient {
 
 		Menu menu_6 = new Menu(mntmTool);
 		mntmTool.setMenu(menu_6);
+		
+		MenuItem mntmSet_2 = new MenuItem(menu_6, SWT.CASCADE);
+		mntmSet_2.setText("Set");
+		
+		Menu menu_3 = new Menu(mntmSet_2);
+		mntmSet_2.setMenu(menu_3);
+		
+		MenuItem mntmDiff = new MenuItem(menu_3, SWT.NONE);
+		mntmDiff.setText("Difference");
+		
+		MenuItem mntmInter = new MenuItem(menu_3, SWT.NONE);
+		mntmInter.setText("Intersection");
+		
+		MenuItem mntmUnion = new MenuItem(menu_3, SWT.NONE);
+		mntmUnion.setText("Union");
+		
+		new MenuItem(menu_6, SWT.SEPARATOR);
 
 		MenuItem mntmPubsub = new MenuItem(menu_6, SWT.NONE);
 		mntmPubsub.setText("Pub/Sub");
@@ -628,9 +637,9 @@ public class RedisClient {
 	}
 
 	private void removeFavoriteMenuItem() {
-		int num = menu_7.getItemCount();
+		int num = menu_favorite.getItemCount();
 		if (num > 2) {
-			MenuItem[] items = menu_7.getItems();
+			MenuItem[] items = menu_favorite.getItems();
 			for (int i = 2; i < num; i++) {
 				items[i].dispose();
 			}
@@ -641,9 +650,9 @@ public class RedisClient {
 	private void addFavoriteMenuItem() {
 		List<Favorite> favorites = service3.listAll();
 		if (favorites.size() > 0) {
-			new MenuItem(menu_7, SWT.SEPARATOR);
+			new MenuItem(menu_favorite, SWT.SEPARATOR);
 			for (Favorite favorite : favorites) {
-				final MenuItem menuItem = new MenuItem(menu_7, SWT.NONE);
+				final MenuItem menuItem = new MenuItem(menu_favorite, SWT.NONE);
 				menuItem.setText(favorite.getName());
 				menuItem.setData(FAVORITE, favorite);
 				menuItem.addSelectionListener(new SelectionAdapter() {
@@ -710,8 +719,7 @@ public class RedisClient {
 		}
 	}
 
-	private void addDBTreeItem(int server, TreeItem serverItem)
-			throws IOException {
+	private void addDBTreeItem(int server, TreeItem serverItem) {
 		int amount = service1.listDBs(server);
 		for (int i = 0; i < amount; i++) {
 			TreeItem dbItem = new TreeItem(serverItem, SWT.NONE);
@@ -761,24 +769,21 @@ public class RedisClient {
 			NodeType type = (NodeType) items[0].getData(NODE_TYPE);
 			if (type == NodeType.SERVER) {
 				int id = (Integer) items[0].getData(NODE_ID);
-				try {
-					Server server = service1.listById(id);
-					UpdateServerDialog dialog = new UpdateServerDialog(
-							shlRedisClient, SWT.DIALOG_TRIM
-									| SWT.APPLICATION_MODAL, server);
-					server = (Server) dialog.open();
-					if (server != null) {
-						service1.update(id, server.getName(), server.getHost(),
-								server.getPort());
-						items[0].setText(server.getName());
-						items[0].removeAll();
-						addDBTreeItem(id, items[0]);
-						serverItemSelected(items[0]);
-					}
-				} catch (IOException e) {
-					MessageDialog.openError(shlRedisClient, "exception",
-							e.getMessage());
+
+				Server server = service1.listById(id);
+				UpdateServerDialog dialog = new UpdateServerDialog(
+						shlRedisClient,
+						SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, server);
+				server = (Server) dialog.open();
+				if (server != null) {
+					service1.update(id, server.getName(), server.getHost(),
+							server.getPort());
+					items[0].setText(server.getName());
+					items[0].removeAll();
+					addDBTreeItem(id, items[0]);
+					serverItemSelected(items[0]);
 				}
+
 			} else
 				MessageDialog.openError(shlRedisClient, "error",
 						"please select a server to update!");
@@ -881,17 +886,10 @@ public class RedisClient {
 		table.removeAll();
 		mntmAdd_Favorite.setEnabled(false);
 
-		try {
-			if (selectedItem.getData(ITEM_OPENED) == null
-					|| ((Boolean) (selectedItem.getData(ITEM_OPENED)) == false)) {
-				selectedItem.removeAll();
-				addDBTreeItem((Integer) selectedItem.getData(NODE_ID),
-						selectedItem);
-			}
-
-		} catch (IOException e) {
-			MessageDialog
-					.openError(shlRedisClient, "exception", e.getMessage());
+		if (selectedItem.getData(ITEM_OPENED) == null
+				|| ((Boolean) (selectedItem.getData(ITEM_OPENED)) == false)) {
+			selectedItem.removeAll();
+			addDBTreeItem((Integer) selectedItem.getData(NODE_ID), selectedItem);
 		}
 
 		int dbs = service1.listDBs((Integer) selectedItem.getData(NODE_ID));
@@ -904,30 +902,41 @@ public class RedisClient {
 
 	}
 
-	private void renameContainerSelected(TreeItem item) {
-		ContainerInfo info = new ContainerInfo();
-		parseContainer(item, info);
+	private void renameContainerSelected() {
+		TreeItem item;
+		
+		TreeItem[] items = tree.getSelection();
+		if (items.length > 0
+				&& items[0].getData(NODE_TYPE) == NodeType.CONTAINER){
+			item = items[0];
+			ContainerInfo info = new ContainerInfo();
+			parseContainer(item, info);
 
-		RenameKeysDialog dialog = new RenameKeysDialog(shlRedisClient,
-				SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, info.getServerName(),
-				info.getDb(), info.getContainer());
-		RenameInfo rinfo = (RenameInfo) dialog.open();
+			RenameKeysDialog dialog = new RenameKeysDialog(shlRedisClient,
+					SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, info.getServerName(),
+					info.getDb(), info.getContainer());
+			RenameInfo rinfo = (RenameInfo) dialog.open();
 
-		if (rinfo != null
-				&& !(rinfo.getNewContainer().equals(info.getContainer()))) {
-			Set<String> result = service2.renameContainer(info.getId(),
-					info.getDb(), info.getContainer(), rinfo.getNewContainer(),
-					rinfo.isOverwritten());
-			item.getParentItem().setData(ITEM_OPENED, false);
-			treeItemSelected(item.getParentItem());
-			if (!rinfo.isOverwritten() && result.size() > 0) {
-				String failString = "Rename following keys failed because of exist:\n";
-				for (String container : result)
-					failString += container + "\n";
-				MessageDialog.openConfirm(shlRedisClient, "rename keys result",
-						failString);
+			if (rinfo != null
+					&& !(rinfo.getNewContainer().equals(info.getContainer()))) {
+				Set<String> result = service2.renameContainer(info.getId(),
+						info.getDb(), info.getContainer(), rinfo.getNewContainer(),
+						rinfo.isOverwritten());
+				item.getParentItem().setData(ITEM_OPENED, false);
+				treeItemSelected(item.getParentItem());
+				if (!rinfo.isOverwritten() && result.size() > 0) {
+					String failString = "Rename following keys failed because of exist:\n";
+					for (String container : result)
+						failString += container + "\n";
+					MessageDialog.openConfirm(shlRedisClient, "rename keys result",
+							failString);
+				}
 			}
-		}
+		}else
+			MessageDialog.openError(shlRedisClient, "error",
+					"please select a container to rename");
+		
+		
 
 	}
 
