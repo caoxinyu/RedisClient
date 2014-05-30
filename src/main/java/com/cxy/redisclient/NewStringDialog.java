@@ -17,7 +17,7 @@ import org.eclipse.swt.events.MouseEvent;
 
 import com.cxy.redisclient.dto.StringInfo;
 
-public class AddStringDialog extends Dialog {
+public class NewStringDialog extends Dialog {
 
 	protected Object result;
 	protected Shell shell;
@@ -32,7 +32,7 @@ public class AddStringDialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public AddStringDialog(Shell parent, int style, String server, int db, String key) {
+	public NewStringDialog(Shell parent, int style, String server, int db, String key) {
 		super(parent, style);
 		setText("SWT Dialog");
 		this.server = server;
