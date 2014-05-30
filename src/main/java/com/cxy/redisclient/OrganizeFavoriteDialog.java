@@ -1,25 +1,23 @@
 package com.cxy.redisclient;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.TableItem;
 
 import com.cxy.redisclient.domain.Favorite;
 import com.cxy.redisclient.service.FavoriteService;
-
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 
 public class OrganizeFavoriteDialog extends Dialog {
 
@@ -154,20 +152,14 @@ public class OrganizeFavoriteDialog extends Dialog {
 		tblclmnNewColumn_1.setWidth(187);
 		tblclmnNewColumn_1.setText("Favorite");
 		
-		try {
-			List<Favorite> favorites = service.listAll();
-			for(Favorite favorite: favorites){
-				TableItem item = new TableItem(table, SWT.NONE);
-				item.setText(new String[] { favorite.getName(),
-					favorite.getFavorite() });
-				item.setData(favorite);
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
-
+		List<Favorite> favorites = service.listAll();
+		for(Favorite favorite: favorites){
+			TableItem item = new TableItem(table, SWT.NONE);
+			item.setText(new String[] { favorite.getName(),
+				favorite.getFavorite() });
+			item.setData(favorite);
+		}
 	}
 
 	protected void tableItemSelected() {

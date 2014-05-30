@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -40,31 +39,35 @@ import com.cxy.redisclient.service.NodeService;
 import com.cxy.redisclient.service.ServerService;
 
 public class RedisClient {
-
+	private static Shell shlRedisClient;
+	
 	private static final String DB_PREFIX = "db";
 	private static final String NODE_TYPE = "type";
 	private static final String NODE_ID = "id";
 	private static final String ITEM_OPENED = "open";
 	private static final String FAVORITE = "favorite";
-	protected Shell shlRedisClient;
-	protected Menu menu_server;
-	protected Menu menu;
-	protected Tree tree;
-	protected Menu menu_null;
-	protected ServerService service1 = new ServerService();
-	protected NodeService service2 = new NodeService();
-	protected FavoriteService service3 = new FavoriteService();
-	protected ListService service4 = new ListService();
+	
+	private Tree tree;
 	private Table table;
 	private Text text;
+	
+	private Menu menu_server;
+	private Menu menu;
+	private Menu menu_null;
 	private Menu menu_DB;
+	private Menu menu_7;
+
 	private MenuItem mntmRename_1;
 	private MenuItem mntmDelete_2;
 	private MenuItem mntmRename_2;
 	private MenuItem mntmDelete_3;
 	private MenuItem mntmAdd_Favorite;
-	private Menu menu_7;
-
+	
+	private ServerService service1 = new ServerService();
+	private NodeService service2 = new NodeService();
+	private FavoriteService service3 = new FavoriteService();
+	private ListService service4 = new ListService();
+	
 	/**
 	 * Launch the application.
 	 * 
@@ -75,23 +78,19 @@ public class RedisClient {
 			RedisClient window = new RedisClient();
 			window.open();
 		} catch (Exception e) {
-			e.printStackTrace();
+			MessageDialog
+					.openError(shlRedisClient, "exception", e.getMessage());
 		}
 	}
 
 	/**
 	 * Open the window.
 	 * 
-	 * @throws IOException
 	 */
 	public void open() {
 		Display display = Display.getDefault();
-		try {
-			createContents();
-		} catch (IOException e) {
-			MessageDialog
-					.openError(shlRedisClient, "exception", e.getMessage());
-		}
+		createContents();
+
 		shlRedisClient.open();
 		shlRedisClient.layout();
 		while (!shlRedisClient.isDisposed()) {
@@ -105,9 +104,8 @@ public class RedisClient {
 	/**
 	 * Create contents of the window.
 	 * 
-	 * @throws IOException
 	 */
-	protected void createContents() throws IOException {
+	protected void createContents() {
 		initShell();
 
 		initMenu();
@@ -123,8 +121,7 @@ public class RedisClient {
 		shlRedisClient.setLayout(new FillLayout(SWT.HORIZONTAL));
 	}
 
-	private void initSash() throws IOException {
-
+	private void initSash() {
 		SashForm sashForm_2 = new SashForm(shlRedisClient, SWT.SMOOTH
 				| SWT.VERTICAL);
 		sashForm_2.setSashWidth(0);
@@ -145,11 +142,8 @@ public class RedisClient {
 				switch (type) {
 				case SERVER:
 					serverItemSelected(items[0]);
-
 					break;
 				case DATABASE:
-					treeItemSelected(items[0]);
-					break;
 				case CONTAINER:
 					treeItemSelected(items[0]);
 					break;
@@ -254,7 +248,7 @@ public class RedisClient {
 		mntmDelete_2.setText("delete");
 
 		new MenuItem(menu_DB, SWT.SEPARATOR);
-		
+
 		MenuItem mntmAddToFavorites = new MenuItem(menu_DB, SWT.NONE);
 		mntmAddToFavorites.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -263,7 +257,7 @@ public class RedisClient {
 			}
 		});
 		mntmAddToFavorites.setText("add to favorites");
-		
+
 		new MenuItem(menu_DB, SWT.SEPARATOR);
 
 		MenuItem mntmCut = new MenuItem(menu_DB, SWT.NONE);
@@ -279,25 +273,26 @@ public class RedisClient {
 
 	private void newListSelected() {
 		TreeItem item = null;
-		
+
 		TreeItem[] items = tree.getSelection();
 		if (items.length > 0
 				&& (items[0].getData(NODE_TYPE) == NodeType.DATABASE || items[0]
-						.getData(NODE_TYPE) == NodeType.CONTAINER)){
+						.getData(NODE_TYPE) == NodeType.CONTAINER)) {
 			item = items[0];
-			
+
 			ContainerInfo cinfo = new ContainerInfo();
 			parseContainer(item, cinfo);
 			NewListDialog dialog = new NewListDialog(shlRedisClient,
-					SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
-					cinfo.getDb(), cinfo.getContainer());
+					SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL,
+					cinfo.getServerName(), cinfo.getDb(), cinfo.getContainer());
 			ListInfo info = (ListInfo) dialog.open();
 			if (info != null) {
-				service4.add(cinfo.getId(), cinfo.getDb(), info.getKey(), info.getValues(), info.isHeadTail(), info.isExist());
-			item.setData(ITEM_OPENED, false);
-			treeItemSelected(item);
+				service4.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
+						info.getValues(), info.isHeadTail(), info.isExist());
+				item.setData(ITEM_OPENED, false);
+				treeItemSelected(item);
 			}
-		}else
+		} else
 			MessageDialog.openError(shlRedisClient, "error",
 					"please select a holder to new list");
 	}
@@ -322,9 +317,10 @@ public class RedisClient {
 					}
 				}
 			}
+
 			@Override
 			public void mouseDown(MouseEvent e) {
-				
+
 			}
 		});
 		table.setHeaderVisible(true);
@@ -587,27 +583,23 @@ public class RedisClient {
 		mntmOrganize.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				OrganizeFavoriteDialog dialog = new OrganizeFavoriteDialog(shlRedisClient,
-						SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-				
-				List<Favorite> favorites =  (List<Favorite>) dialog.open();
-				if(favorites != null){
-					try {
-						service3.updateList(favorites);
-					} catch (IOException e1) {
-						MessageDialog.openError(shlRedisClient, "exception",
-								e1.getMessage());
-					}
+				OrganizeFavoriteDialog dialog = new OrganizeFavoriteDialog(
+						shlRedisClient, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+
+				List<Favorite> favorites = (List<Favorite>) dialog.open();
+				if (favorites != null) {
+					service3.updateList(favorites);
+
 					removeFavoriteMenuItem();
 					addFavoriteMenuItem();
 				}
-				
+
 			}
 		});
 		mntmOrganize.setText("Organize");
 
 		addFavoriteMenuItem();
-		
+
 		MenuItem mntmTool = new MenuItem(menu, SWT.CASCADE);
 		mntmTool.setText("Tool");
 
@@ -637,86 +629,80 @@ public class RedisClient {
 
 	private void removeFavoriteMenuItem() {
 		int num = menu_7.getItemCount();
-		if(num > 2) {
+		if (num > 2) {
 			MenuItem[] items = menu_7.getItems();
-			for(int i = 2; i < num; i ++){
+			for (int i = 2; i < num; i++) {
 				items[i].dispose();
 			}
 		}
-		
+
 	}
 
 	private void addFavoriteMenuItem() {
-		try {
-			List<Favorite> favorites = service3.listAll();
-			if(favorites.size() > 0){
-				new MenuItem(menu_7, SWT.SEPARATOR);
-				for(Favorite favorite:favorites) {
-					final MenuItem menuItem = new MenuItem(menu_7, SWT.NONE);
-					menuItem.setText(favorite.getName());
-					menuItem.setData(FAVORITE, favorite);
-					menuItem.addSelectionListener(new SelectionAdapter() {
-						@Override
-						public void widgetSelected(SelectionEvent e) {
-							Favorite favorite = (Favorite)menuItem.getData(FAVORITE);
-							int sid = favorite.getServerID();
-							
-							TreeItem[] treeItems = tree.getItems();
-							for(TreeItem treeItem: treeItems) {
-								int serverId = (Integer) treeItem.getData(NODE_ID);
-								if(serverId == sid) {
-									serverItemSelected(treeItem);
-									String[] containers = favorite.getFavorite().split(":");
-									TreeItem[] dbItems = treeItem.getItems();
-									for(TreeItem dbItem:dbItems) {
-										if(dbItem.getText().equals(containers[1])) {
-											tree.setSelection(dbItem);
-											treeItemSelected(dbItem);
-											TreeItem[] dataItems = dbItem.getItems();
-											for(int i = 2; i < containers.length; i++) {
-												for(TreeItem dataItem: dataItems){
-													if(dataItem.getText().equals(containers[i])){
-														tree.setSelection(dataItem);
-														treeItemSelected(dataItem);
-														dataItems = dataItem.getItems();
-														break;
-													}
+		List<Favorite> favorites = service3.listAll();
+		if (favorites.size() > 0) {
+			new MenuItem(menu_7, SWT.SEPARATOR);
+			for (Favorite favorite : favorites) {
+				final MenuItem menuItem = new MenuItem(menu_7, SWT.NONE);
+				menuItem.setText(favorite.getName());
+				menuItem.setData(FAVORITE, favorite);
+				menuItem.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						Favorite favorite = (Favorite) menuItem
+								.getData(FAVORITE);
+						int sid = favorite.getServerID();
+
+						TreeItem[] treeItems = tree.getItems();
+						for (TreeItem treeItem : treeItems) {
+							int serverId = (Integer) treeItem.getData(NODE_ID);
+							if (serverId == sid) {
+								serverItemSelected(treeItem);
+								String[] containers = favorite.getFavorite()
+										.split(":");
+								TreeItem[] dbItems = treeItem.getItems();
+								for (TreeItem dbItem : dbItems) {
+									if (dbItem.getText().equals(containers[1])) {
+										tree.setSelection(dbItem);
+										treeItemSelected(dbItem);
+										TreeItem[] dataItems = dbItem
+												.getItems();
+										for (int i = 2; i < containers.length; i++) {
+											for (TreeItem dataItem : dataItems) {
+												if (dataItem.getText().equals(
+														containers[i])) {
+													tree.setSelection(dataItem);
+													treeItemSelected(dataItem);
+													dataItems = dataItem
+															.getItems();
+													break;
 												}
-												
 											}
-										}		
+
+										}
 									}
-									
 								}
+
 							}
-								
 						}
-					});
-				}
+
+					}
+				});
 			}
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		}
 	}
 
-	private void addFavoriteSelected(TreeItem item)  {
+	private void addFavoriteSelected(TreeItem item) {
 		ContainerInfo cinfo = new ContainerInfo();
 		parseContainer(item, cinfo);
 		AddFavoriteDialog dialog = new AddFavoriteDialog(shlRedisClient,
 				SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, text.getText());
 		String name = (String) dialog.open();
 		if (name != null)
-			try {
-				service3.add(cinfo.getId(), name, text.getText());
-			} catch (IOException e) {
-				MessageDialog.openError(shlRedisClient, "exception",
-						e.getMessage());
-			}
-		
+			service3.add(cinfo.getId(), name, text.getText());
 	}
-  
-	private void initServers() throws IOException {
+
+	private void initServers() {
 		java.util.List<Server> servers = service1.listAll();
 
 		for (Server server : servers) {
@@ -724,7 +710,8 @@ public class RedisClient {
 		}
 	}
 
-	private void addDBTreeItem(int server, TreeItem serverItem) throws IOException {
+	private void addDBTreeItem(int server, TreeItem serverItem)
+			throws IOException {
 		int amount = service1.listDBs(server);
 		for (int i = 0; i < amount; i++) {
 			TreeItem dbItem = new TreeItem(serverItem, SWT.NONE);
@@ -732,13 +719,13 @@ public class RedisClient {
 			dbItem.setData(NODE_ID, i);
 			dbItem.setData(NODE_TYPE, NodeType.DATABASE);
 		}
-		if(amount > 0) {
+		if (amount > 0) {
 			serverItem.setExpanded(true);
 			serverItem.setData(ITEM_OPENED, true);
 		}
 	}
 
-	private TreeItem addServerTreeItem(Server server) throws IOException {
+	private TreeItem addServerTreeItem(Server server) {
 		TreeItem treeItem = new TreeItem(tree, 0);
 		treeItem.setText(server.getName());
 		treeItem.setData(NODE_ID, server.getId());
@@ -749,12 +736,8 @@ public class RedisClient {
 
 	private void refreshTree() {
 		tree.removeAll();
-		try {
-			initServers();
-		} catch (IOException e) {
-			MessageDialog
-					.openError(shlRedisClient, "exception", e.getMessage());
-		}
+		initServers();
+
 		table.removeAll();
 		text.setText("");
 	}
@@ -765,18 +748,11 @@ public class RedisClient {
 		Server server = (Server) dialog.open();
 
 		if (server != null) {
-			try {
-				server.setId(service1.add(server.getName(), server.getHost(),
-						server.getPort()));
-				TreeItem item = addServerTreeItem(server);
-				serverItemSelected(item);
-			} catch (IOException e) {
-				MessageDialog.openError(shlRedisClient, "exception",
-						e.getMessage());
-			}
-
+			server.setId(service1.add(server.getName(), server.getHost(),
+					server.getPort()));
+			TreeItem item = addServerTreeItem(server);
+			serverItemSelected(item);
 		}
-
 	}
 
 	private void updateServer() {
@@ -819,12 +795,8 @@ public class RedisClient {
 				if (ok) {
 					int id = ((Integer) (items[0].getData(NODE_ID))).intValue();
 					items[0].dispose();
-					try {
-						service1.delete(id);
-					} catch (IOException e) {
-						MessageDialog.openError(shlRedisClient, "exception",
-								e.getMessage());
-					}
+					service1.delete(id);
+
 				}
 			} else
 				MessageDialog.openError(shlRedisClient, "error",
@@ -842,7 +814,7 @@ public class RedisClient {
 				+ ":" + container);
 		table.removeAll();
 		mntmAdd_Favorite.setEnabled(true);
-		
+
 		Set<Node> cnodes = service2.listContainers(info.getId(), info.getDb(),
 				info.getContainer());
 
@@ -877,31 +849,30 @@ public class RedisClient {
 
 	private void newStringSelected() {
 		TreeItem item;
-		
+
 		TreeItem[] items = tree.getSelection();
 		if (items.length > 0
 				&& (items[0].getData(NODE_TYPE) == NodeType.DATABASE || items[0]
-						.getData(NODE_TYPE) == NodeType.CONTAINER)){
+						.getData(NODE_TYPE) == NodeType.CONTAINER)) {
 			item = items[0];
 			ContainerInfo cinfo = new ContainerInfo();
 			parseContainer(item, cinfo);
 			NewStringDialog dialog = new NewStringDialog(shlRedisClient,
-					SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
-					cinfo.getDb(), cinfo.getContainer());
+					SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL,
+					cinfo.getServerName(), cinfo.getDb(), cinfo.getContainer());
 			StringInfo info = (StringInfo) dialog.open();
 			if (info != null) {
 				service2.addString(cinfo.getId(), cinfo.getDb(), info.getKey(),
 						info.getValue());
-			item.setData(ITEM_OPENED, false);
-			treeItemSelected(item);
+				item.setData(ITEM_OPENED, false);
+				treeItemSelected(item);
 			}
 		}
-			
+
 		else
 			MessageDialog.openError(shlRedisClient, "error",
 					"please select a holder to new string");
-		
-		
+
 	}
 
 	private void serverItemSelected(TreeItem selectedItem) {
@@ -909,32 +880,28 @@ public class RedisClient {
 		text.setText(selectedItem.getText() + ":");
 		table.removeAll();
 		mntmAdd_Favorite.setEnabled(false);
-		
+
 		try {
 			if (selectedItem.getData(ITEM_OPENED) == null
 					|| ((Boolean) (selectedItem.getData(ITEM_OPENED)) == false)) {
 				selectedItem.removeAll();
-				addDBTreeItem((Integer)selectedItem.getData(NODE_ID), selectedItem);
+				addDBTreeItem((Integer) selectedItem.getData(NODE_ID),
+						selectedItem);
 			}
-				
+
 		} catch (IOException e) {
-			MessageDialog.openError(shlRedisClient, "exception",
-					e.getMessage());
+			MessageDialog
+					.openError(shlRedisClient, "exception", e.getMessage());
 		}
 
-		try {
-			int dbs = service1.listDBs((Integer) selectedItem.getData(NODE_ID));
-			for (int i = 0; i < dbs; i++) {
-				TableItem item = new TableItem(table, SWT.NONE);
-				item.setText(new String[] { DB_PREFIX + i,
-						NodeType.DATABASE.toString() });
-				item.setData(NODE_ID, i);
-			}
-
-		} catch (IOException e1) {
-			MessageDialog.openError(shlRedisClient, "exception",
-					e1.getMessage());
+		int dbs = service1.listDBs((Integer) selectedItem.getData(NODE_ID));
+		for (int i = 0; i < dbs; i++) {
+			TableItem item = new TableItem(table, SWT.NONE);
+			item.setText(new String[] { DB_PREFIX + i,
+					NodeType.DATABASE.toString() });
+			item.setData(NODE_ID, i);
 		}
+
 	}
 
 	private void renameContainerSelected(TreeItem item) {
@@ -985,7 +952,7 @@ public class RedisClient {
 		else
 			MessageDialog.openError(shlRedisClient, "error",
 					"please select favorite to add");
-		
+
 		removeFavoriteMenuItem();
 		addFavoriteMenuItem();
 	}

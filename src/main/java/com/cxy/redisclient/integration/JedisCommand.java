@@ -1,7 +1,5 @@
 package com.cxy.redisclient.integration;
 
-import java.io.IOException;
-
 import redis.clients.jedis.Jedis;
 
 import com.cxy.redisclient.domain.NodeType;
@@ -14,26 +12,22 @@ public abstract class JedisCommand {
 	protected Server server;
 	protected Jedis jedis;
 	private ServerService service = new ServerService();
-	
+
 	public JedisCommand(int id) {
 		super();
 		this.id = id;
 	}
 
 	public void execute() {
-		try {
-			server = service.listById(id);
-			jedis = new Jedis(server.getHost(), Integer.parseInt(server.getPort()));
+		server = service.listById(id);
+		jedis = new Jedis(server.getHost(), Integer.parseInt(server.getPort()));
 
-			command();
-			jedis.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		command();
+		jedis.close();
 
 	}
-	
-	protected abstract void command() ;
+
+	protected abstract void command();
 
 	public abstract RedisVersion getVersion();
 
@@ -52,9 +46,10 @@ public abstract class JedisCommand {
 			nodeType = NodeType.SORTSET;
 		return nodeType;
 	}
+
 	protected long getSize(String key) {
 		Long size;
-		
+
 		String type = jedis.type(key);
 		if (type.equals("string"))
 			size = (long) 1;

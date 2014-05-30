@@ -10,72 +10,102 @@ import com.cxy.redisclient.integration.server.QueryDBAmount;
 
 public class ServerService {
 
-	public int add(String name, String host, String port) throws IOException {
-		int id = Integer.parseInt(ConfigFile.readMaxId(ConfigFile.SERVER_MAXID)) + 1;
+	public int add(String name, String host, String port) {
+		try {
+			int id = Integer.parseInt(ConfigFile
+					.readMaxId(ConfigFile.SERVER_MAXID)) + 1;
 
-		ConfigFile.write(ConfigFile.NAME + id, name);
-		ConfigFile.write(ConfigFile.HOST + id, host);
-		ConfigFile.write(ConfigFile.PORT + id, port);
+			ConfigFile.write(ConfigFile.NAME + id, name);
+			ConfigFile.write(ConfigFile.HOST + id, host);
+			ConfigFile.write(ConfigFile.PORT + id, port);
 
-		int amount = Integer.parseInt(ConfigFile.readAmount(ConfigFile.SERVER_AMOUNT)) + 1;
-		ConfigFile.write(ConfigFile.SERVER_AMOUNT, String.valueOf(amount));
-		ConfigFile.write(ConfigFile.SERVER_MAXID, String.valueOf(id));
-		
-		return id;
+			int amount = Integer.parseInt(ConfigFile
+					.readAmount(ConfigFile.SERVER_AMOUNT)) + 1;
+			ConfigFile.write(ConfigFile.SERVER_AMOUNT, String.valueOf(amount));
+			ConfigFile.write(ConfigFile.SERVER_MAXID, String.valueOf(id));
+
+			return id;
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage());
+		}
 	}
 
-	public void delete(int id) throws IOException {
-		int amount = Integer.parseInt(ConfigFile.readAmount(ConfigFile.SERVER_AMOUNT));
+	public void delete(int id) {
+		try {
+			int amount = Integer.parseInt(ConfigFile
+					.readAmount(ConfigFile.SERVER_AMOUNT));
 
-		ConfigFile.delete(ConfigFile.NAME + id);
-		ConfigFile.delete(ConfigFile.HOST + id);
-		ConfigFile.delete(ConfigFile.PORT + id);
+			ConfigFile.delete(ConfigFile.NAME + id);
+			ConfigFile.delete(ConfigFile.HOST + id);
+			ConfigFile.delete(ConfigFile.PORT + id);
 
-		ConfigFile.write(ConfigFile.SERVER_AMOUNT, String.valueOf(amount - 1));
+			ConfigFile.write(ConfigFile.SERVER_AMOUNT,
+					String.valueOf(amount - 1));
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage());
+		}
 	}
 
-	public void update(int id, String name) throws IOException {
-		ConfigFile.write(ConfigFile.NAME + id, name);
+	public void update(int id, String name) {
+		try {
+			ConfigFile.write(ConfigFile.NAME + id, name);
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage());
+		}
 	}
 
-	public void update(int id, String host, String port) throws IOException {
-		ConfigFile.write(ConfigFile.HOST + id, host);
-		ConfigFile.write(ConfigFile.PORT + id, port);
+	public void update(int id, String host, String port) {
+		try {
+			ConfigFile.write(ConfigFile.HOST + id, host);
+			ConfigFile.write(ConfigFile.PORT + id, port);
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage());
+		}
 	}
 
-	public void update(int id, String name, String host, String port) throws IOException {
+	public void update(int id, String name, String host, String port) {
 		update(id, name);
 		update(id, host, port);
 	}
-	public Server listById(int id) throws IOException {
-		Server server = null;
-		if (ConfigFile.read(ConfigFile.NAME + id) != null)
-			server = new Server(id, ConfigFile.read(ConfigFile.NAME + id),
-					ConfigFile.read(ConfigFile.HOST + id),
-					ConfigFile.read(ConfigFile.PORT + id));
 
-		return server;
-	}
+	public Server listById(int id) {
+		try {
+			Server server = null;
+			if (ConfigFile.read(ConfigFile.NAME + id) != null)
+				server = new Server(id, ConfigFile.read(ConfigFile.NAME + id),
+						ConfigFile.read(ConfigFile.HOST + id),
+						ConfigFile.read(ConfigFile.PORT + id));
 
-	public List<Server> listAll() throws IOException {
-		int amount = Integer.parseInt(ConfigFile.readMaxId(ConfigFile.SERVER_MAXID));
-		List<Server> servers = new ArrayList<Server>();
-		for (int i = 1; i <= amount; i++) {
-			Server server = listById(i);
-			if (server != null)
-				servers.add(listById(i));
+			return server;
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage());
 		}
-
-		return servers;
 	}
 
-	public int listDBs(int id) throws IOException {
+	public List<Server> listAll() {
+		try {
+			int amount = Integer.parseInt(ConfigFile
+					.readMaxId(ConfigFile.SERVER_MAXID));
+			List<Server> servers = new ArrayList<Server>();
+			for (int i = 1; i <= amount; i++) {
+				Server server = listById(i);
+				if (server != null)
+					servers.add(listById(i));
+			}
+
+			return servers;
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage());
+		}
+	}
+
+	public int listDBs(int id) {
 		QueryDBAmount command = new QueryDBAmount(id);
 		command.execute();
-		return command.getDbAmount();	
+		return command.getDbAmount();
 	}
-	
+
 	public int listDBs(Server server) throws IOException {
-		return listDBs(server.getId());	
+		return listDBs(server.getId());
 	}
 }
