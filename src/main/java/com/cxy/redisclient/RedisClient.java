@@ -67,6 +67,8 @@ public class RedisClient {
 	private FavoriteService service3 = new FavoriteService();
 	private ListService service4 = new ListService();
 
+	private TreeItem rootRedisServers;
+
 	/**
 	 * Launch the application.
 	 * 
@@ -130,6 +132,10 @@ public class RedisClient {
 		SashForm sashForm = new SashForm(sashForm_2, SWT.NONE);
 
 		tree = new Tree(sashForm, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
+		
+		rootRedisServers = new TreeItem(tree, SWT.NONE);
+		rootRedisServers.setText("Redis Servers");
+		rootRedisServers.setData(NODE_TYPE, NodeType.ROOT);
 
 		initMenuDB();
 
@@ -139,6 +145,9 @@ public class RedisClient {
 				TreeItem[] items = tree.getSelection();
 				NodeType type = (NodeType) items[0].getData(NODE_TYPE);
 				switch (type) {
+				case ROOT:
+					rootItemSelected();
+					break;
 				case SERVER:
 					serverItemSelected(items[0]);
 					break;
@@ -307,8 +316,12 @@ public class RedisClient {
 					for (TreeItem treeItem : treeItems[0].getItems()) {
 						String treeText = treeItem.getText();
 						String tableText = tableItems[0].getText(0);
+						String type = tableItems[0].getText(1);
 						if (treeText.equals(tableText)) {
-							treeItemSelected(treeItem);
+							if(type.equals(NodeType.DATABASE.toString()) || type.equals(NodeType.CONTAINER.toString()))
+								treeItemSelected(treeItem);
+							else if(type.equals(NodeType.SERVER.toString()))
+								serverItemSelected(treeItem);
 							break;
 						}
 
@@ -734,7 +747,7 @@ public class RedisClient {
 	}
 
 	private TreeItem addServerTreeItem(Server server) {
-		TreeItem treeItem = new TreeItem(tree, 0);
+		TreeItem treeItem = new TreeItem(rootRedisServers, 0);
 		treeItem.setText(server.getName());
 		treeItem.setData(NODE_ID, server.getId());
 		treeItem.setData(NODE_TYPE, NodeType.SERVER);
@@ -780,7 +793,7 @@ public class RedisClient {
 							server.getPort());
 					items[0].setText(server.getName());
 					items[0].removeAll();
-					addDBTreeItem(id, items[0]);
+					//addDBTreeItem(id, items[0]);
 					serverItemSelected(items[0]);
 				}
 
@@ -902,6 +915,28 @@ public class RedisClient {
 
 	}
 
+	private void rootItemSelected() {
+		tree.setSelection(rootRedisServers);
+		text.setText("");
+		table.removeAll();
+		mntmAdd_Favorite.setEnabled(false);
+
+		if (rootRedisServers.getData(ITEM_OPENED) == null
+				|| ((Boolean) (rootRedisServers.getData(ITEM_OPENED)) == false)) {
+			rootRedisServers.removeAll();
+			initServers();
+		}
+
+		java.util.List<Server> servers = service1.listAll();
+
+		for (Server server : servers) {
+			TableItem item = new TableItem(table, SWT.NONE);
+			item.setText(new String[] { server.getName(),
+					NodeType.SERVER.toString() });
+		}
+
+	}
+	
 	private void renameContainerSelected() {
 		TreeItem item;
 		
