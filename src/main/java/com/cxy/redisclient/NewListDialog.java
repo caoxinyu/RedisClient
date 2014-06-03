@@ -181,7 +181,7 @@ public class NewListDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				InputDialog inputDialog = new InputDialog(shell,
 						"Input values",
-						"Values(multiple values are separated by ;", "", null);
+						"Values(multiple values are separated by ;)", "", null);
 				if (inputDialog.open() == InputDialog.OK) {
 					String values = inputDialog.getValue();
 					String[] listValues = values.split(";");

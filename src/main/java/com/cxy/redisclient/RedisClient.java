@@ -31,11 +31,13 @@ import com.cxy.redisclient.domain.Server;
 import com.cxy.redisclient.dto.ContainerInfo;
 import com.cxy.redisclient.dto.ListInfo;
 import com.cxy.redisclient.dto.RenameInfo;
+import com.cxy.redisclient.dto.SetInfo;
 import com.cxy.redisclient.dto.StringInfo;
 import com.cxy.redisclient.service.FavoriteService;
 import com.cxy.redisclient.service.ListService;
 import com.cxy.redisclient.service.NodeService;
 import com.cxy.redisclient.service.ServerService;
+import com.cxy.redisclient.service.SetService;
 
 public class RedisClient {
 	private static Shell shlRedisClient;
@@ -66,6 +68,7 @@ public class RedisClient {
 	private NodeService service2 = new NodeService();
 	private FavoriteService service3 = new FavoriteService();
 	private ListService service4 = new ListService();
+	private SetService service5 = new SetService();
 
 	private TreeItem rootRedisServers;
 
@@ -229,6 +232,12 @@ public class RedisClient {
 		menuItem_2.setText("List");
 
 		MenuItem menuItem_3 = new MenuItem(menu_1, SWT.NONE);
+		menuItem_3.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				newSetSelected();
+			}
+		});
 		menuItem_3.setText("Set");
 
 		MenuItem mntmSortedSet = new MenuItem(menu_1, SWT.NONE);
@@ -507,6 +516,12 @@ public class RedisClient {
 		mntmList.setText("List");
 
 		MenuItem mntmSet = new MenuItem(menu_5, SWT.NONE);
+		mntmSet.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				newSetSelected();
+			}
+		});
 		mntmSet.setText("Set");
 
 		MenuItem mntmSortset = new MenuItem(menu_5, SWT.NONE);
@@ -649,6 +664,32 @@ public class RedisClient {
 
 		MenuItem mntmAbout = new MenuItem(menu_2, SWT.NONE);
 		mntmAbout.setText("About");
+	}
+
+	protected void newSetSelected() {
+		TreeItem item = null;
+
+		TreeItem[] items = tree.getSelection();
+		if (items.length > 0
+				&& (items[0].getData(NODE_TYPE) == NodeType.DATABASE || items[0]
+						.getData(NODE_TYPE) == NodeType.CONTAINER)) {
+			item = items[0];
+
+			ContainerInfo cinfo = new ContainerInfo();
+			parseContainer(item, cinfo);
+			NewSetDialog dialog = new NewSetDialog(shlRedisClient,
+					SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL,
+					cinfo.getServerName(), cinfo.getDb(), cinfo.getContainer());
+			SetInfo info = (SetInfo) dialog.open();
+			if (info != null) {
+				service5.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
+						info.getValues());
+				item.setData(ITEM_OPENED, false);
+				treeItemSelected(item);
+			}
+		} else
+			MessageDialog.openError(shlRedisClient, "error",
+					"please select a holder to new set");
 	}
 
 	private void removeFavoriteMenuItem() {
