@@ -1,12 +1,12 @@
 package com.cxy.redisclient.integration.set;
 
-import java.util.List;
+import java.util.Set;
 
 import com.cxy.redisclient.domain.RedisVersion;
 
 public class RemoveSet10 extends RemoveSet {
 
-	public RemoveSet10(int id, int db, String key, List<String> values) {
+	public RemoveSet10(int id, int db, String key, Set<String> values) {
 		super(id, db, key, values);
 	}
 

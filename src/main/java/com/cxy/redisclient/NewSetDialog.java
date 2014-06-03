@@ -1,14 +1,13 @@
 package com.cxy.redisclient;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
-
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Rectangle;
@@ -38,6 +37,7 @@ public class NewSetDialog extends Dialog {
 	private Text text;
 	private Table table;
 	private Button btnDelete;
+	private Button btnOk;
 	/**
 	 * Create the dialog.
 	 * @param parent
@@ -49,7 +49,7 @@ public class NewSetDialog extends Dialog {
 		setText("SWT Dialog");
 		this.server = server;
 		this.db = db;
-		this.key = key;
+		this.key = key == null?"":key;
 	}
 
 	/**
@@ -98,9 +98,19 @@ public class NewSetDialog extends Dialog {
 
 		text = new Text(composite, SWT.BORDER);
 		text.setBounds(61, 29, 345, 19);
-		text.setText(key == null ? "" : key);
+		text.setText(key);
 		text.selectAll();
 		text.setFocus();
+		text.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				String newKey = text.getText() == null?"":text.getText();
+				if(newKey.equals(key)) 
+					btnOk.setEnabled(false);
+				else
+					btnOk.setEnabled(true);
+			}
+		});
+		
 
 		Group grpValues = new Group(composite, SWT.NONE);
 		grpValues.setText("Values");
@@ -172,13 +182,14 @@ public class NewSetDialog extends Dialog {
 		label_3.setText(String.valueOf(db));
 		label_3.setBounds(331, 10, 45, 13);
 
-		Button btnOk = new Button(shlNewSet, SWT.NONE);
+		btnOk = new Button(shlNewSet, SWT.NONE);
+		btnOk.setEnabled(false);
 		btnOk.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				TableItem[] items = table.getItems();
 				String key = text.getText();
-				List<String> values = new ArrayList<String>();
+				Set<String> values = new HashSet<String>();
 				
 				if(key.length() == 0 || items.length == 0)
 					MessageDialog.openError(shlNewSet, "error","please input set information!");

@@ -16,6 +16,8 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Label;
@@ -39,6 +41,7 @@ public class NewListDialog extends Dialog {
 	private Button btnDown;
 	private boolean headTail = true;
 	private boolean exist = true;
+	private Button btnOk;
 
 	/**
 	 * Create the dialog.
@@ -52,7 +55,7 @@ public class NewListDialog extends Dialog {
 		setText("SWT Dialog");
 		this.server = server;
 		this.db = db;
-		this.key = key;
+		this.key = key == null?"":key;
 	}
 
 	/**
@@ -152,10 +155,19 @@ public class NewListDialog extends Dialog {
 
 		text = new Text(composite, SWT.BORDER);
 		text.setBounds(61, 29, 345, 19);
-		text.setText(key == null ? "" : key);
+		text.setText(key);
 		text.selectAll();
 		text.setFocus();
-
+		text.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				String newKey = text.getText() == null?"":text.getText();
+				if(newKey.equals(key)) 
+					btnOk.setEnabled(false);
+				else
+					btnOk.setEnabled(true);
+			}
+		});
+		
 		Group grpValues = new Group(composite, SWT.NONE);
 		grpValues.setText("Values");
 		grpValues.setBounds(10, 54, 396, 145);
@@ -272,7 +284,8 @@ public class NewListDialog extends Dialog {
 		label_3.setText(String.valueOf(db));
 		label_3.setBounds(331, 10, 45, 13);
 
-		Button btnOk = new Button(shell, SWT.NONE);
+		btnOk = new Button(shell, SWT.NONE);
+		btnOk.setEnabled(false);
 		btnOk.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

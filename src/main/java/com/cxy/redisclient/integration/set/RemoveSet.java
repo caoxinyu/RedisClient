@@ -1,6 +1,6 @@
 package com.cxy.redisclient.integration.set;
 
-import java.util.List;
+import java.util.Set;
 
 import com.cxy.redisclient.integration.JedisCommand;
 
@@ -9,7 +9,7 @@ public abstract class RemoveSet extends JedisCommand {
 	protected String key;
 	protected String[] values;
 	
-	public RemoveSet(int id, int db, String key, List<String> values) {
+	public RemoveSet(int id, int db, String key, Set<String> values) {
 		super(id);
 		this.db = db;
 		this.key = key;
@@ -17,7 +17,7 @@ public abstract class RemoveSet extends JedisCommand {
 		this.values = new String[size];
 		
 		for(int i = 0 ; i < size; i++) {
-			String value = values.get(i);
+			String value = values.iterator().next();
 			this.values[i] = value;
 		}
 	}

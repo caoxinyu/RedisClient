@@ -2,6 +2,7 @@ package com.cxy.redisclient.integration.list;
 
 import java.util.List;
 
+import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.domain.RedisVersion;
 import com.cxy.redisclient.integration.JedisCommand;
 
@@ -25,6 +26,10 @@ public class AddList extends JedisCommand {
 	@Override
 	protected void command() {
 		jedis.select(db);
+		if (getNodeType(key) != NodeType.LIST)
+			throw new RuntimeException("Key: " + key
+					+ " alreay exist, and type is not list.");
+
 		for (String value : values) {
 			if (headTail && exist)
 				jedis.lpush(key, value);

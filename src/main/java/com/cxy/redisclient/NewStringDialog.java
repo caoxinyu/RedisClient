@@ -12,6 +12,8 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 
@@ -26,6 +28,7 @@ public class NewStringDialog extends Dialog {
 	private String server;
 	private int db;
 	private String key;
+	private Button btnOk;
 
 	/**
 	 * Create the dialog.
@@ -92,6 +95,15 @@ public class NewStringDialog extends Dialog {
 		text_1.setText(key);
 		text_1.selectAll();
 		text_1.setFocus();
+		text_1.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				String newKey = text_1.getText() == null?"":text_1.getText();
+				if(newKey.equals(key)) 
+					btnOk.setEnabled(false);
+				else
+					btnOk.setEnabled(true);
+			}
+		});
 		
 		Label label = new Label(composite, SWT.NONE);
 		label.setText("Value");
@@ -112,8 +124,9 @@ public class NewStringDialog extends Dialog {
 		label_3.setBounds(223, 13, 45, 13);
 		label_3.setText(String.valueOf(db));
 		
-		Button button = new Button(shell, SWT.NONE);
-		button.addMouseListener(new MouseAdapter() {
+		btnOk = new Button(shell, SWT.NONE);
+		btnOk.setEnabled(false);
+		btnOk.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
 				String key = text_1.getText();
@@ -127,8 +140,8 @@ public class NewStringDialog extends Dialog {
 				}
 			}
 		});
-		button.setText("OK");
-		button.setBounds(61, 144, 68, 23);
+		btnOk.setText("OK");
+		btnOk.setBounds(61, 144, 68, 23);
 		
 		Button button_1 = new Button(shell, SWT.NONE);
 		button_1.addMouseListener(new MouseAdapter() {

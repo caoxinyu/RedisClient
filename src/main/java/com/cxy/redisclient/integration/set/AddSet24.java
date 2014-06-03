@@ -1,18 +1,18 @@
 package com.cxy.redisclient.integration.set;
 
-import java.util.List;
+import java.util.Set;
 
 import com.cxy.redisclient.domain.RedisVersion;
 
 public class AddSet24 extends AddSet {
 
-	public AddSet24(int id, int db, String key, List<String> values) {
+	public AddSet24(int id, int db, String key, Set<String> values) {
 		super(id, db, key, values);
 	}
 
 	@Override
 	protected void command() {
-		jedis.select(db);
+		super.command();
 		jedis.sadd(key, values);
 	}
 

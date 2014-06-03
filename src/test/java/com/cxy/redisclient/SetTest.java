@@ -1,17 +1,17 @@
 package com.cxy.redisclient;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.cxy.redisclient.service.SetService;
+import java.util.HashSet;
+import java.util.Set;
 
 import junit.framework.TestCase;
+
+import com.cxy.redisclient.service.SetService;
 
 public class SetTest extends TestCase {
 
 	public void testAdd() {
 		SetService service = new SetService();
-		List<String> values = new ArrayList<String>();
+		Set<String> values = new HashSet<String>();
 		values.add("hello1");
 		values.add("world1");
 		
@@ -20,7 +20,7 @@ public class SetTest extends TestCase {
 	
 	public void testRemove() {
 		SetService service = new SetService();
-		List<String> values = new ArrayList<String>();
+		Set<String> values = new HashSet<String>();
 		values.add("hello1");
 		values.add("world1");
 		

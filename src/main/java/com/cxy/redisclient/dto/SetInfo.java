@@ -1,11 +1,11 @@
 package com.cxy.redisclient.dto;
 
-import java.util.List;
+import java.util.Set;
 
 public class SetInfo {
 	private String key;
-	private List<String> values;
-	public SetInfo(String key, List<String> values) {
+	private Set<String> values;
+	public SetInfo(String key, Set<String> values) {
 		super();
 		this.key = key;
 		this.values = values;
@@ -16,10 +16,10 @@ public class SetInfo {
 	public void setKey(String key) {
 		this.key = key;
 	}
-	public List<String> getValues() {
+	public Set<String> getValues() {
 		return values;
 	}
-	public void setValues(List<String> values) {
+	public void setValues(Set<String> values) {
 		this.values = values;
 	}
 	

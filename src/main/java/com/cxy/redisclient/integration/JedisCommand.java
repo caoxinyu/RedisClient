@@ -43,7 +43,7 @@ public abstract class JedisCommand {
 		else if (type.equals("set"))
 			nodeType = NodeType.SET;
 		else
-			nodeType = NodeType.SORTSET;
+			nodeType = NodeType.SORTEDSET;
 		return nodeType;
 	}
 
