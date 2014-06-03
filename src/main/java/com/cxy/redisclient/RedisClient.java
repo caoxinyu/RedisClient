@@ -136,6 +136,8 @@ public class RedisClient {
 		rootRedisServers = new TreeItem(tree, SWT.NONE);
 		rootRedisServers.setText("Redis Servers");
 		rootRedisServers.setData(NODE_TYPE, NodeType.ROOT);
+		rootRedisServers.setExpanded(true);
+		rootRedisServers.setData(ITEM_OPENED, true);
 
 		initMenuDB();
 
@@ -675,7 +677,8 @@ public class RedisClient {
 								.getData(FAVORITE);
 						int sid = favorite.getServerID();
 
-						TreeItem[] treeItems = tree.getItems();
+						rootItemSelected();
+						TreeItem[] treeItems = rootRedisServers.getItems();
 						for (TreeItem treeItem : treeItems) {
 							int serverId = (Integer) treeItem.getData(NODE_ID);
 							if (serverId == sid) {
