@@ -33,11 +33,13 @@ import com.cxy.redisclient.dto.ListInfo;
 import com.cxy.redisclient.dto.RenameInfo;
 import com.cxy.redisclient.dto.SetInfo;
 import com.cxy.redisclient.dto.StringInfo;
+import com.cxy.redisclient.dto.ZSetInfo;
 import com.cxy.redisclient.service.FavoriteService;
 import com.cxy.redisclient.service.ListService;
 import com.cxy.redisclient.service.NodeService;
 import com.cxy.redisclient.service.ServerService;
 import com.cxy.redisclient.service.SetService;
+import com.cxy.redisclient.service.ZSetService;
 
 public class RedisClient {
 	private static Shell shlRedisClient;
@@ -69,6 +71,8 @@ public class RedisClient {
 	private FavoriteService service3 = new FavoriteService();
 	private ListService service4 = new ListService();
 	private SetService service5 = new SetService();
+	private ZSetService service6 = new ZSetService();
+
 
 	private TreeItem rootRedisServers;
 
@@ -244,6 +248,12 @@ public class RedisClient {
 		menuItem_3.setText("Set");
 
 		MenuItem mntmSortedSet = new MenuItem(menu_1, SWT.NONE);
+		mntmSortedSet.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				newZSet();
+			}
+		});
 		mntmSortedSet.setText("Sorted Set");
 
 		MenuItem mntmHash_1 = new MenuItem(menu_1, SWT.NONE);
@@ -504,6 +514,12 @@ public class RedisClient {
 		mntmSet.setText("Set");
 
 		MenuItem mntmSortset = new MenuItem(menu_5, SWT.NONE);
+		mntmSortset.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				newZSet();
+			}
+		});
 		mntmSortset.setText("Sorted Set");
 
 		MenuItem mntmHash = new MenuItem(menu_5, SWT.NONE);
@@ -1044,5 +1060,32 @@ public class RedisClient {
 		} else
 			MessageDialog.openError(shlRedisClient, "error",
 					"please select a holder to new set");
+	}
+	
+	private void newZSet() {
+		TreeItem item = null;
+
+		TreeItem[] items = tree.getSelection();
+		if (items.length > 0
+				&& (items[0].getData(NODE_TYPE) == NodeType.DATABASE || items[0]
+						.getData(NODE_TYPE) == NodeType.CONTAINER)) {
+			item = items[0];
+
+			ContainerInfo cinfo = new ContainerInfo();
+			parseContainer(item, cinfo);
+			NewZSetDialog dialog = new NewZSetDialog(shlRedisClient,
+					SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL,
+					cinfo.getServerName(), cinfo.getDb(), cinfo.getContainer());
+			ZSetInfo info = (ZSetInfo) dialog.open();
+			if (info != null) {
+				service6.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
+						info.getValues());
+				item.setData(ITEM_OPENED, false);
+				treeItemSelected(item);
+			}
+		} else
+			MessageDialog.openError(shlRedisClient, "error",
+					"please select a holder to new sorted set");
+		
 	}
 }
