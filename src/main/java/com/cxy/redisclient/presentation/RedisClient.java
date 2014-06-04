@@ -190,22 +190,7 @@ public class RedisClient {
 		tree.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TreeItem[] items = tree.getSelection();
-				NodeType type = (NodeType) items[0].getData(NODE_TYPE);
-				switch (type) {
-				case ROOT:
-					rootItemSelected();
-					break;
-				case SERVER:
-					serverItemSelected(items[0]);
-					break;
-				case DATABASE:
-				case CONTAINER:
-					treeItemSelected(items[0]);
-					break;
-				default:
-					break;
-				}
+				treeItemSelected(false);
 			}
 		});
 
@@ -342,6 +327,18 @@ public class RedisClient {
 		MenuItem mntmPaste_1 = new MenuItem(menu_DB, SWT.NONE);
 		mntmPaste_1.setEnabled(false);
 		mntmPaste_1.setText("paste");
+		
+		new MenuItem(menu_DB, SWT.SEPARATOR);
+		
+		MenuItem mntmRefresh_2 = new MenuItem(menu_DB, SWT.NONE);
+		mntmRefresh_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TreeItem[] items = tree.getSelection();
+				dbContainerItemSelected(items[0], true);
+			}
+		});
+		mntmRefresh_2.setText("refresh");
 	}
 
 	private void initTable(SashForm sashForm_1) {
@@ -361,9 +358,9 @@ public class RedisClient {
 							if (type.equals(NodeType.DATABASE.toString())
 									|| type.equals(NodeType.CONTAINER
 											.toString()))
-								treeItemSelected(treeItem);
+								dbContainerItemSelected(treeItem, false);
 							else if (type.equals(NodeType.SERVER.toString()))
-								serverItemSelected(treeItem);
+								serverItemSelected(treeItem, false);
 							break;
 						}
 
@@ -411,6 +408,18 @@ public class RedisClient {
 			}
 		});
 		mntmDelete.setText("remove");
+		
+		new MenuItem(menu_server, SWT.SEPARATOR);
+		
+		MenuItem mntmRefresh_3 = new MenuItem(menu_server, SWT.NONE);
+		mntmRefresh_3.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TreeItem[] items = tree.getSelection();
+				serverItemSelected(items[0], true);
+			}
+		});
+		mntmRefresh_3.setText("refresh");
 		tree.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent arg0) {
@@ -461,7 +470,7 @@ public class RedisClient {
 		mntmRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				refreshTree();
+				rootItemSelected(true);
 			}
 		});
 		mntmRefresh.setText("refresh");
@@ -632,7 +641,7 @@ public class RedisClient {
 		mntmRefresh_1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				refreshTree();
+				treeItemSelected(true);
 			}
 		});
 		mntmRefresh_1.setText("Refresh");
@@ -743,19 +752,19 @@ public class RedisClient {
 								.getData(FAVORITE);
 						int sid = favorite.getServerID();
 
-						rootItemSelected();
+						rootItemSelected(false);
 						TreeItem[] treeItems = rootRedisServers.getItems();
 						for (TreeItem treeItem : treeItems) {
 							int serverId = (Integer) treeItem.getData(NODE_ID);
 							if (serverId == sid) {
-								serverItemSelected(treeItem);
+								serverItemSelected(treeItem, false);
 								String[] containers = favorite.getFavorite()
 										.split(":");
 								TreeItem[] dbItems = treeItem.getItems();
 								for (TreeItem dbItem : dbItems) {
 									if (dbItem.getText().equals(containers[1])) {
 										tree.setSelection(dbItem);
-										treeItemSelected(dbItem);
+										dbContainerItemSelected(dbItem, false);
 										TreeItem[] dataItems = dbItem
 												.getItems();
 										for (int i = 2; i < containers.length; i++) {
@@ -763,7 +772,7 @@ public class RedisClient {
 												if (dataItem.getText().equals(
 														containers[i])) {
 													tree.setSelection(dataItem);
-													treeItemSelected(dataItem);
+													dbContainerItemSelected(dataItem, false);
 													dataItems = dataItem
 															.getItems();
 													break;
@@ -789,6 +798,8 @@ public class RedisClient {
 		for (Server server : servers) {
 			addServerTreeItem(server);
 		}
+		rootRedisServers.setExpanded(true);
+		rootRedisServers.setData(ITEM_OPENED, true);
 	}
 
 	private void addDBTreeItem(int server, TreeItem serverItem) {
@@ -812,15 +823,8 @@ public class RedisClient {
 		treeItem.setData(NODE_ID, server.getId());
 		treeItem.setData(NODE_TYPE, NodeType.SERVER);
 		treeItem.setImage(redisImage);
-		rootRedisServers.setExpanded(true);
-
+		
 		return treeItem;
-	}
-
-	private void refreshTree() {
-		rootRedisServers.setData(ITEM_OPENED, false);
-		rootItemSelected();
-		rootRedisServers.setData(ITEM_OPENED, true);
 	}
 
 	private void addServer() {
@@ -832,7 +836,7 @@ public class RedisClient {
 			server.setId(service1.add(server.getName(), server.getHost(),
 					server.getPort()));
 			TreeItem item = addServerTreeItem(server);
-			serverItemSelected(item);
+			serverItemSelected(item, false);
 		}
 	}
 
@@ -853,8 +857,7 @@ public class RedisClient {
 							server.getPort());
 					items[0].setText(server.getName());
 					items[0].removeAll();
-					// addDBTreeItem(id, items[0]);
-					serverItemSelected(items[0]);
+					serverItemSelected(items[0], false);
 				}
 
 			} else
@@ -907,7 +910,7 @@ public class RedisClient {
 						info.getDb(), info.getContainer(),
 						rinfo.getNewContainer(), rinfo.isOverwritten());
 				item.getParentItem().setData(ITEM_OPENED, false);
-				treeItemSelected(item.getParentItem());
+				dbContainerItemSelected(item.getParentItem(), false);
 				if (!rinfo.isOverwritten() && result.size() > 0) {
 					String failString = "Rename following keys failed because of exist:\n";
 					for (String container : result)
@@ -953,7 +956,26 @@ public class RedisClient {
 		addFavoriteMenuItem();
 	}
 	
-	private void treeItemSelected(TreeItem itemSelected) {
+	private void treeItemSelected(boolean refresh) {
+		TreeItem[] items = tree.getSelection();
+		NodeType type = (NodeType) items[0].getData(NODE_TYPE);
+		switch (type) {
+		case ROOT:
+			rootItemSelected(refresh);
+			break;
+		case SERVER:
+			serverItemSelected(items[0], refresh);
+			break;
+		case DATABASE:
+		case CONTAINER:
+			dbContainerItemSelected(items[0], refresh);
+			break;
+		default:
+			break;
+		}
+	}
+	
+	private void dbContainerItemSelected(TreeItem itemSelected, boolean refresh) {
 		tree.setSelection(itemSelected);
 		ContainerInfo info = new ContainerInfo();
 		parseContainer(itemSelected, info);
@@ -967,6 +989,9 @@ public class RedisClient {
 		Set<Node> cnodes = service2.listContainers(info.getId(), info.getDb(),
 				info.getContainer());
 
+		if(refresh)
+			itemSelected.setData(ITEM_OPENED, false);
+		
 		if (itemSelected.getData(ITEM_OPENED) == null
 				|| ((Boolean) (itemSelected.getData(ITEM_OPENED)) == false)) {
 			itemSelected.removeAll();
@@ -1017,16 +1042,20 @@ public class RedisClient {
 		}
 	}
 	
-	private void rootItemSelected() {
+	private void rootItemSelected(boolean refresh) {
 		tree.setSelection(rootRedisServers);
 		text.setText("");
 		table.removeAll();
 		mntmAdd_Favorite.setEnabled(false);
 
+		if(refresh)
+			rootRedisServers.setData(ITEM_OPENED, false);
+		
 		if (rootRedisServers.getData(ITEM_OPENED) == null
 				|| ((Boolean) (rootRedisServers.getData(ITEM_OPENED)) == false)) {
 			rootRedisServers.removeAll();
 			initServers();
+			
 		}
 
 		java.util.List<Server> servers = service1.listAll();
@@ -1040,12 +1069,15 @@ public class RedisClient {
 
 	}
 	
-	private void serverItemSelected(TreeItem selectedItem) {
+	private void serverItemSelected(TreeItem selectedItem, boolean refresh) {
 		tree.setSelection(selectedItem);
 		text.setText(selectedItem.getText() + ":");
 		table.removeAll();
 		mntmAdd_Favorite.setEnabled(false);
 
+		if(refresh)
+			selectedItem.setData(ITEM_OPENED, false);
+		
 		if (selectedItem.getData(ITEM_OPENED) == null
 				|| ((Boolean) (selectedItem.getData(ITEM_OPENED)) == false)) {
 			selectedItem.removeAll();
@@ -1081,7 +1113,7 @@ public class RedisClient {
 				service2.addString(cinfo.getId(), cinfo.getDb(), info.getKey(),
 						info.getValue());
 				item.setData(ITEM_OPENED, false);
-				treeItemSelected(item);
+				dbContainerItemSelected(item, false);
 			}
 		}
 
@@ -1110,7 +1142,7 @@ public class RedisClient {
 				service4.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
 						info.getValues(), info.isHeadTail(), info.isExist());
 				item.setData(ITEM_OPENED, false);
-				treeItemSelected(item);
+				dbContainerItemSelected(item, false);
 			}
 		} else
 			MessageDialog.openError(shlRedisClient, "error",
@@ -1136,7 +1168,7 @@ public class RedisClient {
 				service5.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
 						info.getValues());
 				item.setData(ITEM_OPENED, false);
-				treeItemSelected(item);
+				dbContainerItemSelected(item, false);
 			}
 		} else
 			MessageDialog.openError(shlRedisClient, "error",
@@ -1162,7 +1194,7 @@ public class RedisClient {
 				service6.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
 						info.getValues());
 				item.setData(ITEM_OPENED, false);
-				treeItemSelected(item);
+				dbContainerItemSelected(item, false);
 			}
 		} else
 			MessageDialog.openError(shlRedisClient, "error",
@@ -1189,11 +1221,13 @@ public class RedisClient {
 				service7.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
 						info.getValues());
 				item.setData(ITEM_OPENED, false);
-				treeItemSelected(item);
+				dbContainerItemSelected(item, false);
 			}
 		} else
 			MessageDialog.openError(shlRedisClient, "error",
 					"please select a holder to new hash");
 		
 	}
+
+	
 }
