@@ -1,4 +1,4 @@
-package com.cxy.redisclient;
+package com.cxy.redisclient.presentation.key;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;

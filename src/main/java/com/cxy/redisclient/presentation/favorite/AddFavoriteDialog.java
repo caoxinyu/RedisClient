@@ -1,4 +1,4 @@
-package com.cxy.redisclient;
+package com.cxy.redisclient.presentation.favorite;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;

@@ -29,7 +29,7 @@ public abstract class AddSet extends JedisCommand {
 	@Override
 	protected void command() {
 		jedis.select(db);
-		if(getNodeType(key) != NodeType.SET)
+		if(jedis.exists(key) && getNodeType(key) != NodeType.SET)
 			throw new RuntimeException("Key: " + key + " alreay exist, and type is not set.");
 	}
 

@@ -1,4 +1,4 @@
-package com.cxy.redisclient;
+package com.cxy.redisclient.presentation.list;
 
 import java.util.ArrayList;
 import java.util.List;

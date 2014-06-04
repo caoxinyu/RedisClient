@@ -1,8 +1,8 @@
 package com.cxy.redisclient.integration.key;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.TreeSet;
 
 import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
@@ -11,7 +11,7 @@ import com.cxy.redisclient.integration.JedisCommand;
 
 public class ListKeys extends JedisCommand {
 	private int db;
-	private Set<Node> nodes = new HashSet<Node>();
+	private Set<Node> nodes = new TreeSet<Node>();
 
 	public Set<Node> getNodes() {
 		return nodes;

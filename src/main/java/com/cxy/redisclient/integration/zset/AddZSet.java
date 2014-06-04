@@ -20,7 +20,7 @@ public abstract class AddZSet extends JedisCommand {
 	@Override
 	protected void command() {
 		jedis.select(db);
-		if(getNodeType(key) != NodeType.SORTEDSET)
+		if(jedis.exists(key) && getNodeType(key) != NodeType.SORTEDSET)
 			throw new RuntimeException("Key: " + key + " alreay exist, and type is not sorted set.");
 		
 	}

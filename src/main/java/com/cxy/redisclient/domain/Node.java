@@ -1,6 +1,6 @@
 package com.cxy.redisclient.domain;
 
-public class Node {
+public class Node implements Comparable<Node> {
 	private String key;
 	private NodeType type;
 	public Node(String key, NodeType type) {
@@ -32,5 +32,10 @@ public class Node {
 	@Override
 	public int hashCode() {
 		return key.hashCode()+type.hashCode();
+	}
+
+	@Override
+	public int compareTo(Node o) {
+		return this.getKey().compareTo(o.getKey());
 	}
 }

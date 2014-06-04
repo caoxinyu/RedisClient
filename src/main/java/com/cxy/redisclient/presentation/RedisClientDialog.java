@@ -1,4 +1,4 @@
-package com.cxy.redisclient;
+package com.cxy.redisclient.presentation;
 
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Dialog;

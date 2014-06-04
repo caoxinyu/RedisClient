@@ -26,7 +26,7 @@ public class AddList extends JedisCommand {
 	@Override
 	protected void command() {
 		jedis.select(db);
-		if (getNodeType(key) != NodeType.LIST)
+		if (jedis.exists(key) && getNodeType(key) != NodeType.LIST)
 			throw new RuntimeException("Key: " + key
 					+ " alreay exist, and type is not list.");
 

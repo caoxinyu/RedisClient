@@ -1,4 +1,4 @@
-package com.cxy.redisclient;
+package com.cxy.redisclient.presentation;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;

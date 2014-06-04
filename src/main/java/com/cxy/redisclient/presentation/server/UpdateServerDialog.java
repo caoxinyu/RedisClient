@@ -1,4 +1,4 @@
-package com.cxy.redisclient;
+package com.cxy.redisclient.presentation.server;
 
 import org.eclipse.swt.widgets.Shell;
 

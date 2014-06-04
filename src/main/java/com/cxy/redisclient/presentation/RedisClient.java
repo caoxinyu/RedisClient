@@ -1,4 +1,4 @@
-package com.cxy.redisclient;
+package com.cxy.redisclient.presentation;
 
 import java.util.List;
 import java.util.Set;
@@ -29,12 +29,24 @@ import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.domain.Server;
 import com.cxy.redisclient.dto.ContainerInfo;
+import com.cxy.redisclient.dto.HashInfo;
 import com.cxy.redisclient.dto.ListInfo;
 import com.cxy.redisclient.dto.RenameInfo;
 import com.cxy.redisclient.dto.SetInfo;
 import com.cxy.redisclient.dto.StringInfo;
 import com.cxy.redisclient.dto.ZSetInfo;
+import com.cxy.redisclient.presentation.favorite.AddFavoriteDialog;
+import com.cxy.redisclient.presentation.favorite.OrganizeFavoriteDialog;
+import com.cxy.redisclient.presentation.hash.NewHashDialog;
+import com.cxy.redisclient.presentation.key.RenameKeysDialog;
+import com.cxy.redisclient.presentation.list.NewListDialog;
+import com.cxy.redisclient.presentation.server.AddServerDialog;
+import com.cxy.redisclient.presentation.server.UpdateServerDialog;
+import com.cxy.redisclient.presentation.set.NewSetDialog;
+import com.cxy.redisclient.presentation.string.NewStringDialog;
+import com.cxy.redisclient.presentation.zset.NewZSetDialog;
 import com.cxy.redisclient.service.FavoriteService;
+import com.cxy.redisclient.service.HashService;
 import com.cxy.redisclient.service.ListService;
 import com.cxy.redisclient.service.NodeService;
 import com.cxy.redisclient.service.ServerService;
@@ -72,6 +84,7 @@ public class RedisClient {
 	private ListService service4 = new ListService();
 	private SetService service5 = new SetService();
 	private ZSetService service6 = new ZSetService();
+	private HashService service7 = new HashService();
 
 
 	private TreeItem rootRedisServers;
@@ -257,6 +270,12 @@ public class RedisClient {
 		mntmSortedSet.setText("Sorted Set");
 
 		MenuItem mntmHash_1 = new MenuItem(menu_1, SWT.NONE);
+		mntmHash_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				newHash();
+			}
+		});
 		mntmHash_1.setText("Hash");
 
 		mntmRename_1 = new MenuItem(menu_DB, SWT.NONE);
@@ -381,7 +400,9 @@ public class RedisClient {
 						NodeType type = (NodeType) selectedItem
 								.getData(NODE_TYPE);
 
-						if (type == NodeType.SERVER)
+						if(type == NodeType.ROOT)
+							tree.setMenu(menu_null);
+						else if (type == NodeType.SERVER)
 							tree.setMenu(menu_server);
 						else if (type == NodeType.DATABASE
 								|| type == NodeType.CONTAINER) {
@@ -523,6 +544,12 @@ public class RedisClient {
 		mntmSortset.setText("Sorted Set");
 
 		MenuItem mntmHash = new MenuItem(menu_5, SWT.NONE);
+		mntmHash.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				newHash();
+			}
+		});
 		mntmHash.setText("Hash");
 
 		mntmRename_2 = new MenuItem(menu_4, SWT.NONE);
@@ -579,6 +606,12 @@ public class RedisClient {
 		new MenuItem(menu_4, SWT.SEPARATOR);
 
 		MenuItem mntmRefresh_1 = new MenuItem(menu_4, SWT.NONE);
+		mntmRefresh_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				refreshTree();
+			}
+		});
 		mntmRefresh_1.setText("Refresh");
 
 		MenuItem mntmFavorites = new MenuItem(menu, SWT.CASCADE);
@@ -1086,6 +1119,33 @@ public class RedisClient {
 		} else
 			MessageDialog.openError(shlRedisClient, "error",
 					"please select a holder to new sorted set");
+		
+	}
+	
+	private void newHash() {
+		TreeItem item = null;
+
+		TreeItem[] items = tree.getSelection();
+		if (items.length > 0
+				&& (items[0].getData(NODE_TYPE) == NodeType.DATABASE || items[0]
+						.getData(NODE_TYPE) == NodeType.CONTAINER)) {
+			item = items[0];
+
+			ContainerInfo cinfo = new ContainerInfo();
+			parseContainer(item, cinfo);
+			NewHashDialog dialog = new NewHashDialog(shlRedisClient,
+					SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL,
+					cinfo.getServerName(), cinfo.getDb(), cinfo.getContainer());
+			HashInfo info = (HashInfo) dialog.open();
+			if (info != null) {
+				service7.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
+						info.getValues());
+				item.setData(ITEM_OPENED, false);
+				treeItemSelected(item);
+			}
+		} else
+			MessageDialog.openError(shlRedisClient, "error",
+					"please select a holder to new hash");
 		
 	}
 }
