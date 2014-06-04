@@ -10,6 +10,7 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
@@ -89,6 +90,15 @@ public class RedisClient {
 
 	private TreeItem rootRedisServers;
 
+	private Image redisImage;
+	private Image dbImage;
+	private Image containerImage;
+	private Image strImage;
+	private Image setImage;
+	private Image listImage;
+	private Image zsetImage;
+	private Image hashImage;
+
 	/**
 	 * Launch the application.
 	 * 
@@ -138,9 +148,19 @@ public class RedisClient {
 
 	}
 
+	private void initImage() {
+		redisImage = new Image(tree.getDisplay(),getClass().getResourceAsStream("/redis.png")); 
+		dbImage = new Image(tree.getDisplay(),getClass().getResourceAsStream("/db.png")); 
+		strImage = new Image(tree.getDisplay(),getClass().getResourceAsStream("/string.png")); 
+		setImage = new Image(tree.getDisplay(),getClass().getResourceAsStream("/set.png")); 
+		listImage = new Image(tree.getDisplay(),getClass().getResourceAsStream("/list.png")); 
+		zsetImage = new Image(tree.getDisplay(),getClass().getResourceAsStream("/zset.png")); 
+		hashImage = new Image(tree.getDisplay(),getClass().getResourceAsStream("/hash.png")); 
+		containerImage = new Image(tree.getDisplay(),getClass().getResourceAsStream("/container.png")); 
+	}
 	private void initShell() {
 		shlRedisClient = new Shell();
-		shlRedisClient.setSize(577, 439);
+		shlRedisClient.setSize(750, 529);
 		shlRedisClient.setText("Redis client");
 		shlRedisClient.setLayout(new FillLayout(SWT.HORIZONTAL));
 	}
@@ -156,7 +176,10 @@ public class RedisClient {
 
 		tree = new Tree(sashForm, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 
+		initImage();
+		
 		rootRedisServers = new TreeItem(tree, SWT.NONE);
+		rootRedisServers.setImage(redisImage);
 		rootRedisServers.setText("Redis Servers");
 		rootRedisServers.setData(NODE_TYPE, NodeType.ROOT);
 		rootRedisServers.setExpanded(true);
@@ -775,6 +798,7 @@ public class RedisClient {
 			dbItem.setText(DB_PREFIX + i);
 			dbItem.setData(NODE_ID, i);
 			dbItem.setData(NODE_TYPE, NodeType.DATABASE);
+			dbItem.setImage(dbImage);
 		}
 		if (amount > 0) {
 			serverItem.setExpanded(true);
@@ -787,6 +811,7 @@ public class RedisClient {
 		treeItem.setText(server.getName());
 		treeItem.setData(NODE_ID, server.getId());
 		treeItem.setData(NODE_TYPE, NodeType.SERVER);
+		treeItem.setImage(redisImage);
 		rootRedisServers.setExpanded(true);
 
 		return treeItem;
@@ -950,6 +975,7 @@ public class RedisClient {
 				TreeItem item = new TreeItem(itemSelected, SWT.NONE);
 				item.setText(node.getKey());
 				item.setData(NODE_TYPE, node.getType());
+				item.setImage(containerImage);
 				
 			}
 			itemSelected.setExpanded(true);
@@ -959,6 +985,7 @@ public class RedisClient {
 			TableItem item = new TableItem(table, SWT.NONE);
 			item.setText(new String[] { node.getKey(),
 					node.getType().toString() });
+			item.setImage(containerImage);
 		}
 
 		Set<DataNode> knodes = service2.listContainerKeys(info.getId(),
@@ -968,6 +995,25 @@ public class RedisClient {
 			TableItem item = new TableItem(table, SWT.NONE);
 			item.setText(new String[] { node1.getKey(),
 					node1.getType().toString(), String.valueOf(node1.getSize()) });
+			switch(node1.getType()) {
+			case STRING:
+				item.setImage(strImage);
+				break;
+			case SET:
+				item.setImage(setImage);
+				break;
+			case LIST:
+				item.setImage(listImage);
+				break;
+			case HASH:
+				item.setImage(hashImage);
+				break;
+			case SORTEDSET:
+				item.setImage(zsetImage);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 	
@@ -989,6 +1035,7 @@ public class RedisClient {
 			TableItem item = new TableItem(table, SWT.NONE);
 			item.setText(new String[] { server.getName(),
 					NodeType.SERVER.toString() });
+			item.setImage(redisImage);
 		}
 
 	}
@@ -1011,6 +1058,7 @@ public class RedisClient {
 			item.setText(new String[] { DB_PREFIX + i,
 					NodeType.DATABASE.toString() });
 			item.setData(NODE_ID, i);
+			item.setImage(dbImage);
 		}
 
 	}
