@@ -5,6 +5,8 @@ import java.util.Set;
 
 import com.cxy.redisclient.domain.DataNode;
 import com.cxy.redisclient.domain.Node;
+import com.cxy.redisclient.dto.Order;
+import com.cxy.redisclient.dto.OrderBy;
 import com.cxy.redisclient.integration.key.DeleteKey;
 import com.cxy.redisclient.integration.key.ListContainerAllKeys;
 import com.cxy.redisclient.integration.key.ListContainerAllKeysFactory;
@@ -39,11 +41,24 @@ public class NodeService {
 		return command.getNodes();
 	}
 	
+	public Set<Node> listContainers(int id, int db, String key, Order order) {
+		ListContainers command = new ListContainers(id, db, key, order);
+		command.execute();
+		return command.getContainers();
+		
+	}
+	
 	public Set<Node> listContainers(int id, int db, String key) {
 		ListContainers command = new ListContainers(id, db, key);
 		command.execute();
 		return command.getContainers();
 		
+	}
+	
+	public Set<DataNode> listContainerKeys(int id, int db, String key, Order order, OrderBy orderBy) {
+		ListContainerKeys command = new ListContainerKeys(id, db, key, order, orderBy);
+		command.execute();
+		return command.getKeys();
 	}
 	
 	public Set<DataNode> listContainerKeys(int id, int db, String key) {

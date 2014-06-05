@@ -1,12 +1,24 @@
 package com.cxy.redisclient.domain;
 
+import com.cxy.redisclient.dto.Order;
+
 public class Node implements Comparable<Node> {
-	private String key;
-	private NodeType type;
+	protected String key;
+	protected NodeType type;
+	protected Order order;
+	
+	public Node(String key, NodeType type, Order order) {
+		super();
+		this.key = key;
+		this.type = type;
+		this.order = order;
+	}
+	
 	public Node(String key, NodeType type) {
 		super();
 		this.key = key;
 		this.type = type;
+		this.order = Order.Ascend;
 	}
 	
 	public String getKey() {
@@ -36,6 +48,9 @@ public class Node implements Comparable<Node> {
 
 	@Override
 	public int compareTo(Node o) {
-		return this.getKey().compareTo(o.getKey());
+		int result = this.getKey().compareTo(o.getKey());
+		if(order == Order.Ascend)
+			return result;
+		return result * -1;
 	}
 }

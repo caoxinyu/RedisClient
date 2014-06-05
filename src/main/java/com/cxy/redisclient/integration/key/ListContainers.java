@@ -7,17 +7,27 @@ import java.util.TreeSet;
 import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.domain.RedisVersion;
+import com.cxy.redisclient.dto.Order;
 import com.cxy.redisclient.integration.JedisCommand;
 
 public class ListContainers extends JedisCommand {
 	private int db;
 	private String key;
 	private Set<Node> containers = new TreeSet<Node>();
+	private Order order;
 
+	public ListContainers(int id, int db, String key, Order order) {
+		super(id);
+		this.db = db;
+		this.key = key;
+		this.order = order;
+	}
+	
 	public ListContainers(int id, int db, String key) {
 		super(id);
 		this.db = db;
 		this.key = key;
+		this.order = Order.Ascend;
 	}
 
 	@Override
@@ -39,7 +49,7 @@ public class ListContainers extends JedisCommand {
 			if (ckey.length > 1) {
 				NodeType nodeType = NodeType.CONTAINER;
 
-				Node node = new Node(ckey[0], nodeType);
+				Node node = new Node(ckey[0], nodeType, order);
 				containers.add(node);
 			}
 		}

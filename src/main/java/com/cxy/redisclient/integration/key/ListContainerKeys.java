@@ -7,21 +7,43 @@ import java.util.TreeSet;
 import com.cxy.redisclient.domain.DataNode;
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.domain.RedisVersion;
+import com.cxy.redisclient.dto.Order;
+import com.cxy.redisclient.dto.OrderBy;
 import com.cxy.redisclient.integration.JedisCommand;
 
 public class ListContainerKeys extends JedisCommand {
 	private int db;
 	private String key;
 	private Set<DataNode> keys = new TreeSet<DataNode>();
+	private Order order;
+	private OrderBy orderBy;
 	
 	public Set<DataNode> getKeys() {
 		return keys;
 	}
 
+	public ListContainerKeys(int id, int db, String key, Order order, OrderBy orderBy) {
+		super(id);
+		this.db = db;
+		this.key = key;
+		this.order = order;
+		this.orderBy = orderBy;
+	}
+	
+	public ListContainerKeys(int id, int db, String key, Order order) {
+		super(id);
+		this.db = db;
+		this.key = key;
+		this.order = order;
+		this.orderBy = OrderBy.NAME;
+	}
+	
 	public ListContainerKeys(int id, int db, String key) {
 		super(id);
 		this.db = db;
 		this.key = key;
+		this.order = Order.Ascend;
+		this.orderBy = OrderBy.NAME;
 	}
 
 	@Override
@@ -45,7 +67,7 @@ public class ListContainerKeys extends JedisCommand {
 				NodeType nodeType = getNodeType(nextKey);
 				long size = getSize(nextKey);
 				
-				DataNode node = new DataNode(ckey[0], nodeType, size);
+				DataNode node = new DataNode(ckey[0], nodeType, size, order, orderBy);
 				keys.add(node);
 			}
 		}
