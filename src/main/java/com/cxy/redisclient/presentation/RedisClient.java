@@ -57,10 +57,6 @@ import com.cxy.redisclient.service.SetService;
 import com.cxy.redisclient.service.ZSetService;
 
 public class RedisClient {
-	private static final String COL_SIZE = "size";
-	private static final String COL_TYPE = "type";
-	private static final String COL_NAME = "name";
-
 	private static Shell shlRedisClient;
 
 	private static final String DB_PREFIX = "db";
@@ -80,12 +76,6 @@ public class RedisClient {
 	private Menu menu_DB;
 	private Menu menu_favorite;
 
-	private MenuItem mntmRename_1;
-	private MenuItem mntmDelete_2;
-	private MenuItem mntmRename_2;
-	private MenuItem mntmDelete_3;
-	private MenuItem mntmAdd_Favorite;
-
 	private ServerService service1 = new ServerService();
 	private NodeService service2 = new NodeService();
 	private FavoriteService service3 = new FavoriteService();
@@ -104,10 +94,28 @@ public class RedisClient {
 	private Image listImage;
 	private Image zsetImage;
 	private Image hashImage;
+	
+	
 	private TableColumn tblclmnName;
 	private TableColumn tblclmnType;
 	private TableColumn tblclmnSize;
 
+	private static final String COL_SIZE = "size";
+	private static final String COL_TYPE = "type";
+	private static final String COL_NAME = "name";
+
+	private MenuItem mntmEdit;
+	private MenuItem mntmDelete_1;
+	private MenuItem mntmProperties;
+
+	private MenuItem mntmAdd;
+	private MenuItem mntmRename_1;
+	private MenuItem mntmDelete_2;
+	private MenuItem mntmRename_2;
+	private MenuItem mntmDelete_3;
+	
+	private MenuItem mntmAdd_Favorite;
+	
 	/**
 	 * Launch the application.
 	 * 
@@ -385,11 +393,6 @@ public class RedisClient {
 					}
 				}
 			}
-
-			@Override
-			public void mouseDown(MouseEvent e) {
-
-			}
 		});
 		table.setHeaderVisible(true);
 
@@ -539,7 +542,8 @@ public class RedisClient {
 		});
 		mntmNew.setText("Add");
 
-		MenuItem mntmEdit = new MenuItem(menu_1, SWT.NONE);
+		mntmEdit = new MenuItem(menu_1, SWT.NONE);
+		mntmEdit.setEnabled(false);
 		mntmEdit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -548,7 +552,8 @@ public class RedisClient {
 		});
 		mntmEdit.setText("Update");
 
-		MenuItem mntmDelete_1 = new MenuItem(menu_1, SWT.NONE);
+		mntmDelete_1 = new MenuItem(menu_1, SWT.NONE);
+		mntmDelete_1.setEnabled(false);
 		mntmDelete_1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -559,7 +564,8 @@ public class RedisClient {
 
 		new MenuItem(menu_1, SWT.SEPARATOR);
 
-		MenuItem mntmProperties = new MenuItem(menu_1, SWT.NONE);
+		mntmProperties = new MenuItem(menu_1, SWT.NONE);
+		mntmProperties.setEnabled(false);
 		mntmProperties.setText("Properties");
 
 		MenuItem mntmExit = new MenuItem(menu_1, SWT.NONE);
@@ -577,7 +583,8 @@ public class RedisClient {
 		Menu menu_4 = new Menu(mntmData);
 		mntmData.setMenu(menu_4);
 
-		MenuItem mntmAdd = new MenuItem(menu_4, SWT.CASCADE);
+		mntmAdd = new MenuItem(menu_4, SWT.CASCADE);
+		mntmAdd.setEnabled(false);
 		mntmAdd.setText("New");
 
 		Menu menu_5 = new Menu(mntmAdd);
@@ -629,6 +636,7 @@ public class RedisClient {
 		mntmHash.setText("Hash");
 
 		mntmRename_2 = new MenuItem(menu_4, SWT.NONE);
+		mntmRename_2.setEnabled(false);
 		mntmRename_2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -638,6 +646,7 @@ public class RedisClient {
 		mntmRename_2.setText("Rename");
 
 		mntmDelete_3 = new MenuItem(menu_4, SWT.NONE);
+		mntmDelete_3.setEnabled(false);
 		mntmDelete_3.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -655,12 +664,15 @@ public class RedisClient {
 		new MenuItem(menu_4, SWT.SEPARATOR);
 
 		MenuItem mntmcut = new MenuItem(menu_4, SWT.NONE);
+		mntmcut.setEnabled(false);
 		mntmcut.setText("&Cut");
 
 		MenuItem mntmCopy = new MenuItem(menu_4, SWT.NONE);
+		mntmCopy.setEnabled(false);
 		mntmCopy.setText("C&opy");
 
 		MenuItem mntmPaste = new MenuItem(menu_4, SWT.NONE);
+		mntmPaste.setEnabled(false);
 		mntmPaste.setText("&Paste");
 
 		new MenuItem(menu_4, SWT.SEPARATOR);
@@ -674,9 +686,11 @@ public class RedisClient {
 		new MenuItem(menu_4, SWT.SEPARATOR);
 
 		MenuItem mntmImport = new MenuItem(menu_4, SWT.NONE);
+		mntmImport.setEnabled(false);
 		mntmImport.setText("Import");
 
 		MenuItem mntmExport = new MenuItem(menu_4, SWT.NONE);
+		mntmExport.setEnabled(false);
 		mntmExport.setText("Export");
 
 		new MenuItem(menu_4, SWT.SEPARATOR);
@@ -697,6 +711,7 @@ public class RedisClient {
 		mntmFavorites.setMenu(menu_favorite);
 
 		mntmAdd_Favorite = new MenuItem(menu_favorite, SWT.NONE);
+		mntmAdd_Favorite.setEnabled(false);
 		mntmAdd_Favorite.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -1025,6 +1040,22 @@ public class RedisClient {
 		text.setText(info.getServerName() + ":" + DB_PREFIX + info.getDb()
 				+ ":" + container);
 
+		mntmEdit.setEnabled(false);
+		mntmDelete_1.setEnabled(false);
+		mntmProperties.setEnabled(false);
+		
+		TreeItem[] items = tree.getSelection();
+		NodeType type = (NodeType) items[0].getData(NODE_TYPE);
+		
+		mntmAdd.setEnabled(true);
+		if(type == NodeType.CONTAINER){
+			mntmRename_2.setEnabled(true);
+			mntmDelete_3.setEnabled(true);
+		} else {
+			mntmRename_2.setEnabled(false);
+			mntmDelete_3.setEnabled(false);
+		}
+			
 		mntmAdd_Favorite.setEnabled(true);
 
 		Set<Node> cnodes = service2.listContainers(info.getId(), info.getDb(),
@@ -1097,6 +1128,15 @@ public class RedisClient {
 		tree.setSelection(rootRedisServers);
 		text.setText("");
 		table.removeAll();
+		
+		mntmEdit.setEnabled(false);
+		mntmDelete_1.setEnabled(false);
+		mntmProperties.setEnabled(false);
+		
+		mntmAdd.setEnabled(false);
+		mntmRename_2.setEnabled(false);
+		mntmDelete_3.setEnabled(false);
+		
 		mntmAdd_Favorite.setEnabled(false);
 
 		if (refresh)
@@ -1124,6 +1164,15 @@ public class RedisClient {
 		tree.setSelection(selectedItem);
 		text.setText(selectedItem.getText() + ":");
 		table.removeAll();
+		
+		mntmEdit.setEnabled(true);
+		mntmDelete_1.setEnabled(true);
+		mntmProperties.setEnabled(true);
+		
+		mntmAdd.setEnabled(false);
+		mntmRename_2.setEnabled(false);
+		mntmDelete_3.setEnabled(false);
+		
 		mntmAdd_Favorite.setEnabled(false);
 
 		if (refresh)

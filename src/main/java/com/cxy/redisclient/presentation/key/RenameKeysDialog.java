@@ -16,6 +16,8 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.dto.RenameInfo;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.ModifyEvent;
 
 public class RenameKeysDialog extends Dialog {
 
@@ -25,6 +27,7 @@ public class RenameKeysDialog extends Dialog {
 	private String server;
 	private int db;
 	private String oldContainer;
+	private Button button;
 	
 	/**
 	 * Create the dialog.
@@ -36,7 +39,7 @@ public class RenameKeysDialog extends Dialog {
 		setText("SWT Dialog");
 		this.server = server;
 		this.db = db;
-		this.oldContainer = oldContainer;
+		this.oldContainer = oldContainer == null?"":oldContainer;
 	}
 
 	/**
@@ -91,6 +94,15 @@ public class RenameKeysDialog extends Dialog {
 		text_2.setText(oldContainer);
 		text_2.selectAll();
 		text_2.setFocus();
+		text_2.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				String newContainer = text_2.getText() == null?"":text_2.getText();
+				if(newContainer.equals(oldContainer)) 
+					button.setEnabled(false);
+				else
+					button.setEnabled(true);
+			}
+		});
 		
 		Label label_1 = new Label(composite, SWT.NONE);
 		label_1.setBounds(61, 13, 89, 13);
@@ -109,7 +121,8 @@ public class RenameKeysDialog extends Dialog {
 		btnCheckButton.setBounds(10, 69, 272, 16);
 		btnCheckButton.setText("Overwritten if exists");
 		
-		Button button = new Button(shell, SWT.NONE);
+		button = new Button(shell, SWT.NONE);
+		button.setEnabled(false);
 		button.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
