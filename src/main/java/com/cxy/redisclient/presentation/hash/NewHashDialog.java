@@ -142,7 +142,7 @@ public class NewHashDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				InputDialog inputDialog = new InputDialog(shlNewHash,
 						"Input values",
-						"Values(multiple values are separated by ; score and member are separated by ,)", "", null);
+						"Values(multiple values are separated by ; field and value are separated by ,)", "", null);
 				if (inputDialog.open() == InputDialog.OK) {
 					String values = inputDialog.getValue();
 					String[] zsetValues = values.split(";");

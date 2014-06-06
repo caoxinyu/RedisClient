@@ -7,24 +7,19 @@ import com.cxy.redisclient.integration.JedisCommand;
 
 public class QueryDBAmount extends JedisCommand {
 	private int dbAmount;
-	
+
 	public int getDbAmount() {
 		return dbAmount;
 	}
 
 	public QueryDBAmount(int id) {
 		super(id);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void command() {
-		try{
-			List<String> dbs = jedis.configGet("databases");
-			dbAmount = Integer.parseInt(dbs.get(1));
-		} catch (Exception e) {
-			dbAmount = 0;
-		} 
+		List<String> dbs = jedis.configGet("databases");
+		dbAmount = Integer.parseInt(dbs.get(1));
 	}
 
 	@Override
