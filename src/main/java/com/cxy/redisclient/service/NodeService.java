@@ -35,6 +35,15 @@ public class NodeService {
 		command.execute();
 	}
 	
+	public boolean renameKey(int id, int db, String oldKey, String newKey, boolean overwritten) {
+		RenameKey command = new RenameKey(id, db, oldKey, newKey, overwritten);
+		command.execute();
+		if(!overwritten && command.getResult() == 0)
+			return false;
+		else
+			return true;
+	}
+	
 	public Set<Node> listKeys(int id, int db) {
 		ListKeys command = new ListKeys(id, db);
 		command.execute();

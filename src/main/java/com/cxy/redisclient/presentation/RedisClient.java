@@ -235,11 +235,18 @@ public class RedisClient {
 		mntmRename.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				renameKey();
 			}
 		});
 		mntmRename.setText("rename");
 
 		MenuItem mntmDelete_4 = new MenuItem(menu_Data, SWT.NONE);
+		mntmDelete_4.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				deleteKey();
+			}
+		});
 		mntmDelete_4.setText("delete");
 		
 				MenuItem mntmProperties_1 = new MenuItem(menu_Data, SWT.NONE);
@@ -774,7 +781,10 @@ public class RedisClient {
 		mntmRename_2.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				renameContainer();
+				if(itemSelected instanceof TreeItem)
+					renameContainer();
+				else
+					renameKey();
 			}
 		});
 		mntmRename_2.setText("Rename");
@@ -784,7 +794,10 @@ public class RedisClient {
 		mntmDelete_3.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				deleteCotainer();
+				if(itemSelected instanceof TreeItem)
+					deleteCotainer();
+				else
+					deleteKey();
 			}
 		});
 		mntmDelete_3.setText("Delete");
@@ -1108,7 +1121,7 @@ public class RedisClient {
 				String failString = "Rename following keys failed because of exist:\n";
 				for (String container : result)
 					failString += container + "\n";
-				MessageDialog.openConfirm(shlRedisClient, "rename keys result",
+				MessageDialog.openError(shlRedisClient, "rename keys result",
 						failString);
 			}
 		}
@@ -1514,6 +1527,52 @@ public class RedisClient {
 				tableItemOrderSelected(info, (Order) tblclmn.getData(ORDER),
 						orderBy);
 			}
+		}
+	}
+
+	private void renameKey() {
+		ContainerInfo cinfo = new ContainerInfo();
+		TreeItem[] items = tree.getSelection();
+
+		parseContainer(items[0], cinfo);
+
+		String key = cinfo.getContainer() == null?"": cinfo.getContainer();
+		key += itemSelected.getText();
+		
+		RenameKeysDialog dialog = new RenameKeysDialog(shlRedisClient,
+				SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+				cinfo.getDb(), key);
+		RenameInfo rinfo = (RenameInfo) dialog.open();
+
+		if (rinfo != null) {
+			boolean result = service2.renameKey(cinfo.getId(),
+					cinfo.getDb(), key,
+					rinfo.getNewContainer(), rinfo.isOverwritten());
+			dbContainerTreeItemSelected(items[0], false);
+			
+			if (!rinfo.isOverwritten() && !result) {
+				String failString = "Rename key failed because of exist";
+				MessageDialog.openError(shlRedisClient, "rename keys result",
+						failString);
+			}
+		}
+	}
+
+	private void deleteKey() {
+		boolean ok = MessageDialog.openConfirm(shlRedisClient, "delete key",
+				"Are you sure delete this key?");
+		if (ok) {
+			ContainerInfo cinfo = new ContainerInfo();
+			TreeItem[] items = tree.getSelection();
+
+			parseContainer(items[0], cinfo);
+
+			String key = cinfo.getContainer() == null?"": cinfo.getContainer();
+			key += itemSelected.getText();
+
+			service2.deleteKey(cinfo.getId(), cinfo.getDb(), key);
+			itemSelected.dispose();
+
 		}
 	}
 }
