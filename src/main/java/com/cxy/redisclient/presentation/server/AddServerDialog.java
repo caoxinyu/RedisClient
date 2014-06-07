@@ -78,28 +78,28 @@ public class AddServerDialog extends Dialog {
 		tbtmServerInformation.setControl(composite);
 		
 		Label lblName = new Label(composite, SWT.NONE);
-		lblName.setBounds(10, 15, 29, 13);
+		lblName.setBounds(10, 10, 35, 16);
 		lblName.setText("Name");
 		
 		text_3 = new Text(composite, SWT.BORDER);
-		text_3.setBounds(45, 12, 237, 19);
+		text_3.setBounds(56, 10, 226, 19);
 		text_3.setFocus();
 		
 		Label lblHost = new Label(composite, SWT.NONE);
-		lblHost.setBounds(10, 43, 29, 13);
+		lblHost.setBounds(10, 36, 29, 16);
 		lblHost.setText("Host");
 		
 		text_4 = new Text(composite, SWT.BORDER);
-		text_4.setBounds(45, 40, 237, 19);
+		text_4.setBounds(56, 36, 226, 19);
 		
 		text_5 = new Text(composite, SWT.BORDER);
 		text_5.setText("6379");
 		text_5.selectAll();
-		text_5.setBounds(45, 68, 237, 19);
+		text_5.setBounds(56, 62, 226, 19);
 		
 		Label lblPort = new Label(composite, SWT.NONE);
 		lblPort.setText("Port");
-		lblPort.setBounds(10, 71, 30, 13);
+		lblPort.setBounds(10, 62, 30, 16);
 		
 		Button btnOk = new Button(shell, SWT.NONE);
 		btnOk.addMouseListener(new MouseAdapter() {

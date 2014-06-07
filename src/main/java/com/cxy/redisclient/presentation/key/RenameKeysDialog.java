@@ -83,14 +83,14 @@ public class RenameKeysDialog extends Dialog {
 		
 		Label lblKey = new Label(composite, SWT.NONE);
 		lblKey.setText("Server");
-		lblKey.setBounds(10, 13, 45, 13);
+		lblKey.setBounds(10, 13, 45, 19);
 		
 		Label lblNewKey = new Label(composite, SWT.NONE);
 		lblNewKey.setText("New key");
-		lblNewKey.setBounds(10, 44, 45, 13);
+		lblNewKey.setBounds(10, 44, 56, 16);
 		
 		text_2 = new Text(composite, SWT.BORDER);
-		text_2.setBounds(62, 41, 220, 19);
+		text_2.setBounds(72, 41, 210, 19);
 		text_2.setText(oldContainer);
 		text_2.selectAll();
 		text_2.setFocus();
@@ -105,15 +105,15 @@ public class RenameKeysDialog extends Dialog {
 		});
 		
 		Label label_1 = new Label(composite, SWT.NONE);
-		label_1.setBounds(61, 13, 89, 13);
+		label_1.setBounds(72, 13, 78, 19);
 		label_1.setText(server);
 		
 		Label lblDatabase = new Label(composite, SWT.NONE);
 		lblDatabase.setText("Database");
-		lblDatabase.setBounds(156, 13, 45, 13);
+		lblDatabase.setBounds(156, 13, 61, 19);
 		
 		Label label_3 = new Label(composite, SWT.NONE);
-		label_3.setBounds(223, 13, 45, 13);
+		label_3.setBounds(223, 13, 45, 19);
 		label_3.setText(String.valueOf(db));
 		
 		final Button btnCheckButton = new Button(composite, SWT.CHECK);

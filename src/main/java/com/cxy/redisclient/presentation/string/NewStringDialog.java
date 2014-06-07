@@ -74,7 +74,7 @@ public class NewStringDialog extends Dialog {
 				screenSize.y + screenSize.height / 2 - shellSize.height / 2);
 		
 		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
-		tabFolder.setBounds(10, 10, 300, 121);
+		tabFolder.setBounds(10, 10, 300, 128);
 		
 		TabItem tbtmString = new TabItem(tabFolder, SWT.NONE);
 		tbtmString.setText("String");
@@ -84,14 +84,14 @@ public class NewStringDialog extends Dialog {
 		
 		Label lblKey = new Label(composite, SWT.NONE);
 		lblKey.setText("Server");
-		lblKey.setBounds(10, 13, 45, 13);
+		lblKey.setBounds(10, 12, 45, 16);
 		
 		Label lblValue = new Label(composite, SWT.NONE);
 		lblValue.setText("key");
-		lblValue.setBounds(10, 41, 29, 13);
+		lblValue.setBounds(10, 40, 45, 16);
 		
 		text_1 = new Text(composite, SWT.BORDER);
-		text_1.setBounds(62, 38, 220, 19);
+		text_1.setBounds(62, 40, 220, 19);
 		text_1.setText(key);
 		text_1.selectAll();
 		text_1.setFocus();
@@ -107,21 +107,21 @@ public class NewStringDialog extends Dialog {
 		
 		Label label = new Label(composite, SWT.NONE);
 		label.setText("Value");
-		label.setBounds(10, 69, 29, 13);
+		label.setBounds(10, 68, 45, 16);
 		
 		text_2 = new Text(composite, SWT.BORDER);
-		text_2.setBounds(62, 66, 220, 19);
+		text_2.setBounds(62, 68, 220, 19);
 		
 		Label label_1 = new Label(composite, SWT.NONE);
-		label_1.setBounds(61, 13, 89, 13);
+		label_1.setBounds(61, 12, 89, 16);
 		label_1.setText(server);
 		
 		Label lblDatabase = new Label(composite, SWT.NONE);
 		lblDatabase.setText("Database");
-		lblDatabase.setBounds(156, 13, 45, 13);
+		lblDatabase.setBounds(156, 12, 61, 16);
 		
 		Label label_3 = new Label(composite, SWT.NONE);
-		label_3.setBounds(223, 13, 45, 13);
+		label_3.setBounds(223, 12, 45, 16);
 		label_3.setText(String.valueOf(db));
 		
 		btnOk = new Button(shell, SWT.NONE);

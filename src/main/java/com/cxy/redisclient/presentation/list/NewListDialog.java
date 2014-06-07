@@ -81,7 +81,7 @@ public class NewListDialog extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(450, 433);
+		shell.setSize(450, 441);
 		shell.setText("New List");
 
 		Rectangle screenSize = shell.getParent().getBounds();
@@ -91,7 +91,7 @@ public class NewListDialog extends Dialog {
 				/ 2);
 
 		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
-		tabFolder.setBounds(10, 10, 424, 359);
+		tabFolder.setBounds(10, 10, 424, 365);
 
 		TabItem tbtmList = new TabItem(tabFolder, SWT.NONE);
 		tbtmList.setText("List");
@@ -150,11 +150,11 @@ public class NewListDialog extends Dialog {
 		btnNothingToDo.setBounds(228, 26, 158, 16);
 
 		Label lblKey = new Label(composite, SWT.NONE);
-		lblKey.setBounds(10, 32, 49, 13);
+		lblKey.setBounds(10, 32, 49, 19);
 		lblKey.setText("Key");
 
 		text = new Text(composite, SWT.BORDER);
-		text.setBounds(61, 29, 345, 19);
+		text.setBounds(61, 32, 345, 19);
 		text.setText(key);
 		text.selectAll();
 		text.setFocus();
@@ -270,19 +270,19 @@ public class NewListDialog extends Dialog {
 
 		Label label = new Label(composite, SWT.NONE);
 		label.setText("Server");
-		label.setBounds(10, 10, 45, 13);
+		label.setBounds(10, 10, 45, 16);
 
 		Label label_1 = new Label(composite, SWT.NONE);
 		label_1.setText(server);
-		label_1.setBounds(61, 10, 89, 13);
+		label_1.setBounds(61, 10, 89, 19);
 
 		Label label_2 = new Label(composite, SWT.NONE);
 		label_2.setText("Database");
-		label_2.setBounds(248, 10, 45, 13);
+		label_2.setBounds(248, 10, 62, 16);
 
 		Label label_3 = new Label(composite, SWT.NONE);
 		label_3.setText(String.valueOf(db));
-		label_3.setBounds(331, 10, 45, 13);
+		label_3.setBounds(331, 10, 45, 16);
 
 		btnOk = new Button(shell, SWT.NONE);
 		btnOk.setEnabled(false);
@@ -306,7 +306,7 @@ public class NewListDialog extends Dialog {
 				
 			}
 		});
-		btnOk.setBounds(104, 375, 68, 23);
+		btnOk.setBounds(104, 380, 68, 23);
 		btnOk.setText("OK");
 
 		Button btnCancel = new Button(shell, SWT.NONE);
@@ -316,7 +316,7 @@ public class NewListDialog extends Dialog {
 				shell.dispose();
 			}
 		});
-		btnCancel.setBounds(276, 375, 68, 23);
+		btnCancel.setBounds(276, 380, 68, 23);
 		btnCancel.setText("Cancel");
 	}
 

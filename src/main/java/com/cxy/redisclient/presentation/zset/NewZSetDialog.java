@@ -85,7 +85,7 @@ public class NewZSetDialog extends Dialog {
 				/ 2);
 
 		TabFolder tabFolder = new TabFolder(shlNewSortedSet, SWT.NONE);
-		tabFolder.setBounds(10, 10, 424, 234);
+		tabFolder.setBounds(10, 10, 424, 244);
 
 		TabItem tbtmList = new TabItem(tabFolder, SWT.NONE);
 		tbtmList.setText("Sorted Set");
@@ -94,11 +94,11 @@ public class NewZSetDialog extends Dialog {
 		tbtmList.setControl(composite);
 
 		Label lblKey = new Label(composite, SWT.NONE);
-		lblKey.setBounds(10, 32, 49, 13);
+		lblKey.setBounds(10, 34, 49, 19);
 		lblKey.setText("Key");
 
 		text = new Text(composite, SWT.BORDER);
-		text.setBounds(61, 29, 345, 19);
+		text.setBounds(61, 34, 345, 22);
 		text.setText(key);
 		text.selectAll();
 		text.setFocus();
@@ -115,7 +115,7 @@ public class NewZSetDialog extends Dialog {
 
 		Group grpValues = new Group(composite, SWT.NONE);
 		grpValues.setText("Values");
-		grpValues.setBounds(10, 54, 396, 145);
+		grpValues.setBounds(10, 59, 396, 145);
 
 		table = new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION
 				| SWT.MULTI);
@@ -175,19 +175,19 @@ public class NewZSetDialog extends Dialog {
 
 		Label label = new Label(composite, SWT.NONE);
 		label.setText("Server");
-		label.setBounds(10, 10, 45, 13);
+		label.setBounds(10, 10, 45, 18);
 
 		Label label_1 = new Label(composite, SWT.NONE);
 		label_1.setText(server);
-		label_1.setBounds(61, 10, 89, 13);
+		label_1.setBounds(61, 10, 89, 19);
 
 		Label label_2 = new Label(composite, SWT.NONE);
 		label_2.setText("Database");
-		label_2.setBounds(248, 10, 45, 13);
+		label_2.setBounds(248, 10, 65, 15);
 
 		Label label_3 = new Label(composite, SWT.NONE);
 		label_3.setText(String.valueOf(db));
-		label_3.setBounds(331, 10, 45, 13);
+		label_3.setBounds(331, 10, 45, 15);
 
 		btnOk = new Button(shlNewSortedSet, SWT.NONE);
 		btnOk.setEnabled(false);

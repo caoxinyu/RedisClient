@@ -75,7 +75,7 @@ public class RenameFavoriteDialog extends Dialog {
 		
 		Label lblNewKey = new Label(composite, SWT.NONE);
 		lblNewKey.setText("Name");
-		lblNewKey.setBounds(10, 13, 45, 13);
+		lblNewKey.setBounds(10, 13, 51, 13);
 		
 		final Text text_2 = new Text(composite, SWT.BORDER);
 		text_2.setText(oldFavorite.getName());
@@ -85,7 +85,7 @@ public class RenameFavoriteDialog extends Dialog {
 		
 		Label lblFavorite = new Label(composite, SWT.NONE);
 		lblFavorite.setText("Favorite");
-		lblFavorite.setBounds(10, 55, 45, 13);
+		lblFavorite.setBounds(10, 55, 51, 13);
 		
 		text = new Text(composite, SWT.BORDER);
 		text.setEditable(false);

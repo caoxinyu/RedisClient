@@ -84,7 +84,7 @@ public class NewSetDialog extends Dialog {
 				/ 2);
 
 		TabFolder tabFolder = new TabFolder(shlNewSet, SWT.NONE);
-		tabFolder.setBounds(10, 10, 424, 234);
+		tabFolder.setBounds(10, 10, 424, 242);
 
 		TabItem tbtmList = new TabItem(tabFolder, SWT.NONE);
 		tbtmList.setText("Set");
@@ -93,11 +93,11 @@ public class NewSetDialog extends Dialog {
 		tbtmList.setControl(composite);
 
 		Label lblKey = new Label(composite, SWT.NONE);
-		lblKey.setBounds(10, 32, 49, 13);
+		lblKey.setBounds(10, 32, 49, 19);
 		lblKey.setText("Key");
 
 		text = new Text(composite, SWT.BORDER);
-		text.setBounds(61, 29, 345, 19);
+		text.setBounds(61, 32, 345, 19);
 		text.setText(key);
 		text.selectAll();
 		text.setFocus();
@@ -114,7 +114,7 @@ public class NewSetDialog extends Dialog {
 
 		Group grpValues = new Group(composite, SWT.NONE);
 		grpValues.setText("Values");
-		grpValues.setBounds(10, 54, 396, 145);
+		grpValues.setBounds(10, 57, 396, 145);
 
 		table = new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION
 				| SWT.MULTI);
@@ -168,15 +168,15 @@ public class NewSetDialog extends Dialog {
 
 		Label label = new Label(composite, SWT.NONE);
 		label.setText("Server");
-		label.setBounds(10, 10, 45, 13);
+		label.setBounds(10, 10, 49, 16);
 
 		Label label_1 = new Label(composite, SWT.NONE);
 		label_1.setText(server);
-		label_1.setBounds(61, 10, 89, 13);
+		label_1.setBounds(61, 10, 89, 16);
 
 		Label label_2 = new Label(composite, SWT.NONE);
 		label_2.setText("Database");
-		label_2.setBounds(248, 10, 45, 13);
+		label_2.setBounds(248, 10, 65, 16);
 
 		Label label_3 = new Label(composite, SWT.NONE);
 		label_3.setText(String.valueOf(db));
@@ -204,7 +204,7 @@ public class NewSetDialog extends Dialog {
 				
 			}
 		});
-		btnOk.setBounds(104, 260, 68, 23);
+		btnOk.setBounds(104, 258, 68, 23);
 		btnOk.setText("OK");
 
 		Button btnCancel = new Button(shlNewSet, SWT.NONE);
@@ -214,7 +214,7 @@ public class NewSetDialog extends Dialog {
 				shlNewSet.dispose();
 			}
 		});
-		btnCancel.setBounds(276, 260, 68, 23);
+		btnCancel.setBounds(276, 258, 68, 23);
 		btnCancel.setText("Cancel");
 
 	}
