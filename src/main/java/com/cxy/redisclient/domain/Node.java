@@ -46,7 +46,6 @@ public class Node implements Comparable<Node> {
 		return key.hashCode()+type.hashCode();
 	}
 
-	@Override
 	public int compareTo(Node o) {
 		int result = this.getKey().compareTo(o.getKey());
 		if(order == Order.Ascend)
