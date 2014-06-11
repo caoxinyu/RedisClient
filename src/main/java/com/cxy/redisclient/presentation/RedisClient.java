@@ -255,6 +255,12 @@ public class RedisClient {
 		new MenuItem(menu_Data, SWT.SEPARATOR);
 
 		MenuItem menuItem = new MenuItem(menu_Data, SWT.NONE);
+		menuItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				addFavorite();
+			}
+		});
 		menuItem.setText("add to favorites");
 
 		new MenuItem(menu_Data, SWT.SEPARATOR);
@@ -1077,6 +1083,10 @@ public class RedisClient {
 	private TreeItem getTreeItemByTableItem(TableItem tableItem) {
 		TreeItem[] treeItems = tree.getSelection();
 		TreeItem treeItem = treeItems[0];
+		NodeType tableItmeType = (NodeType) tableItem.getData(NODE_TYPE);
+		
+		if(tableItmeType != NodeType.DATABASE && tableItmeType != NodeType.SERVER && tableItmeType != NodeType.CONTAINER)
+			return treeItem;
 		TreeItem[] subTreeItems = treeItem.getItems();
 
 		for (TreeItem item : subTreeItems) {
