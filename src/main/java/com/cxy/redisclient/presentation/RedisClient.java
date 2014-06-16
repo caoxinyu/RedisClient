@@ -876,7 +876,7 @@ public class RedisClient {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				OrganizeFavoriteDialog dialog = new OrganizeFavoriteDialog(
-						shlRedisClient, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+						shlRedisClient, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
 
 				List<Favorite> favorites = (List<Favorite>) dialog.open();
 				if (favorites != null) {
@@ -1059,7 +1059,7 @@ public class RedisClient {
 
 	private void addServer() {
 		AddServerDialog dialog = new AddServerDialog(shlRedisClient,
-				SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
 		Server server = (Server) dialog.open();
 
 		if (server != null) {
@@ -1075,7 +1075,7 @@ public class RedisClient {
 
 		Server server = service1.listById(id);
 		UpdateServerDialog dialog = new UpdateServerDialog(shlRedisClient,
-				SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, server);
+				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, server);
 		server = (Server) dialog.open();
 		if (server != null) {
 			service1.update(id, server.getName(), server.getHost(),
@@ -1135,7 +1135,7 @@ public class RedisClient {
 		parseContainer(treeItem, cinfo);
 
 		RenameKeysDialog dialog = new RenameKeysDialog(shlRedisClient,
-				SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
 				cinfo.getDb(), cinfo.getContainer());
 		RenameInfo rinfo = (RenameInfo) dialog.open();
 
@@ -1199,7 +1199,7 @@ public class RedisClient {
 		parseContainer(treeItem, cinfo);
 
 		AddFavoriteDialog dialog = new AddFavoriteDialog(shlRedisClient,
-				SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, container);
+				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, container);
 		String name = (String) dialog.open();
 		if (name != null)
 			service3.add(cinfo.getId(), name, container);
@@ -1426,7 +1426,7 @@ public class RedisClient {
 		parseContainer(treeItem, cinfo);
 
 		NewStringDialog dialog = new NewStringDialog(shlRedisClient,
-				SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
 				cinfo.getDb(), cinfo.getContainer());
 		StringInfo info = (StringInfo) dialog.open();
 		if (info != null) {
@@ -1451,7 +1451,7 @@ public class RedisClient {
 		parseContainer(treeItem, cinfo);
 
 		NewListDialog dialog = new NewListDialog(shlRedisClient,
-				SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
 				cinfo.getDb(), cinfo.getContainer());
 		ListInfo info = (ListInfo) dialog.open();
 		if (info != null) {
@@ -1473,7 +1473,7 @@ public class RedisClient {
 
 		parseContainer(treeItem, cinfo);
 
-		NewSetDialog dialog = new NewSetDialog(shlRedisClient, SWT.DIALOG_TRIM
+		NewSetDialog dialog = new NewSetDialog(shlRedisClient, SWT.SHELL_TRIM
 				| SWT.APPLICATION_MODAL, cinfo.getServerName(), cinfo.getDb(),
 				cinfo.getContainer());
 		SetInfo info = (SetInfo) dialog.open();
@@ -1497,7 +1497,7 @@ public class RedisClient {
 		parseContainer(treeItem, cinfo);
 
 		NewZSetDialog dialog = new NewZSetDialog(shlRedisClient,
-				SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
 				cinfo.getDb(), cinfo.getContainer());
 		ZSetInfo info = (ZSetInfo) dialog.open();
 		if (info != null) {
@@ -1521,7 +1521,7 @@ public class RedisClient {
 		parseContainer(treeItem, cinfo);
 
 		NewHashDialog dialog = new NewHashDialog(shlRedisClient,
-				SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
 				cinfo.getDb(), cinfo.getContainer());
 		HashInfo info = (HashInfo) dialog.open();
 		if (info != null) {
@@ -1572,7 +1572,7 @@ public class RedisClient {
 		key += itemSelected.getText();
 		
 		RenameKeysDialog dialog = new RenameKeysDialog(shlRedisClient,
-				SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
 				cinfo.getDb(), key);
 		RenameInfo rinfo = (RenameInfo) dialog.open();
 
