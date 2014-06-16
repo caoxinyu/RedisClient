@@ -36,6 +36,14 @@ public class Favorite {
 	public void setFavorite(String favorite) {
 		this.favorite = favorite;
 	}
+	public boolean isData() {
+		char lastChar = favorite.charAt(favorite.length() -1);
+		
+		if(lastChar == ':')
+			return false;
+		else
+			return true;
+	}
 	
 	
 }

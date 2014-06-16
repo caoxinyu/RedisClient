@@ -185,7 +185,7 @@ public class RedisClient {
 
 	private void initShell() {
 		shlRedisClient = new Shell();
-		shlRedisClient.setSize(750, 529);
+		shlRedisClient.setSize(852, 624);
 		shlRedisClient.setText("Redis client");
 		shlRedisClient.setLayout(new FillLayout(SWT.HORIZONTAL));
 	}
@@ -559,7 +559,7 @@ public class RedisClient {
 		table.setHeaderVisible(true);
 
 		tblclmnName = new TableColumn(table, SWT.NONE);
-		tblclmnName.setWidth(100);
+		tblclmnName.setWidth(150);
 		tblclmnName.setText("name");
 		tblclmnName.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -569,7 +569,7 @@ public class RedisClient {
 		});
 
 		tblclmnType = new TableColumn(table, SWT.NONE);
-		tblclmnType.setWidth(100);
+		tblclmnType.setWidth(150);
 		tblclmnType.setText("type");
 		tblclmnType.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -978,19 +978,37 @@ public class RedisClient {
 												false);
 										TreeItem[] dataItems = dbItem
 												.getItems();
-										for (int i = 2; i < containers.length; i++) {
-											for (TreeItem dataItem : dataItems) {
-												if (dataItem.getText().equals(
-														containers[i])) {
-													tree.setSelection(dataItem);
-													dbContainerTreeItemSelected(
-															dataItem, false);
-													dataItems = dataItem
-															.getItems();
-													break;
+										if(!favorite.isData()){
+											for (int i = 2; i < containers.length; i++) {
+												for (TreeItem dataItem : dataItems) {
+													if (dataItem.getText().equals(containers[i])) {
+														tree.setSelection(dataItem);
+														dbContainerTreeItemSelected(dataItem, false);
+														dataItems = dataItem.getItems();
+														break;
+													}
 												}
 											}
-
+										} else {
+											for (int i = 2; i < containers.length - 1; i++) {
+												for (TreeItem dataItem : dataItems) {
+													if (dataItem.getText().equals(containers[i])) {
+														tree.setSelection(dataItem);
+														dbContainerTreeItemSelected(dataItem, false);
+														dataItems = dataItem.getItems();
+														break;
+													}
+												}
+											}
+											TableItem[] tableItems = table.getItems();
+											for(TableItem tableItem : tableItems) {
+												NodeType type = (NodeType) tableItem.getData(NODE_TYPE);
+												if(type != NodeType.SERVER && type != NodeType.DATABASE && type != NodeType.CONTAINER && tableItem.getText().equals(containers[containers.length -1])){
+													table.setSelection(tableItem);
+													break;
+												}
+													
+											}
 										}
 									}
 								}
@@ -1171,7 +1189,11 @@ public class RedisClient {
 			container = text.getText();
 		} else {
 			treeItem = getTreeItemByTableItem((TableItem) itemSelected);
-			container = text.getText() + itemSelected.getText();
+			NodeType type = (NodeType) itemSelected.getData(NODE_TYPE);
+			if(type == NodeType.CONTAINER || type == NodeType.DATABASE)
+				container = text.getText() + itemSelected.getText() + ":";
+			else
+				container = text.getText() + itemSelected.getText();
 		}
 
 		parseContainer(treeItem, cinfo);
