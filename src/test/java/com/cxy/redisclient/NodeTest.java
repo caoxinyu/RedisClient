@@ -9,7 +9,9 @@ import junit.framework.TestCase;
 import com.cxy.redisclient.domain.DataNode;
 import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
+import com.cxy.redisclient.domain.Server;
 import com.cxy.redisclient.service.NodeService;
+import com.cxy.redisclient.service.ServerService;
 
 public class NodeTest extends TestCase {
 
@@ -78,6 +80,20 @@ public class NodeTest extends TestCase {
 	public void testInfo() {
 		NodeService service2 = new NodeService();
 		service2.listServerVersion(1);
+	}
+	
+	public void testPasteKey() {
+		ServerService service = new ServerService();
+		Server server = service.listById(6);
+		NodeService service1 = new NodeService();
+		service1.pasteKey(5, 0, "myzset", server, 0, "paste:test:", true, true);
+	}
+	
+	public void testPasteContainer() {
+		ServerService service = new ServerService();
+		Server server = service.listById(6);
+		NodeService service1 = new NodeService();
+		service1.pasteContainer(5, 0, "article:a1:", server, 0, "paste:test:", false, true);
 	}
 
 }

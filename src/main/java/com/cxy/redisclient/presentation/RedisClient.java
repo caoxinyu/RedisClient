@@ -1005,6 +1005,7 @@ public class RedisClient {
 												NodeType type = (NodeType) tableItem.getData(NODE_TYPE);
 												if(type != NodeType.SERVER && type != NodeType.DATABASE && type != NodeType.CONTAINER && tableItem.getText().equals(containers[containers.length -1])){
 													table.setSelection(tableItem);
+													dataItemSelected();
 													break;
 												}
 													
