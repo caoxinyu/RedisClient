@@ -1,5 +1,6 @@
 package com.cxy.redisclient.domain;
 
+
 public class Favorite {
 	private int fid;
 	private int serverID;
@@ -37,9 +38,9 @@ public class Favorite {
 		this.favorite = favorite;
 	}
 	public boolean isData() {
-		char lastChar = favorite.charAt(favorite.length() -1);
+		char lastChar = favorite.charAt(favorite.length() - 1);
 		
-		if(lastChar == ':')
+		if (lastChar == ':')
 			return false;
 		else
 			return true;

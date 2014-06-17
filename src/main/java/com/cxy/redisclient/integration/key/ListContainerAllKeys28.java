@@ -22,9 +22,14 @@ public class ListContainerAllKeys28 extends ListContainerAllKeys {
 		
 		ScanParams params = new ScanParams();
 		params.match(container + "*");
-		ScanResult<String> result = jedis.scan(SCAN_POINTER_START, params);
+		ScanResult<String> result;
+		String cursor = SCAN_POINTER_START;
+		do {
+			result = jedis.scan(cursor, params);
+			nodekeys.addAll(result.getResult());
+			cursor = result.getStringCursor();
+		}while(!result.getStringCursor().equals(SCAN_POINTER_START));
 		
-		nodekeys.addAll(result.getResult());
 		return nodekeys;
 	}
 

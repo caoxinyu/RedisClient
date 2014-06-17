@@ -3,12 +3,6 @@ package com.cxy.redisclient.dto;
 public class ContainerInfo {
 	private int id;
 	private String serverName;
-	public String getServerName() {
-		return serverName;
-	}
-	public void setServerName(String serverName) {
-		this.serverName = serverName;
-	}
 	private int db;
 	private String container;
 	
@@ -25,9 +19,15 @@ public class ContainerInfo {
 		this.db = db;
 	}
 	public String getContainer() {
-		return container;
+		return container == null?"":container;
 	}
 	public void setContainer(String container) {
 		this.container = container;
+	}
+	public String getServerName() {
+		return serverName;
+	}
+	public void setServerName(String serverName) {
+		this.serverName = serverName;
 	}
 }

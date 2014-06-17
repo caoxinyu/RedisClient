@@ -83,17 +83,15 @@ public class NodeTest extends TestCase {
 	}
 	
 	public void testPasteKey() {
-		ServerService service = new ServerService();
-		Server server = service.listById(6);
 		NodeService service1 = new NodeService();
-		service1.pasteKey(5, 0, "myzset", server, 0, "paste:test:", true, true);
+		service1.pasteKey(5, 0, "myzset", 6, 0, "paste:test:", true, true);
 	}
 	
 	public void testPasteContainer() {
-		ServerService service = new ServerService();
-		Server server = service.listById(6);
 		NodeService service1 = new NodeService();
-		service1.pasteContainer(5, 0, "article:a1:", server, 0, "paste:test:", false, true);
+		service1.pasteContainer(5, 0, "sns:", 6, 1, "sns:", true, true);
+		
+		service1.pasteContainer(5, 0, "sns:", 6, 1, "user:", true, true);
 	}
 
 }

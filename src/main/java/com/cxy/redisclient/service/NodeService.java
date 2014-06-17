@@ -5,18 +5,18 @@ import java.util.Set;
 
 import com.cxy.redisclient.domain.DataNode;
 import com.cxy.redisclient.domain.Node;
-import com.cxy.redisclient.domain.Server;
 import com.cxy.redisclient.dto.Order;
 import com.cxy.redisclient.dto.OrderBy;
 import com.cxy.redisclient.integration.key.DeleteKey;
+import com.cxy.redisclient.integration.key.DumpKey;
 import com.cxy.redisclient.integration.key.IsKeyExist;
 import com.cxy.redisclient.integration.key.ListContainerAllKeys;
 import com.cxy.redisclient.integration.key.ListContainerAllKeysFactory;
 import com.cxy.redisclient.integration.key.ListContainerKeys;
 import com.cxy.redisclient.integration.key.ListContainers;
 import com.cxy.redisclient.integration.key.ListKeys;
-import com.cxy.redisclient.integration.key.PasteKey;
 import com.cxy.redisclient.integration.key.RenameKey;
+import com.cxy.redisclient.integration.key.RestoreKey;
 import com.cxy.redisclient.integration.server.QueryServerVersion;
 import com.cxy.redisclient.integration.string.AddString;
 import com.cxy.redisclient.integration.string.ReadString;
@@ -114,29 +114,35 @@ public class NodeService {
 		return command.getVersionInfo();
 	}
 	
-	public void pasteContainer(int sourceId, int sourceDb, String sourceContainer, Server targetServer, int targetDb, String targetContainer, boolean copy, boolean overwritten) {
+	public void pasteContainer(int sourceId, int sourceDb, String sourceContainer, int targetId, int targetDb, String targetContainer, boolean copy, boolean overwritten) {
 		ListContainerAllKeys command = new ListContainerAllKeysFactory(sourceId, sourceDb, sourceContainer).getListContainerAllKeys();
 		command.execute();
 		Set<Node> nodes = command.getKeys();
 		
 		for(Node node: nodes) {
-			pasteKey(sourceId, sourceDb, node.getKey(), targetServer, targetDb, targetContainer, copy, overwritten);
+			pasteKey(sourceId, sourceDb, node.getKey(), targetId, targetDb, targetContainer, copy, overwritten);
 		}
 	}
 	
-	public void pasteKey(int sourceId, int sourceDb, String sourceKey, Server targetServer, int targetDb, String targetContainer, boolean copy, boolean overwritten) {
+	public void pasteKey(int sourceId, int sourceDb, String sourceKey, int targetId, int targetDb, String targetContainer, boolean copy, boolean overwritten) {
 		String targetKey;
 		if(targetContainer == null || targetContainer.length() == 0)
 			targetContainer = "";
 		targetKey = targetContainer + sourceKey;
 		
-		if(overwritten && isKeyExist(targetServer.getId(), targetDb, targetKey)){
-			deleteKey(targetServer.getId(), targetDb, targetContainer + sourceKey);
+		if(overwritten && isKeyExist(targetId, targetDb, targetKey)){
+			deleteKey(targetId, targetDb, targetContainer + sourceKey);
 		}
-		PasteKey command = new PasteKey(sourceId, sourceDb, sourceKey, targetServer, targetDb, copy);
-		command.execute();
-		if(targetContainer.length() > 0)
-			renameKey(targetServer.getId(), targetDb, sourceKey, targetKey, true);
+		DumpKey command1 = new DumpKey(sourceId, sourceDb, sourceKey);
+		command1.execute();
+		byte[] value = command1.getValue();
+		
+		RestoreKey command2 = new RestoreKey(targetId, targetDb, targetKey, value);
+		command2.execute();
+		
+		if(!copy)
+			deleteKey(sourceId, sourceDb, sourceKey);
+		
 	}
 	
 	public boolean isKeyExist(int id, int db, String key) {
