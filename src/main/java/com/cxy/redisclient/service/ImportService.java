@@ -17,12 +17,12 @@ public class ImportService {
 	}
 	
 	public void importFile() throws IOException {
-		int maxid = Integer.valueOf(PropertyFile.readMaxId(file, "maxid"));
+		int maxid = Integer.valueOf(PropertyFile.readMaxId(file, Constant.MAXID));
 		for(int i = 0 ; i < maxid; i++) {
-			String key = PropertyFile.read(file, "key" + i);
-			String value = PropertyFile.read(file, "value" + i);
+			String key = PropertyFile.read(file, Constant.KEY + i);
+			String value = PropertyFile.read(file, Constant.VALUE + i);
 			
-			RestoreKey command2 = new RestoreKey(id, db, key, value.getBytes("ISO-8859-1"));
+			RestoreKey command2 = new RestoreKey(id, db, key, value.getBytes(Constant.CODEC));
 			command2.execute();
 		}
 		

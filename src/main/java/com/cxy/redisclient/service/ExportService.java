@@ -9,6 +9,7 @@ import com.cxy.redisclient.integration.PropertyFile;
 import com.cxy.redisclient.integration.key.DumpKey;
 
 public class ExportService {
+	
 	private String file;
 	private int id;
 	private int db;
@@ -33,12 +34,12 @@ public class ExportService {
 			DumpKey command = new DumpKey(id, db, node.getKey());
 			command.execute();
 			byte[] value = command.getValue();
-			String id = PropertyFile.readMaxId(file, "maxid");
-			PropertyFile.write(file, "key"+id, node.getKey());
-			PropertyFile.write(file, "value"+id, new String(value,"ISO-8859-1"));
+			String id = PropertyFile.readMaxId(file, Constant.MAXID);
+			PropertyFile.write(file, Constant.KEY+id, node.getKey());
+			PropertyFile.write(file, Constant.VALUE+id, new String(value,Constant.CODEC));
 			
 			int maxid = Integer.parseInt(id) + 1;
-			PropertyFile.write(file, "maxid", String.valueOf(maxid));
+			PropertyFile.write(file, Constant.MAXID, String.valueOf(maxid));
 		}
 	}
 }

@@ -1,5 +1,7 @@
 package com.cxy.redisclient.presentation;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -14,6 +16,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Item;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -49,8 +52,10 @@ import com.cxy.redisclient.presentation.server.UpdateServerDialog;
 import com.cxy.redisclient.presentation.set.NewSetDialog;
 import com.cxy.redisclient.presentation.string.NewStringDialog;
 import com.cxy.redisclient.presentation.zset.NewZSetDialog;
+import com.cxy.redisclient.service.ExportService;
 import com.cxy.redisclient.service.FavoriteService;
 import com.cxy.redisclient.service.HashService;
+import com.cxy.redisclient.service.ImportService;
 import com.cxy.redisclient.service.ListService;
 import com.cxy.redisclient.service.NodeService;
 import com.cxy.redisclient.service.ServerService;
@@ -107,6 +112,7 @@ public class RedisClient {
 	private TableColumn tblclmnName;
 	private TableColumn tblclmnType;
 	private TableColumn tblclmnSize;
+	private Menu menu_dbContainer;
 
 	/**
 	 * Launch the application.
@@ -304,28 +310,7 @@ public class RedisClient {
 							tree.setMenu(menuTreeServer);
 						else if (type == NodeType.DATABASE
 								|| type == NodeType.CONTAINER) {
-							if (type == NodeType.DATABASE) {
-								menuTreeDBContainer.getItem(1)
-										.setEnabled(false);
-								menuTreeDBContainer.getItem(2)
-										.setEnabled(false);
-								menuTreeDBContainer.getItem(7).setEnabled(false);
-								menuTreeDBContainer.getItem(8).setEnabled(true);
-								if(buffer.canPaste())
-									menuTreeDBContainer.getItem(9).setEnabled(true);
-								else
-									menuTreeDBContainer.getItem(9).setEnabled(false);
-								
-							} else {
-								menuTreeDBContainer.getItem(1).setEnabled(true);
-								menuTreeDBContainer.getItem(2).setEnabled(true);
-								menuTreeDBContainer.getItem(7).setEnabled(true);
-								menuTreeDBContainer.getItem(8).setEnabled(true);
-								if(buffer.canPaste())
-									menuTreeDBContainer.getItem(9).setEnabled(true);
-								else
-									menuTreeDBContainer.getItem(9).setEnabled(false);
-							}
+							updateMenuDBContainer(type, menuTreeDBContainer);
 							tree.setMenu(menuTreeDBContainer);
 						}
 
@@ -385,7 +370,7 @@ public class RedisClient {
 	}
 
 	private Menu initMenuTableDB() {
-		Menu menu_dbContainer = new Menu(shlRedisClient);
+		menu_dbContainer = new Menu(shlRedisClient);
 
 		MenuItem mntmNew_1 = new MenuItem(menu_dbContainer, SWT.CASCADE);
 		mntmNew_1.setText("new");
@@ -500,8 +485,31 @@ public class RedisClient {
 		mntmPaste_1.setEnabled(false);
 		mntmPaste_1.setText("paste");
 
+		new MenuItem(menu_dbContainer, SWT.SEPARATOR);
+		
+		MenuItem mntmImport_1 = new MenuItem(menu_dbContainer, SWT.NONE);
+		mntmImport_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				importFile();
+			}
+		});
+		mntmImport_1.setEnabled(false);
+		mntmImport_1.setText("import");
+		
+		MenuItem mntmExport_1 = new MenuItem(menu_dbContainer, SWT.NONE);
+		mntmExport_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				export();
+			}
+		});
+		mntmExport_1.setText("export");
+		
 		return menu_dbContainer;
 	}
+
+	
 
 	private void initTable(SashForm sashForm_1) {
 		table = new Table(sashForm_1, SWT.BORDER | SWT.FULL_SELECTION);
@@ -533,21 +541,24 @@ public class RedisClient {
 				Point point = new Point(e.x, e.y);
 				TableItem selectedItem = table.getItem(point);
 
-				if (treeItems.length > 0 && selectedItem != null) {
-					for (TreeItem treeItem : treeItems[0].getItems()) {
-						String treeText = treeItem.getText();
-						String tableText = selectedItem.getText(0);
-						String type = selectedItem.getText(1);
-						if (treeText.equals(tableText)) {
-							if (type.equals(NodeType.DATABASE.toString())
-									|| type.equals(NodeType.CONTAINER
-											.toString()))
-								dbContainerTreeItemSelected(treeItem, false);
-							else if (type.equals(NodeType.SERVER.toString()))
-								serverTreeItemSelected(treeItem, false);
-							break;
+				if (selectedItem != null){
+					if(treeItems[0].getItems().length == 0)
+						treeItemSelected(true);
+					else {
+						for (TreeItem treeItem : treeItems[0].getItems()) {
+							String treeText = treeItem.getText();
+							String tableText = selectedItem.getText(0);
+							String type = selectedItem.getText(1);
+							if (treeText.equals(tableText)) {
+								if (type.equals(NodeType.DATABASE.toString())
+										|| type.equals(NodeType.CONTAINER
+												.toString()))
+									dbContainerTreeItemSelected(treeItem, false);
+								else if (type.equals(NodeType.SERVER.toString()))
+									serverTreeItemSelected(treeItem, false);
+								break;
+							}
 						}
-
 					}
 				}
 			}
@@ -560,33 +571,15 @@ public class RedisClient {
 					if (selectedItem == null)
 						table.setMenu(menu_null);
 					else {
-						String type = selectedItem.getText(1);
-
-						if (type == NodeType.ROOT.toString())
+						NodeType type = (NodeType) selectedItem.getData(NODE_TYPE);
+						
+						if (type == NodeType.ROOT)
 							table.setMenu(menu_null);
-						else if (type == NodeType.SERVER.toString())
+						else if (type == NodeType.SERVER)
 							table.setMenu(menuTableServer);
-						else if (type == NodeType.DATABASE.toString()
-								|| type == NodeType.CONTAINER.toString()) {
-							if (type == NodeType.DATABASE.toString()) {
-								menuTableDBContainer.getItem(1).setEnabled(false);
-								menuTableDBContainer.getItem(2).setEnabled(false);
-								menuTableDBContainer.getItem(7).setEnabled(false);
-								menuTableDBContainer.getItem(8).setEnabled(true);
-								if(buffer.canPaste())
-									menuTableDBContainer.getItem(9).setEnabled(true);
-								else
-									menuTableDBContainer.getItem(9).setEnabled(false);
-							} else {
-								menuTableDBContainer.getItem(1).setEnabled(true);
-								menuTableDBContainer.getItem(2).setEnabled(true);
-								menuTableDBContainer.getItem(7).setEnabled(true);
-								menuTableDBContainer.getItem(8).setEnabled(true);
-								if(buffer.canPaste())
-									menuTableDBContainer.getItem(9).setEnabled(true);
-								else
-									menuTableDBContainer.getItem(9).setEnabled(false);
-							}
+						else if (type == NodeType.DATABASE
+								|| type == NodeType.CONTAINER) {
+							updateMenuDBContainer(type, menuTableDBContainer);
 							table.setMenu(menuTableDBContainer);
 						} else {
 							table.setMenu(menu_key);
@@ -846,7 +839,8 @@ public class RedisClient {
 					deleteKey();
 			}
 		});
-		mntmDelete_3.setText("Delete");
+		mntmDelete_3.setText("Delete\t Del");
+		mntmDelete_3.setAccelerator(SWT.DEL);
 		
 		MenuItem mntmProperties_2 = new MenuItem(menuData, SWT.NONE);
 		mntmProperties_2.setEnabled(false);
@@ -862,7 +856,8 @@ public class RedisClient {
 			}
 		});
 		mntmcut.setEnabled(false);
-		mntmcut.setText("&Cut");
+		mntmcut.setText("Cut\tCtrl+X");
+		mntmcut.setAccelerator(SWT.CTRL + 'X');
 
 		MenuItem mntmCopy = new MenuItem(menuData, SWT.NONE);
 		mntmCopy.addSelectionListener(new SelectionAdapter() {
@@ -872,7 +867,8 @@ public class RedisClient {
 			}
 		});
 		mntmCopy.setEnabled(false);
-		mntmCopy.setText("C&opy");
+		mntmCopy.setText("Copy\tCtrl+C");
+		mntmCopy.setAccelerator(SWT.CTRL + 'C');
 
 		MenuItem mntmPaste = new MenuItem(menuData, SWT.NONE);
 		mntmPaste.addSelectionListener(new SelectionAdapter() {
@@ -882,19 +878,18 @@ public class RedisClient {
 			}
 		});
 		mntmPaste.setEnabled(false);
-		mntmPaste.setText("&Paste");
-
-		new MenuItem(menuData, SWT.SEPARATOR);
-
-		MenuItem mntmFind = new MenuItem(menuData, SWT.NONE);
-		mntmFind.setText("Find");
-
-		MenuItem mntmReplace = new MenuItem(menuData, SWT.NONE);
-		mntmReplace.setText("Find next");
+		mntmPaste.setText("Paste\tCtrl+V");
+		mntmPaste.setAccelerator(SWT.CTRL + 'V');
 
 		new MenuItem(menuData, SWT.SEPARATOR);
 
 		MenuItem mntmImport = new MenuItem(menuData, SWT.NONE);
+		mntmImport.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				importFile();
+			}
+		});
 		mntmImport.setEnabled(false);
 		mntmImport.setText("Import");
 
@@ -911,7 +906,8 @@ public class RedisClient {
 				treeItemSelected(true);
 			}
 		});
-		mntmRefresh_1.setText("Refresh");
+		mntmRefresh_1.setText("Refresh\tF5");
+		mntmRefresh_1.setAccelerator(SWT.F5);
 
 		MenuItem mntmFavorites = new MenuItem(menu, SWT.CASCADE);
 		mntmFavorites.setText("Favorites");
@@ -992,6 +988,64 @@ public class RedisClient {
 
 		MenuItem mntmAbout = new MenuItem(menu_2, SWT.NONE);
 		mntmAbout.setText("About");
+	}
+
+	private void export() {
+		TreeItem treeItem;
+		
+		ContainerInfo cinfo = new ContainerInfo();
+		if (itemSelected instanceof TreeItem) {
+			treeItem = (TreeItem) itemSelected;
+		} else {
+			treeItem = getTreeItemByTableItem((TableItem) itemSelected);
+		}
+
+		parseContainer(treeItem, cinfo);
+		
+		FileDialog dialog = new FileDialog(shlRedisClient,SWT.SAVE);
+		dialog.setText("Export redis data file");
+		String[] filterExt = { "*.*" };
+		dialog.setFilterExtensions(filterExt);
+		String file = dialog.open();
+		File exportFile = new File(file);
+		boolean ok = false;
+		if(exportFile.exists())
+			ok = MessageDialog.openConfirm(shlRedisClient, "file exists",
+					"File exists, are you sure replace this file?");
+		if(ok) {
+			ExportService service = new ExportService(file, cinfo.getId(), cinfo.getDb(), cinfo.getContainer());
+			try {
+				service.export();
+			} catch (IOException e) {
+				throw new RuntimeException(e.getMessage());
+			}
+		}
+	}
+	private void importFile() {
+		TreeItem treeItem;
+		
+		ContainerInfo cinfo = new ContainerInfo();
+		if (itemSelected instanceof TreeItem) {
+			treeItem = (TreeItem) itemSelected;
+		} else {
+			treeItem = getTreeItemByTableItem((TableItem) itemSelected);
+		}
+
+		parseContainer(treeItem, cinfo);
+		
+		FileDialog dialog = new FileDialog(shlRedisClient, SWT.OPEN);
+		dialog.setText("Import redis data file");
+		String[] filterExt = { "*.*" };
+		dialog.setFilterExtensions(filterExt);
+		String file = dialog.open();
+		ImportService service = new ImportService(file, cinfo.getId(), cinfo.getDb());
+		try {
+			service.importFile();
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage());
+		}
+		
+		dbContainerTreeItemSelected(treeItem, true);
 	}
 
 	private void removeFavoriteMenuItem() {
@@ -1342,6 +1396,9 @@ public class RedisClient {
 				menuData.getItem(7).setEnabled(true);
 			else
 				menuData.getItem(7).setEnabled(false);
+			
+			menuData.getItem(9).setEnabled(false);
+			menuData.getItem(10).setEnabled(true);
 		} else {
 			menuData.getItem(1).setEnabled(false);
 			menuData.getItem(2).setEnabled(false);
@@ -1351,6 +1408,9 @@ public class RedisClient {
 				menuData.getItem(7).setEnabled(true);
 			else
 				menuData.getItem(7).setEnabled(false);
+			
+			menuData.getItem(9).setEnabled(true);
+			menuData.getItem(10).setEnabled(true);
 		}
 
 		menuFavorite.getItem(0).setEnabled(true);
@@ -1442,6 +1502,8 @@ public class RedisClient {
 		menuData.getItem(5).setEnabled(false);
 		menuData.getItem(6).setEnabled(false);
 		menuData.getItem(7).setEnabled(false);
+		menuData.getItem(9).setEnabled(false);
+		menuData.getItem(10).setEnabled(false);
 		
 		menuFavorite.getItem(0).setEnabled(false);
 	}
@@ -1487,6 +1549,8 @@ public class RedisClient {
 		menuData.getItem(5).setEnabled(false);
 		menuData.getItem(6).setEnabled(false);
 		menuData.getItem(7).setEnabled(false);
+		menuData.getItem(9).setEnabled(false);
+		menuData.getItem(10).setEnabled(false);
 		
 		menuFavorite.getItem(0).setEnabled(false);
 	}
@@ -1752,12 +1816,32 @@ public class RedisClient {
 		
 		if(!buffer.isCopy() && !buffer.isKey())
 			dbContainerTreeItemSelected(buffer.getCutItem().getParentItem(), true);
-		if (itemSelected instanceof TreeItem) {
-			dbContainerTreeItemSelected(treeItem, true);
-		} else {
-			TreeItem[] items = tree.getSelection();
+		dbContainerTreeItemSelected(treeItem, true);
+	}
+
+	private void updateMenuDBContainer(NodeType type, Menu menu) {
+		if (type == NodeType.DATABASE) {
+			menu.getItem(1).setEnabled(false);
+			menu.getItem(2).setEnabled(false);
+			menu.getItem(7).setEnabled(false);
+			menu.getItem(8).setEnabled(true);
+			if(buffer.canPaste())
+				menu.getItem(9).setEnabled(true);
+			else
+				menu.getItem(9).setEnabled(false);
 			
-			dbContainerTreeItemSelected(items[0], true);
+			menu.getItem(11).setEnabled(true);
+		} else {
+			menu.getItem(1).setEnabled(true);
+			menu.getItem(2).setEnabled(true);
+			menu.getItem(7).setEnabled(true);
+			menu.getItem(8).setEnabled(true);
+			if(buffer.canPaste())
+				menu.getItem(9).setEnabled(true);
+			else
+				menu.getItem(9).setEnabled(false);
+			
+			menu.getItem(11).setEnabled(false);
 		}
 	}
 }
