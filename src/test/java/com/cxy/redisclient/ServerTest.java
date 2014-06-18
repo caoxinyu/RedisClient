@@ -40,13 +40,9 @@ public class ServerTest extends TestCase {
 	}
 	
 	public void testDelete() throws IOException {
-		int oldamount = Integer.parseInt(ConfigFile.readAmount(ConfigFile.SERVER_AMOUNT));
 		int id = Integer.parseInt(ConfigFile.readMaxId(ConfigFile.SERVER_MAXID));
 		ServerService server = new ServerService();
 		server.delete(id);
-		
-		int newamount = Integer.parseInt(ConfigFile.readAmount(ConfigFile.SERVER_AMOUNT));
-		assertEquals(oldamount, newamount+1);
 	}
 
 	public void testList() throws IOException {
@@ -62,9 +58,6 @@ public class ServerTest extends TestCase {
 	public void testListAll() throws IOException {
 		ServerService service = new ServerService();
 		List<Server> servers = service.listAll();
-		
-		int amount = Integer.parseInt(ConfigFile.readAmount(ConfigFile.SERVER_AMOUNT));
-		assertEquals(amount, servers.size());
 	}
 	
 	public void testUpdate() throws IOException {

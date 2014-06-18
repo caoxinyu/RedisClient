@@ -79,6 +79,12 @@ public class NodeService {
 		return command.getKeys();
 	}
 	
+	public Set<Node> listContainerAllKeys(int id, int db, String container) {
+		ListContainerAllKeys command = new ListContainerAllKeysFactory(id, db, container).getListContainerAllKeys();
+		command.execute();
+		return command.getKeys();
+	}
+	
 	public Set<String> renameContainer(int id, int db, String oldContainer, String newContainer, boolean overwritten) {
 		Set<String> failContainer = new HashSet<String>();
 		
@@ -115,9 +121,7 @@ public class NodeService {
 	}
 	
 	public void pasteContainer(int sourceId, int sourceDb, String sourceContainer, int targetId, int targetDb, String targetContainer, boolean copy, boolean overwritten) {
-		ListContainerAllKeys command = new ListContainerAllKeysFactory(sourceId, sourceDb, sourceContainer).getListContainerAllKeys();
-		command.execute();
-		Set<Node> nodes = command.getKeys();
+		Set<Node> nodes = listContainerAllKeys(sourceId, sourceDb, sourceContainer);
 		
 		for(Node node: nodes) {
 			pasteKey(sourceId, sourceDb, node.getKey(), targetId, targetDb, targetContainer, copy, overwritten);

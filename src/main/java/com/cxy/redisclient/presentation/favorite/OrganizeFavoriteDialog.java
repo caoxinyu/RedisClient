@@ -18,6 +18,8 @@ import org.eclipse.swt.widgets.TableItem;
 
 import com.cxy.redisclient.domain.Favorite;
 import com.cxy.redisclient.service.FavoriteService;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 
 public class OrganizeFavoriteDialog extends Dialog {
 
@@ -60,6 +62,13 @@ public class OrganizeFavoriteDialog extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
+		shell.addShellListener(new ShellAdapter() {
+			@Override
+			public void shellClosed(ShellEvent e) {
+				result = null;
+				shell.dispose();
+			}
+		});
 		shell.setSize(450, 300);
 		shell.setText("Organize Favorites");
 		

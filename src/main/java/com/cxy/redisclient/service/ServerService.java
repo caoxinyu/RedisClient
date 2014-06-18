@@ -19,9 +19,6 @@ public class ServerService {
 			ConfigFile.write(ConfigFile.HOST + id, host);
 			ConfigFile.write(ConfigFile.PORT + id, port);
 
-			int amount = Integer.parseInt(ConfigFile
-					.readAmount(ConfigFile.SERVER_AMOUNT)) + 1;
-			ConfigFile.write(ConfigFile.SERVER_AMOUNT, String.valueOf(amount));
 			ConfigFile.write(ConfigFile.SERVER_MAXID, String.valueOf(id));
 
 			return id;
@@ -32,15 +29,9 @@ public class ServerService {
 
 	public void delete(int id) {
 		try {
-			int amount = Integer.parseInt(ConfigFile
-					.readAmount(ConfigFile.SERVER_AMOUNT));
-
 			ConfigFile.delete(ConfigFile.NAME + id);
 			ConfigFile.delete(ConfigFile.HOST + id);
 			ConfigFile.delete(ConfigFile.PORT + id);
-
-			ConfigFile.write(ConfigFile.SERVER_AMOUNT,
-					String.valueOf(amount - 1));
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}

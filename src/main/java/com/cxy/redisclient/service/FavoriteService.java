@@ -17,10 +17,7 @@ public class FavoriteService {
 			ConfigFile.write(ConfigFile.FAVORITE_SERVER + fid,
 					String.valueOf(id));
 
-			int amount = Integer.parseInt(ConfigFile
-					.readAmount(ConfigFile.FAVORITE_AMOUNT)) + 1;
-			ConfigFile
-					.write(ConfigFile.FAVORITE_AMOUNT, String.valueOf(amount));
+			
 			ConfigFile.write(ConfigFile.FAVORITE_MAXID, String.valueOf(fid));
 
 			return fid;
@@ -31,14 +28,8 @@ public class FavoriteService {
 
 	public void delete(int fid) {
 		try {
-			int amount = Integer.parseInt(ConfigFile
-					.readAmount(ConfigFile.FAVORITE_AMOUNT));
-
 			ConfigFile.delete(ConfigFile.FAVORITE + fid);
 			ConfigFile.delete(ConfigFile.FAVORITE_SERVER + fid);
-
-			ConfigFile.write(ConfigFile.FAVORITE_AMOUNT,
-					String.valueOf(amount - 1));
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}
