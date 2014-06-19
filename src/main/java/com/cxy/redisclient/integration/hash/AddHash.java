@@ -21,7 +21,7 @@ public class AddHash extends JedisCommand {
 	@Override
 	protected void command() {
 		jedis.select(db);
-		if(jedis.exists(key) && getNodeType(key) != NodeType.HASH)
+		if(jedis.exists(key) && getValueType(key) != NodeType.HASH)
 			throw new RuntimeException("Key: " + key + " alreay exist, and type is not hash.");
 		jedis.hmset(key, values);
 	}

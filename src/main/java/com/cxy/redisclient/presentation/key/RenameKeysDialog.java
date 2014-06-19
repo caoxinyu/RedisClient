@@ -22,7 +22,7 @@ import org.eclipse.swt.events.ModifyEvent;
 public class RenameKeysDialog extends Dialog {
 
 	protected Object result = null;
-	protected Shell shell;
+	protected Shell shlRenameKey;
 	private Text text_2;
 	private String server;
 	private int db;
@@ -48,10 +48,10 @@ public class RenameKeysDialog extends Dialog {
 	 */
 	public Object open() {
 		createContents();
-		shell.open();
-		shell.layout();
+		shlRenameKey.open();
+		shlRenameKey.layout();
 		Display display = getParent().getDisplay();
-		while (!shell.isDisposed()) {
+		while (!shlRenameKey.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
@@ -63,20 +63,20 @@ public class RenameKeysDialog extends Dialog {
 	 * Create contents of the dialog.
 	 */
 	private void createContents() {
-		shell = new Shell(getParent(), getStyle());
-		shell.setSize(326, 201);
-		shell.setText("Rename Keys");
+		shlRenameKey = new Shell(getParent(), getStyle());
+		shlRenameKey.setSize(326, 201);
+		shlRenameKey.setText("Rename Key");
 		
-		Rectangle screenSize = shell.getParent().getBounds();
-		Rectangle shellSize = shell.getBounds();
-		shell.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
+		Rectangle screenSize = shlRenameKey.getParent().getBounds();
+		Rectangle shellSize = shlRenameKey.getBounds();
+		shlRenameKey.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
 				screenSize.y + screenSize.height / 2 - shellSize.height / 2);
 		
-		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
+		TabFolder tabFolder = new TabFolder(shlRenameKey, SWT.NONE);
 		tabFolder.setBounds(10, 10, 300, 121);
 		
 		TabItem tbtmString = new TabItem(tabFolder, SWT.NONE);
-		tbtmString.setText("String");
+		tbtmString.setText("Key");
 		
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tbtmString.setControl(composite);
@@ -121,7 +121,7 @@ public class RenameKeysDialog extends Dialog {
 		btnCheckButton.setBounds(10, 69, 272, 16);
 		btnCheckButton.setText("Overwritten if exists");
 		
-		button = new Button(shell, SWT.NONE);
+		button = new Button(shlRenameKey, SWT.NONE);
 		button.setEnabled(false);
 		button.addMouseListener(new MouseAdapter() {
 			@Override
@@ -130,21 +130,21 @@ public class RenameKeysDialog extends Dialog {
 				boolean overwritten = btnCheckButton.getSelection(); 
 				
 				if( newContainer.length() == 0){
-					MessageDialog.openError(shell, "error","please input new key name!");
+					MessageDialog.openError(shlRenameKey, "error","please input new key name!");
 				} else {
 					result = new RenameInfo(newContainer, overwritten);
-					shell.dispose();
+					shlRenameKey.dispose();
 				}
 			}
 		});
 		button.setText("OK");
 		button.setBounds(61, 144, 68, 23);
 		
-		Button button_1 = new Button(shell, SWT.NONE);
+		Button button_1 = new Button(shlRenameKey, SWT.NONE);
 		button_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				shell.dispose();
+				shlRenameKey.dispose();
 			}
 		});
 		button_1.setText("Cancel");

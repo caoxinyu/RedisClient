@@ -84,7 +84,7 @@ public class NodeTest extends TestCase {
 	
 	public void testPasteKey() {
 		NodeService service1 = new NodeService();
-		service1.pasteKey(5, 0, "myzset", 6, 0, "paste:test:", true, true);
+		service1.pasteKey(5, 0, "myzset", 6, 0, "paste:test:", false, true, true);
 	}
 	
 	public void testPasteContainer() {

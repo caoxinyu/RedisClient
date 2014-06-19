@@ -8,20 +8,25 @@ import java.util.Set;
 import redis.clients.jedis.ScanParams;
 import redis.clients.jedis.ScanResult;
 
+import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.domain.RedisVersion;
 
-public class ListContainerAllKeys28 extends ListContainerAllKeys {
+public class FindContainerKeys28 extends FindContainerKeys {
 
-	public ListContainerAllKeys28(int id, int db, String container) {
-		super(id, db, container);
+	public FindContainerKeys28(int id, int db, String container, String keyPattern) {
+		super(id, db, container, keyPattern);
 	}
 
+	public FindContainerKeys28(int id, int db, String container, String keyPattern, NodeType[] valueTypes) {
+		super(id, db, container, keyPattern, valueTypes);
+	}
+	
 	protected Set<String> getResult() {
 		Set<String> nodekeys = new HashSet<String>();
 		assert(container != null);
 		
 		ScanParams params = new ScanParams();
-		params.match(container + "*");
+		params.match(container + keyPattern);
 		ScanResult<String> result;
 		String cursor = SCAN_POINTER_START;
 		do {

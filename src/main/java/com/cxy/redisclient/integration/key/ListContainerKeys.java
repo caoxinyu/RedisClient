@@ -64,7 +64,7 @@ public class ListContainerKeys extends JedisCommand {
 			String nextKey = it.next();
 			String[] ckey = nextKey.substring(length).split(":");
 			if (ckey.length == 1) {
-				NodeType nodeType = getNodeType(nextKey);
+				NodeType nodeType = getValueType(nextKey);
 				long size = getSize(nextKey);
 				
 				DataNode node = new DataNode(ckey[0], nodeType, size, order, orderBy);

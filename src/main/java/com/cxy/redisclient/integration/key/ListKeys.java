@@ -29,7 +29,7 @@ public class ListKeys extends JedisCommand {
 		Iterator<String> it = nodekeys.iterator();
 		while (it.hasNext()) {
 			String key = (String)it.next();
-			NodeType nodeType = getNodeType(key);
+			NodeType nodeType = getValueType(key);
 			
 			Node node = new Node(key, nodeType);
 			nodes.add(node);

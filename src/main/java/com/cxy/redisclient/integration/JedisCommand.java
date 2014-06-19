@@ -7,7 +7,11 @@ import com.cxy.redisclient.domain.RedisVersion;
 import com.cxy.redisclient.domain.Server;
 import com.cxy.redisclient.service.ServerService;
 
-public abstract class JedisCommand {
+public abstract class JedisCommand implements Comparable<JedisCommand>{
+	public int compareTo(JedisCommand arg0) {
+		return this.getVersion().compareTo(arg0.getVersion()) * -1;
+	}
+
 	private int id;
 	protected Server server;
 	protected Jedis jedis;
@@ -24,14 +28,13 @@ public abstract class JedisCommand {
 
 		command();
 		jedis.close();
-
 	}
 
 	protected abstract void command();
 
 	public abstract RedisVersion getVersion();
 
-	protected NodeType getNodeType(String key) {
+	protected NodeType getValueType(String key) {
 		String type = jedis.type(key);
 		NodeType nodeType = null;
 		if (type.equals("string"))

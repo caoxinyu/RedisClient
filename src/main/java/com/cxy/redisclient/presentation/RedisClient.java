@@ -156,6 +156,8 @@ public class RedisClient {
 	protected void createContents() {
 		initShell();
 
+		initImage();
+
 		initMenu();
 
 		initSash();
@@ -163,21 +165,21 @@ public class RedisClient {
 	}
 
 	private void initImage() {
-		redisImage = new Image(tree.getDisplay(), getClass()
+		redisImage = new Image(shlRedisClient.getDisplay(), getClass()
 				.getResourceAsStream("/redis.png"));
-		dbImage = new Image(tree.getDisplay(), getClass().getResourceAsStream(
+		dbImage = new Image(shlRedisClient.getDisplay(), getClass().getResourceAsStream(
 				"/db.png"));
-		strImage = new Image(tree.getDisplay(), getClass().getResourceAsStream(
+		strImage = new Image(shlRedisClient.getDisplay(), getClass().getResourceAsStream(
 				"/string.png"));
-		setImage = new Image(tree.getDisplay(), getClass().getResourceAsStream(
+		setImage = new Image(shlRedisClient.getDisplay(), getClass().getResourceAsStream(
 				"/set.png"));
-		listImage = new Image(tree.getDisplay(), getClass()
+		listImage = new Image(shlRedisClient.getDisplay(), getClass()
 				.getResourceAsStream("/list.png"));
-		zsetImage = new Image(tree.getDisplay(), getClass()
+		zsetImage = new Image(shlRedisClient.getDisplay(), getClass()
 				.getResourceAsStream("/zset.png"));
-		hashImage = new Image(tree.getDisplay(), getClass()
+		hashImage = new Image(shlRedisClient.getDisplay(), getClass()
 				.getResourceAsStream("/hash.png"));
-		containerImage = new Image(tree.getDisplay(), getClass()
+		containerImage = new Image(shlRedisClient.getDisplay(), getClass()
 				.getResourceAsStream("/container.png"));
 	}
 
@@ -198,8 +200,6 @@ public class RedisClient {
 		SashForm sashForm = new SashForm(sashForm_2, SWT.NONE);
 
 		initTree(sashForm);
-
-		initImage();
 
 		initRootItem();
 
@@ -386,6 +386,7 @@ public class RedisClient {
 			}
 		});
 		menuItem_1.setText("String");
+		menuItem_1.setImage(strImage);
 
 		MenuItem menuItem_2 = new MenuItem(menu_1, SWT.NONE);
 		menuItem_2.addSelectionListener(new SelectionAdapter() {
@@ -395,6 +396,7 @@ public class RedisClient {
 			}
 		});
 		menuItem_2.setText("List");
+		menuItem_2.setImage(listImage);
 
 		MenuItem menuItem_3 = new MenuItem(menu_1, SWT.NONE);
 		menuItem_3.addSelectionListener(new SelectionAdapter() {
@@ -404,6 +406,7 @@ public class RedisClient {
 			}
 		});
 		menuItem_3.setText("Set");
+		menuItem_3.setImage(setImage);
 
 		MenuItem mntmSortedSet = new MenuItem(menu_1, SWT.NONE);
 		mntmSortedSet.addSelectionListener(new SelectionAdapter() {
@@ -413,6 +416,7 @@ public class RedisClient {
 			}
 		});
 		mntmSortedSet.setText("Sorted Set");
+		mntmSortedSet.setImage(zsetImage);
 
 		MenuItem mntmHash_1 = new MenuItem(menu_1, SWT.NONE);
 		mntmHash_1.addSelectionListener(new SelectionAdapter() {
@@ -422,6 +426,7 @@ public class RedisClient {
 			}
 		});
 		mntmHash_1.setText("Hash");
+		mntmHash_1.setImage(hashImage);
 
 		MenuItem mntmRename_1 = new MenuItem(menu_dbContainer, SWT.NONE);
 		mntmRename_1.addSelectionListener(new SelectionAdapter() {
@@ -777,7 +782,10 @@ public class RedisClient {
 				newString();
 			}
 		});
-		mntmString.setText("String");
+		mntmString.setText("String\tAlt+1");
+		mntmString.setAccelerator(SWT.ALT+'1');
+		mntmString.setImage(strImage);
+		
 
 		MenuItem mntmList = new MenuItem(menu_5, SWT.NONE);
 		mntmList.addSelectionListener(new SelectionAdapter() {
@@ -786,7 +794,9 @@ public class RedisClient {
 				newList();
 			}
 		});
-		mntmList.setText("List");
+		mntmList.setText("List\tAlt+2");
+		mntmList.setAccelerator(SWT.ALT+'2');
+		mntmList.setImage(listImage);
 
 		MenuItem mntmSet = new MenuItem(menu_5, SWT.NONE);
 		mntmSet.addSelectionListener(new SelectionAdapter() {
@@ -795,7 +805,9 @@ public class RedisClient {
 				newSet();
 			}
 		});
-		mntmSet.setText("Set");
+		mntmSet.setText("Set\tAlt+3");
+		mntmSet.setAccelerator(SWT.ALT+'3');
+		mntmSet.setImage(setImage);
 
 		MenuItem mntmSortset = new MenuItem(menu_5, SWT.NONE);
 		mntmSortset.addSelectionListener(new SelectionAdapter() {
@@ -804,8 +816,10 @@ public class RedisClient {
 				newZSet();
 			}
 		});
-		mntmSortset.setText("Sorted Set");
-
+		mntmSortset.setText("Sorted Set\tAlt+4");
+		mntmSortset.setAccelerator(SWT.ALT+'4');
+		mntmSortset.setImage(zsetImage);
+		
 		MenuItem mntmHash = new MenuItem(menu_5, SWT.NONE);
 		mntmHash.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -813,8 +827,10 @@ public class RedisClient {
 				newHash();
 			}
 		});
-		mntmHash.setText("Hash");
-
+		mntmHash.setText("Hash\tAlt+5");
+		mntmHash.setAccelerator(SWT.ALT+'5');
+		mntmHash.setImage(hashImage);
+		
 		MenuItem mntmRename_2 = new MenuItem(menuData, SWT.NONE);
 		mntmRename_2.setEnabled(false);
 		mntmRename_2.addSelectionListener(new SelectionAdapter() {
@@ -1074,60 +1090,13 @@ public class RedisClient {
 								.getData(FAVORITE);
 						int sid = favorite.getServerID();
 
-						rootTreeItemSelected(false);
-						TreeItem[] treeItems = rootRedisServers.getItems();
-						for (TreeItem treeItem : treeItems) {
-							int serverId = (Integer) treeItem.getData(NODE_ID);
-							if (serverId == sid) {
-								serverTreeItemSelected(treeItem, false);
-								String[] containers = favorite.getFavorite()
-										.split(":");
-								TreeItem[] dbItems = treeItem.getItems();
-								for (TreeItem dbItem : dbItems) {
-									if (dbItem.getText().equals(containers[1])) {
-										tree.setSelection(dbItem);
-										dbContainerTreeItemSelected(dbItem,
-												false);
-										TreeItem[] dataItems = dbItem
-												.getItems();
-										if(!favorite.isData()){
-											for (int i = 2; i < containers.length; i++) {
-												for (TreeItem dataItem : dataItems) {
-													if (dataItem.getText().equals(containers[i])) {
-														tree.setSelection(dataItem);
-														dbContainerTreeItemSelected(dataItem, false);
-														dataItems = dataItem.getItems();
-														break;
-													}
-												}
-											}
-										} else {
-											for (int i = 2; i < containers.length - 1; i++) {
-												for (TreeItem dataItem : dataItems) {
-													if (dataItem.getText().equals(containers[i])) {
-														tree.setSelection(dataItem);
-														dbContainerTreeItemSelected(dataItem, false);
-														dataItems = dataItem.getItems();
-														break;
-													}
-												}
-											}
-											TableItem[] tableItems = table.getItems();
-											for(TableItem tableItem : tableItems) {
-												NodeType type = (NodeType) tableItem.getData(NODE_TYPE);
-												if(type != NodeType.SERVER && type != NodeType.DATABASE && type != NodeType.CONTAINER && tableItem.getText().equals(containers[containers.length -1])){
-													table.setSelection(tableItem);
-													dataItemSelected();
-													break;
-												}
-													
-											}
-										}
-									}
-								}
-
-							}
+						String[] containers = favorite.getFavorite().split(":");
+						
+						String container = "";
+						for(int i = 2; i < containers.length; i++){
+							container += containers[i] + ":";
 						}
+						go(sid,Integer.parseInt(containers[1].replaceFirst(DB_PREFIX, "")), container, favorite.isData(), false);
 
 					}
 				});
@@ -1809,14 +1778,23 @@ public class RedisClient {
 
 		ContainerInfo info = buffer.paste();
 		
-		if(buffer.isKey())
-			service2.pasteKey(info.getId(), info.getDb(), info.getContainer()+buffer.getKey(), cinfo.getId(), cinfo.getDb(), cinfo.getContainer(), buffer.isCopy(), true);
-		else
-			service2.pasteContainer(info.getId(), info.getDb(), info.getContainer(), cinfo.getId(), cinfo.getDb(), cinfo.getContainer(), buffer.isCopy(), true);
+		if(!buffer.isCopy() && ! buffer.isKey()){
+			 buffer.getCutItem().dispose();
+		}
 		
-		if(!buffer.isCopy() && !buffer.isKey())
-			dbContainerTreeItemSelected(buffer.getCutItem().getParentItem(), true);
-		dbContainerTreeItemSelected(treeItem, true);
+		if(buffer.isKey()){
+			String newKey = service2.pasteKey(info.getId(), info.getDb(), info.getContainer()+buffer.getKey(), cinfo.getId(), cinfo.getDb(), cinfo.getContainer(), buffer.isCopy(), true);
+			if(newKey == null)
+				go(cinfo.getId(), cinfo.getDb(), cinfo.getContainer() + buffer.getKey(), true, true);
+			else
+				go(cinfo.getId(), cinfo.getDb(), newKey, true, true);
+		}else{
+			String newContainer = service2.pasteContainer(info.getId(), info.getDb(), info.getContainer(), cinfo.getId(), cinfo.getDb(), cinfo.getContainer(), buffer.isCopy(), true);
+			if(newContainer != null)
+				go(cinfo.getId(), cinfo.getDb(), newContainer, false, true);
+			else
+				go(cinfo.getId(), cinfo.getDb(), cinfo.getContainer() + info.getContainer(), false, true);
+		}			
 	}
 
 	private void updateMenuDBContainer(NodeType type, Menu menu) {
@@ -1842,6 +1820,64 @@ public class RedisClient {
 				menu.getItem(9).setEnabled(false);
 			
 			menu.getItem(11).setEnabled(false);
+		}
+	}
+
+	private void go(int id, int db, String container, boolean isKey, boolean fresh) {
+		rootTreeItemSelected(false);
+		TreeItem[] treeItems = rootRedisServers.getItems();
+		for (TreeItem treeItem : treeItems) {
+			int serverId = (Integer) treeItem.getData(NODE_ID);
+			if (serverId == id) {
+				serverTreeItemSelected(treeItem, false);
+				
+				TreeItem[] dbItems = treeItem.getItems();
+				for (TreeItem dbItem : dbItems) {
+					if (dbItem.getText().equals(DB_PREFIX+db)) {
+						tree.setSelection(dbItem);
+						dbContainerTreeItemSelected(dbItem,	fresh);
+						TreeItem[] dataItems = dbItem.getItems();
+						
+							
+						String[] containers = container.split(":");
+						if(!isKey){
+							for (int i = 0; i < containers.length; i++) {
+								for (TreeItem dataItem : dataItems) {
+									if (dataItem.getText().equals(containers[i])) {
+										tree.setSelection(dataItem);
+										dbContainerTreeItemSelected(dataItem, fresh);
+										dataItems = dataItem.getItems();
+										
+										break;
+									}
+								}
+							}
+						} else {
+							for (int i = 0; i < containers.length - 1; i++) {
+								for (TreeItem dataItem : dataItems) {
+									if (dataItem.getText().equals(containers[i])) {
+										tree.setSelection(dataItem);
+										dbContainerTreeItemSelected(dataItem, false);
+										dataItems = dataItem.getItems();
+										break;
+									}
+								}
+							}
+							TableItem[] tableItems = table.getItems();
+							for(TableItem tableItem : tableItems) {
+								NodeType type = (NodeType) tableItem.getData(NODE_TYPE);
+								if(type != NodeType.SERVER && type != NodeType.DATABASE && type != NodeType.CONTAINER && tableItem.getText().equals(containers[containers.length -1])){
+									table.setSelection(tableItem);
+									dataItemSelected();
+									break;
+								}
+									
+							}
+						}
+					}
+				}
+
+			}
 		}
 	}
 }

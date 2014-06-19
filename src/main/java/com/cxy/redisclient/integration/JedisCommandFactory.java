@@ -1,9 +1,9 @@
 package com.cxy.redisclient.integration;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.cxy.redisclient.domain.RedisVersion;
 import com.cxy.redisclient.integration.server.QueryServerVersion;
@@ -12,7 +12,7 @@ public abstract class JedisCommandFactory {
 	private int id;
 	private static Map<String, RedisVersion> redisVersion = new HashMap<String, RedisVersion>();
 	protected RedisVersion version;
-	protected List<JedisCommand> commands = new ArrayList<JedisCommand>();
+	protected SortedSet<JedisCommand> commands = new TreeSet<JedisCommand>();
 	
 	public JedisCommandFactory(int id) {
 		this.id = id;
@@ -25,14 +25,13 @@ public abstract class JedisCommandFactory {
 			version = getRedisVersion();
 			redisVersion.put(String.valueOf(id), version);
 		}		
-		JedisCommand command = null;
-		for (int i = commands.size(); i > 0; i--) {
-			command = commands.get(i - 1);
+		
+		for (JedisCommand command: commands) {
 			if (command.getVersion().getVersion() <= version.getVersion()) {
 				return command;
 			}
 		}
-		return command;
+		return null;
 	}
 	
 	private RedisVersion getRedisVersion() {
