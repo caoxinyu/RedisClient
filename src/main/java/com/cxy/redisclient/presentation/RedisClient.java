@@ -851,8 +851,14 @@ public class RedisClient {
 			public void widgetSelected(SelectionEvent e) {
 				if(itemSelected instanceof TreeItem)
 					deleteCotainer();
-				else
-					deleteKey();
+				else {
+					NodeType type = (NodeType) itemSelected.getData(NODE_TYPE);
+					if(type == NodeType.CONTAINER)
+						deleteCotainer();
+					else
+						deleteKey();
+				}
+					
 			}
 		});
 		mntmDelete_3.setText("Delete\t Del");
@@ -1767,33 +1773,30 @@ public class RedisClient {
 	private void paste() {
 		TreeItem treeItem;
 		
-		ContainerInfo cinfo = new ContainerInfo();
+		ContainerInfo target = new ContainerInfo();
 		if (itemSelected instanceof TreeItem) {
 			treeItem = (TreeItem) itemSelected;
 		} else {
 			treeItem = getTreeItemByTableItem((TableItem) itemSelected);
 		}
 
-		parseContainer(treeItem, cinfo);
+		parseContainer(treeItem, target);
 
-		ContainerInfo info = buffer.paste();
+		ContainerInfo source = buffer.paste();
 		
 		if(!buffer.isCopy() && ! buffer.isKey()){
 			 buffer.getCutItem().dispose();
 		}
 		
 		if(buffer.isKey()){
-			String newKey = service2.pasteKey(info.getId(), info.getDb(), info.getContainer()+buffer.getKey(), cinfo.getId(), cinfo.getDb(), cinfo.getContainer(), buffer.isCopy(), true);
+			String newKey = service2.pasteKey(source.getId(), source.getDb(), source.getContainer()+buffer.getKey(), target.getId(), target.getDb(), target.getContainer()+buffer.getKey(), buffer.isCopy(), true);
 			if(newKey == null)
-				go(cinfo.getId(), cinfo.getDb(), cinfo.getContainer() + buffer.getKey(), true, true);
+				go(target.getId(), target.getDb(), target.getContainer() + buffer.getKey(), true, true);
 			else
-				go(cinfo.getId(), cinfo.getDb(), newKey, true, true);
+				go(target.getId(), target.getDb(), newKey, true, true);
 		}else{
-			String newContainer = service2.pasteContainer(info.getId(), info.getDb(), info.getContainer(), cinfo.getId(), cinfo.getDb(), cinfo.getContainer(), buffer.isCopy(), true);
-			if(newContainer != null)
-				go(cinfo.getId(), cinfo.getDb(), newContainer, false, true);
-			else
-				go(cinfo.getId(), cinfo.getDb(), cinfo.getContainer() + info.getContainer(), false, true);
+			service2.pasteContainer(source.getId(), source.getDb(), source.getContainer(), target.getId(), target.getDb(), target.getContainer(), buffer.isCopy(), true);
+			go(target.getId(), target.getDb(), target.getContainer(), false, true);
 		}			
 	}
 

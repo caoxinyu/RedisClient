@@ -3,6 +3,7 @@ package com.cxy.redisclient.service;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.cxy.redisclient.domain.Container;
 import com.cxy.redisclient.domain.DataNode;
 import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
@@ -124,65 +125,43 @@ public class NodeService {
 	public String pasteContainer(int sourceId, int sourceDb, String sourceContainer, int targetId, int targetDb, String targetContainer, boolean copy, boolean overwritten) {
 		Set<Node> nodes = listContainerAllKeys(sourceId, sourceDb, sourceContainer);
 		
-		if(sourceId == targetId && sourceDb == targetDb && targetContainer.equals("")){
+		if(sourceId == targetId && sourceDb == targetDb && targetContainer.equals(new Container(sourceContainer).getUpperContainer())){
 			if(!copy)
 				return null;
 			if(sourceContainer.equals(""))
 				return null;
 			else {
-				String[] containers = sourceContainer.split(":");
-				containers[containers.length - 1] += String.valueOf(System.currentTimeMillis());
-				
-				for(int i = 0; i < containers.length; i ++) {
-					targetContainer += containers[i] + ":";
-				}
+				String target = new Container(sourceContainer).appendLastContainer(String.valueOf(System.currentTimeMillis()));
 				
 				for(Node node: nodes) {
-					String targetKey = node.getKey().replaceFirst(sourceContainer, targetContainer);
-					
-					pasteKey(sourceId, sourceDb, node.getKey(), targetId, targetDb, targetKey, true, copy, overwritten);
+					String targetKey = node.getKey().replaceFirst(sourceContainer, target);
+					pasteKey(sourceId, sourceDb, node.getKey(), targetId, targetDb, targetKey, copy, overwritten);
 				}
-				return targetContainer;
+				return target;
 			}
 		} else {
 			for(Node node: nodes) {
-				pasteKey(sourceId, sourceDb, node.getKey(), targetId, targetDb, targetContainer, false, copy, overwritten);
+				String targetKey = targetContainer + new Container(node.getKey()).getRelativeContainer(sourceContainer);
+				pasteKey(sourceId, sourceDb, node.getKey(), targetId, targetDb, targetKey, copy, overwritten);
 			}
 			return null;
 		}
 	}
 	
-	public String pasteKey(int sourceId, int sourceDb, String sourceKey, int targetId, int targetDb, String targetContainer, boolean copy, boolean overwritten) {
-		if(sourceId == targetId && sourceDb == targetDb && targetContainer.equals("")){
+
+	public String pasteKey(int sourceId, int sourceDb, String sourceKey, int targetId, int targetDb, String targetKey, boolean copy, boolean overwritten) {
+		boolean changeTarget = false;
+		
+		if(sourceId == targetId && sourceDb == targetDb && sourceKey.equals(targetKey)) {
 			if(!copy)
 				return null;
-			else {
-				String[] containers = sourceKey.split(":");
-				containers[containers.length - 1] += String.valueOf(System.currentTimeMillis());
-				
-				for(int i = 0; i < containers.length -1; i ++) {
-					targetContainer += containers[i] + ":";
-				}
-				targetContainer += containers[containers.length - 1];
-				
-				pasteKey(sourceId, sourceDb, sourceKey, targetId, targetDb, targetContainer, true, copy, overwritten);
-				return targetContainer;
-			}
-		} else {
-			pasteKey(sourceId, sourceDb, sourceKey, targetId, targetDb, targetContainer, false, copy, overwritten);
-			return null;
+			String key = new Container(sourceKey).getKeyOnly();
+			
+			String source = key + String.valueOf(System.currentTimeMillis());
+			targetKey = sourceKey.replaceFirst(key, source);
+			changeTarget = true;
 		}
-	}
-	public void pasteKey(int sourceId, int sourceDb, String sourceKey, int targetId, int targetDb, String target, boolean specifyKey, boolean copy, boolean overwritten) {
-		String targetKey;
-		if(target == null || target.length() == 0)
-			target = "";
-		if(!specifyKey)
-			targetKey = target + sourceKey;
-		else
-			targetKey = target;
-		if(sourceId == targetId && sourceDb == targetDb && sourceKey.equals(targetKey))
-			return;
+			
 		if(overwritten && isKeyExist(targetId, targetDb, targetKey)){
 			deleteKey(targetId, targetDb, targetKey);
 		}
@@ -196,6 +175,10 @@ public class NodeService {
 		if(!copy)
 			deleteKey(sourceId, sourceDb, sourceKey);
 		
+		if(changeTarget)
+			return targetKey;
+		else
+			return null;
 	}
 	
 	public boolean isKeyExist(int id, int db, String key) {
