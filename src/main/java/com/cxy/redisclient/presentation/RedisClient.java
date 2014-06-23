@@ -916,6 +916,12 @@ public class RedisClient {
 		mntmImport.setText("Import");
 
 		MenuItem mntmExport = new MenuItem(menuData, SWT.NONE);
+		mntmExport.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				export();
+			}
+		});
 		mntmExport.setEnabled(false);
 		mntmExport.setText("Export");
 
@@ -1029,17 +1035,21 @@ public class RedisClient {
 		String[] filterExt = { "*.*" };
 		dialog.setFilterExtensions(filterExt);
 		String file = dialog.open();
-		File exportFile = new File(file);
-		boolean ok = false;
-		if(exportFile.exists())
-			ok = MessageDialog.openConfirm(shlRedisClient, "file exists",
-					"File exists, are you sure replace this file?");
-		if(ok) {
-			ExportService service = new ExportService(file, cinfo.getId(), cinfo.getDb(), cinfo.getContainer());
-			try {
-				service.export();
-			} catch (IOException e) {
-				throw new RuntimeException(e.getMessage());
+		if(file != null){
+			File exportFile = new File(file);
+		
+			boolean ok = false;
+			boolean exist = exportFile.exists();
+			if(exist)
+				ok = MessageDialog.openConfirm(shlRedisClient, "file exists",
+						"File exists, are you sure replace this file?");
+			if(!exist || ok) {
+				ExportService service = new ExportService(file, cinfo.getId(), cinfo.getDb(), cinfo.getContainer());
+				try {
+					service.export();
+				} catch (IOException e) {
+					throw new RuntimeException(e.getMessage());
+				}
 			}
 		}
 	}
@@ -1060,14 +1070,16 @@ public class RedisClient {
 		String[] filterExt = { "*.*" };
 		dialog.setFilterExtensions(filterExt);
 		String file = dialog.open();
-		ImportService service = new ImportService(file, cinfo.getId(), cinfo.getDb());
-		try {
-			service.importFile();
-		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
+		if(file != null) {
+			ImportService service = new ImportService(file, cinfo.getId(), cinfo.getDb());
+			try {
+				service.importFile();
+			} catch (IOException e) {
+				throw new RuntimeException(e.getMessage());
+			}
+			
+			dbContainerTreeItemSelected(treeItem, true);
 		}
-		
-		dbContainerTreeItemSelected(treeItem, true);
 	}
 
 	private void removeFavoriteMenuItem() {
