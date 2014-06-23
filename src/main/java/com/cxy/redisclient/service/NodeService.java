@@ -1,19 +1,22 @@
 package com.cxy.redisclient.service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import com.cxy.redisclient.domain.Container;
 import com.cxy.redisclient.domain.DataNode;
 import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
+import com.cxy.redisclient.domain.Server;
 import com.cxy.redisclient.dto.Order;
 import com.cxy.redisclient.dto.OrderBy;
 import com.cxy.redisclient.integration.key.DeleteKey;
 import com.cxy.redisclient.integration.key.DumpKey;
-import com.cxy.redisclient.integration.key.IsKeyExist;
 import com.cxy.redisclient.integration.key.FindContainerKeys;
 import com.cxy.redisclient.integration.key.FindContainerKeysFactory;
+import com.cxy.redisclient.integration.key.IsKeyExist;
 import com.cxy.redisclient.integration.key.ListContainerKeys;
 import com.cxy.redisclient.integration.key.ListContainers;
 import com.cxy.redisclient.integration.key.ListKeys;
@@ -190,26 +193,42 @@ public class NodeService {
 	public Set<Node> find(NodeType searchFrom, int id, int db, String container, NodeType[] searchNodeType, String pattern) {
 		switch(searchFrom) {
 		case ROOT:
-			break;
+			ServerService service = new ServerService();
+			List<Server> servers = service.listAll();
+			Set<Node> nodes = new TreeSet<Node>();
+			
+			for(Server server:servers)
+				nodes.addAll(findKeysFromServer(server.getId(), searchNodeType, pattern));
+			return nodes;
 			
 		case SERVER:
-			break;
+			return findKeysFromServer(id, searchNodeType, pattern);
 		
 		case DATABASE:
-			break;
+			return findKeys(id, db, "", searchNodeType, pattern);
 		
 		case CONTAINER:
-			break;
-		
-			
+			return findKeys(id, db, container, searchNodeType, pattern);
 		default:
 			throw new IllegalArgumentException();
 		}
-		return null;
+	}
+
+	private Set<Node> findKeysFromServer(int id, NodeType[] searchNodeType,
+			String pattern) {
+		ServerService service = new ServerService();
+		int amount = service.listDBs(id);
+		
+		Set<Node> nodes = new TreeSet<Node>();
+		
+		for(int i = 0; i < amount; i ++) {
+			nodes.addAll(findKeys(id, i, "", searchNodeType, pattern));
+		}
+		return nodes;
 	}
 	
-	public Set<Node> findKeys(int id, int db, String container, String keyPattern) {
-		FindContainerKeys command = new FindContainerKeysFactory(id, db, container, keyPattern).getListContainerAllKeys();
+	public Set<Node> findKeys(int id, int db, String container, NodeType[] searchNodeType, String keyPattern) {
+		FindContainerKeys command = new FindContainerKeysFactory(id, db, container, searchNodeType, keyPattern).getListContainerAllKeys();
 		command.execute();
 		return command.getKeys();
 	}

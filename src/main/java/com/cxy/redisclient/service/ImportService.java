@@ -22,8 +22,8 @@ public class ImportService {
 			String key = PropertyFile.read(file, Constant.KEY + i);
 			String value = PropertyFile.read(file, Constant.VALUE + i);
 			
-			RestoreKey command2 = new RestoreKey(id, db, key, value.getBytes(Constant.CODEC));
-			command2.execute();
+			RestoreKey command = new RestoreKey(id, db, key, value.getBytes(Constant.CODEC));
+			command.execute();
 		}
 		
 	}

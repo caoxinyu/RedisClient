@@ -11,7 +11,7 @@ public class FindContainerKeysFactory extends JedisCommandFactory {
 		commands.add(new FindContainerKeys10(id, db, container, keyPattern));
 	}
 	
-	public FindContainerKeysFactory(int id, int db, String container, String keyPattern, NodeType[] valueTypes) {
+	public FindContainerKeysFactory(int id, int db, String container, NodeType[] valueTypes, String keyPattern) {
 		super(id);
 		commands.add(new FindContainerKeys28(id, db, container, keyPattern, valueTypes));
 		commands.add(new FindContainerKeys10(id, db, container, keyPattern, valueTypes));

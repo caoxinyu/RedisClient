@@ -67,7 +67,7 @@ public class ListContainerKeys extends JedisCommand {
 				NodeType nodeType = getValueType(nextKey);
 				long size = getSize(nextKey);
 				
-				DataNode node = new DataNode(ckey[0], nodeType, size, order, orderBy);
+				DataNode node = new DataNode(id, db, ckey[0], nodeType, size, order, orderBy);
 				keys.add(node);
 			}
 		}

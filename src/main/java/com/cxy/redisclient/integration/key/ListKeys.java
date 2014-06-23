@@ -31,7 +31,7 @@ public class ListKeys extends JedisCommand {
 			String key = (String)it.next();
 			NodeType nodeType = getValueType(key);
 			
-			Node node = new Node(key, nodeType);
+			Node node = new Node(id, db, key, nodeType);
 			nodes.add(node);
 		}
 	}

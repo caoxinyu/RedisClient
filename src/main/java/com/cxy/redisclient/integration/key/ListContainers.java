@@ -49,7 +49,7 @@ public class ListContainers extends JedisCommand {
 			if (ckey.length > 1) {
 				NodeType nodeType = NodeType.CONTAINER;
 
-				Node node = new Node(ckey[0], nodeType, order);
+				Node node = new Node(id, db, ckey[0], nodeType, order);
 				containers.add(node);
 			}
 		}

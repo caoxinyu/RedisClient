@@ -12,7 +12,7 @@ public abstract class JedisCommand implements Comparable<JedisCommand>{
 		return this.getVersion().compareTo(arg0.getVersion()) * -1;
 	}
 
-	private int id;
+	protected int id;
 	protected Server server;
 	protected Jedis jedis;
 	private ServerService service = new ServerService();

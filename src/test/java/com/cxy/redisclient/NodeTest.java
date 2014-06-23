@@ -67,8 +67,8 @@ public class NodeTest extends TestCase {
 		
 		Set<Node> nodes = new HashSet<Node>();
 		
-		Node node1 = new Node("login", NodeType.CONTAINER);
-		Node node2 = new Node("login", NodeType.CONTAINER);
+		Node node1 = new Node(7, 0, "login", NodeType.CONTAINER);
+		Node node2 = new Node(7, 0, "login", NodeType.CONTAINER);
 		assertTrue(node1.equals(node2));
 		
 		nodes.add(node1);
@@ -92,6 +92,18 @@ public class NodeTest extends TestCase {
 		service1.pasteContainer(5, 0, "sns:", 6, 1, "sns:", true, true);
 		
 		service1.pasteContainer(5, 0, "sns:", 6, 1, "user:", true, true);
+	}
+	
+	public void testFindKeys() {
+		NodeService service = new NodeService();
+		NodeType[] types = new NodeType[]{NodeType.STRING, NodeType.LIST,NodeType.SET, NodeType.SORTEDSET, NodeType.HASH};
+		Set<Node> nodes = service.find(NodeType.DATABASE, 7, 5, "", types, "*cxy*");
+		
+		for(Node node:nodes) {
+			System.out.println("server:" + node.getId()+"db:" + node.getDb()+node.getKey());
+			
+		}
+		
 	}
 
 }
