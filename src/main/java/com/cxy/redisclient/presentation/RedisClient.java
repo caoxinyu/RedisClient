@@ -1275,7 +1275,7 @@ public class RedisClient {
 				treeItem.dispose();
 			}
 			itemSelected.dispose();
-
+			treeItemSelected(false);
 		}
 	}
 
@@ -1732,7 +1732,8 @@ public class RedisClient {
 
 			service2.deleteKey(cinfo.getId(), cinfo.getDb(), key);
 			itemSelected.dispose();
-
+			
+			treeItemSelected(false);
 		}
 	}
 	
