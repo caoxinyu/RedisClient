@@ -3,6 +3,7 @@ package com.cxy.redisclient.integration.key;
 import static redis.clients.jedis.ScanParams.SCAN_POINTER_START;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import redis.clients.jedis.ScanParams;
@@ -17,8 +18,8 @@ public class FindContainerKeys28 extends FindContainerKeys {
 		super(id, db, container, keyPattern);
 	}
 
-	public FindContainerKeys28(int id, int db, String container, String keyPattern, NodeType[] valueTypes) {
-		super(id, db, container, keyPattern, valueTypes);
+	public FindContainerKeys28(int id, int db, String container, String keyPattern, List<NodeType> valueTypes, boolean forward) {
+		super(id, db, container, keyPattern, valueTypes, forward);
 	}
 	
 	protected Set<String> getResult() {

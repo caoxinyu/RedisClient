@@ -34,6 +34,7 @@ import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.domain.Server;
 import com.cxy.redisclient.dto.ContainerInfo;
+import com.cxy.redisclient.dto.FindInfo;
 import com.cxy.redisclient.dto.HashInfo;
 import com.cxy.redisclient.dto.ListInfo;
 import com.cxy.redisclient.dto.Order;
@@ -45,6 +46,7 @@ import com.cxy.redisclient.dto.ZSetInfo;
 import com.cxy.redisclient.presentation.favorite.AddFavoriteDialog;
 import com.cxy.redisclient.presentation.favorite.OrganizeFavoriteDialog;
 import com.cxy.redisclient.presentation.hash.NewHashDialog;
+import com.cxy.redisclient.presentation.key.FindKeyDialog;
 import com.cxy.redisclient.presentation.key.RenameKeysDialog;
 import com.cxy.redisclient.presentation.list.NewListDialog;
 import com.cxy.redisclient.presentation.server.AddServerDialog;
@@ -64,7 +66,8 @@ import com.cxy.redisclient.service.ZSetService;
 
 public class RedisClient {
 	private Shell shlRedisClient;
-	private RedisClientBuffer buffer = new RedisClientBuffer();
+	private PasteBuffer pBuffer = new PasteBuffer();
+	private FindBuffer fBuffer = null;
 	
 	private Item itemSelected;
 
@@ -224,6 +227,9 @@ public class RedisClient {
 		menuTableServer = initMenuTableServer();
 
 		initServers();
+		
+		tree.select(rootRedisServers);
+		treeItemSelected(false);
 	}
 
 	private void initMenuData() {
@@ -296,7 +302,7 @@ public class RedisClient {
 				Point point = new Point(arg0.x, arg0.y);
 				TreeItem selectedItem = tree.getItem(point);
 				if (arg0.button == 3) {
-					if (selectedItem == null)
+					if (selectedItem == rootRedisServers || selectedItem == null)
 						tree.setMenu(menu_null);
 					else {
 						itemSelected = selectedItem;
@@ -353,7 +359,7 @@ public class RedisClient {
 
 	private Menu initMenuTreeDB() {
 		Menu menu = initMenuTableDB();
-
+		
 		new MenuItem(menu, SWT.SEPARATOR);
 
 		MenuItem mntmRefresh_2 = new MenuItem(menu, SWT.NONE);
@@ -511,6 +517,35 @@ public class RedisClient {
 		});
 		mntmExport_1.setText("export");
 		
+		new MenuItem(menu_dbContainer, SWT.SEPARATOR);
+		
+		MenuItem mntmFind_1 = new MenuItem(menu_dbContainer, SWT.NONE);
+		mntmFind_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				find();
+			}
+		});
+		mntmFind_1.setText("find");
+		
+		MenuItem mntmFindNext_1 = new MenuItem(menu_dbContainer, SWT.NONE);
+		mntmFindNext_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				findForward();
+			}
+		});
+		mntmFindNext_1.setText("find forward");
+		
+		MenuItem mntmFindBackward_3 = new MenuItem(menu_dbContainer, SWT.NONE);
+		mntmFindBackward_3.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				findBackward();
+			}
+		});
+		mntmFindBackward_3.setText("find backward");
+		
 		return menu_dbContainer;
 	}
 
@@ -643,7 +678,7 @@ public class RedisClient {
 
 	private Menu initMenuTreeServer() {
 		Menu menu_server = initMenuTableServer();
-
+		
 		new MenuItem(menu_server, SWT.SEPARATOR);
 
 		MenuItem mntmRefresh_3 = new MenuItem(menu_server, SWT.NONE);
@@ -660,9 +695,9 @@ public class RedisClient {
 	}
 
 	private Menu initMenuTableServer() {
-		Menu menu_server = new Menu(shlRedisClient);
+		Menu menu_server_1 = new Menu(shlRedisClient);
 
-		MenuItem mntmUpdate = new MenuItem(menu_server, SWT.NONE);
+		MenuItem mntmUpdate = new MenuItem(menu_server_1, SWT.NONE);
 		mntmUpdate.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -671,7 +706,7 @@ public class RedisClient {
 		});
 		mntmUpdate.setText("update");
 
-		MenuItem mntmDelete = new MenuItem(menu_server, SWT.NONE);
+		MenuItem mntmDelete = new MenuItem(menu_server_1, SWT.NONE);
 		mntmDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -680,10 +715,39 @@ public class RedisClient {
 		});
 		mntmDelete.setText("remove");
 
-		MenuItem mntmProperties_4 = new MenuItem(menu_server, SWT.NONE);
+		MenuItem mntmProperties_4 = new MenuItem(menu_server_1, SWT.NONE);
 		mntmProperties_4.setText("properties");
 		
-		return menu_server;
+		new MenuItem(menu_server_1, SWT.SEPARATOR);
+		
+		MenuItem menuItem_2 = new MenuItem(menu_server_1, SWT.NONE);
+		menuItem_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				find();
+			}
+		});
+		menuItem_2.setText("find");
+		
+		MenuItem mntmFindForward = new MenuItem(menu_server_1, SWT.NONE);
+		mntmFindForward.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				findForward();
+			}
+		});
+		mntmFindForward.setText("find forward");
+		
+		MenuItem mntmFindBackward = new MenuItem(menu_server_1, SWT.NONE);
+		mntmFindBackward.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				findBackward();
+			}
+		});
+		mntmFindBackward.setText("find backward");
+		
+		return menu_server_1;
 	}
 
 	private void initMenuNull() {
@@ -697,6 +761,37 @@ public class RedisClient {
 			}
 		});
 		mntmNewConnection.setText("add server");
+		
+		new MenuItem(menu_null, SWT.SEPARATOR);
+		
+		MenuItem mntmFind = new MenuItem(menu_null, SWT.NONE);
+		mntmFind.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				find();
+			}
+		});
+		mntmFind.setText("find");
+		
+		MenuItem mntmFindNext = new MenuItem(menu_null, SWT.NONE);
+		mntmFindNext.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				findForward();
+			}
+		});
+		mntmFindNext.setText("find forward");
+		
+		MenuItem mntmFindBackward_2 = new MenuItem(menu_null, SWT.NONE);
+		mntmFindBackward_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				findBackward();
+			}
+		});
+		mntmFindBackward_2.setText("find  backward");
+		
+		new MenuItem(menu_null, SWT.SEPARATOR);
 
 		MenuItem mntmRefresh = new MenuItem(menu_null, SWT.NONE);
 		mntmRefresh.addSelectionListener(new SelectionAdapter() {
@@ -926,6 +1021,38 @@ public class RedisClient {
 		mntmExport.setText("Export");
 
 		new MenuItem(menuData, SWT.SEPARATOR);
+		
+		MenuItem mntmFind_2 = new MenuItem(menuData, SWT.NONE);
+		mntmFind_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				find();
+			}
+		});
+		mntmFind_2.setText("Find\tCtrl+F");
+		mntmFind_2.setAccelerator(SWT.CTRL + 'F');
+		
+		MenuItem mntmFindNext_2 = new MenuItem(menuData, SWT.NONE);
+		mntmFindNext_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				findForward();
+			}
+		});
+		mntmFindNext_2.setText("Find forward\tF3");
+		mntmFindNext_2.setAccelerator(SWT.F3);
+		
+		MenuItem mntmFindBackward_1 = new MenuItem(menuData, SWT.NONE);
+		mntmFindBackward_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				findBackward();
+			}
+		});
+		mntmFindBackward_1.setText("Find backward\tCtrl+F3");
+		mntmFindBackward_1.setAccelerator(SWT.CTRL+SWT.F3);
+		
+		new MenuItem(menuData, SWT.SEPARATOR);
 
 		MenuItem mntmRefresh_1 = new MenuItem(menuData, SWT.NONE);
 		mntmRefresh_1.addSelectionListener(new SelectionAdapter() {
@@ -1016,6 +1143,89 @@ public class RedisClient {
 
 		MenuItem mntmAbout = new MenuItem(menu_2, SWT.NONE);
 		mntmAbout.setText("About");
+	}
+
+	protected void findForward() {
+		if(fBuffer == null)
+			find();		
+		else {
+			Node node = service2.findNext(fBuffer.getFindNode(), fBuffer.getSearchFrom(), fBuffer.getId(), fBuffer.getDb(), fBuffer.getContainer(), fBuffer.getSearchNodeType(), fBuffer.getPattern(), true);
+			if(node != null) {
+				go(node.getId(), node.getDb(), node.getKey(), true, true);
+				
+				fBuffer.setFindNode(node);
+			} else {
+				boolean ok = MessageDialog.openConfirm(shlRedisClient, "find forward", "Finished find result, find again?");
+				if(ok){
+					Set<Node> nodes = service2.find(fBuffer.getSearchFrom(), fBuffer.getId(), fBuffer.getDb(), fBuffer.getContainer(), fBuffer.getSearchNodeType(), fBuffer.getPattern(), true);
+					if(!nodes.isEmpty()) {
+						Node node1 = nodes.iterator().next();
+						go(node1.getId(), node1.getDb(), node1.getKey(), true, true);
+						
+						fBuffer.setFindNode(node1);
+					}else{
+						MessageDialog.openInformation(shlRedisClient, "find results",
+								"No match result found!");
+					}
+				}
+			}
+		}
+	}
+	
+	protected void findBackward() {
+		if(fBuffer == null)
+			find();		
+		else {
+			Node node = service2.findNext(fBuffer.getFindNode(), fBuffer.getSearchFrom(), fBuffer.getId(), fBuffer.getDb(), fBuffer.getContainer(), fBuffer.getSearchNodeType(), fBuffer.getPattern(), false);
+			if(node != null) {
+				go(node.getId(), node.getDb(), node.getKey(), true, true);
+				
+				fBuffer.setFindNode(node);
+			} else {
+				boolean ok = MessageDialog.openConfirm(shlRedisClient, "find backward", "Finished find result, find again?");
+				if(ok){
+					Set<Node> nodes = service2.find(fBuffer.getSearchFrom(), fBuffer.getId(), fBuffer.getDb(), fBuffer.getContainer(), fBuffer.getSearchNodeType(), fBuffer.getPattern(), false);
+					if(!nodes.isEmpty()) {
+						Node node1 = nodes.iterator().next();
+						go(node1.getId(), node1.getDb(), node1.getKey(), true, true);
+						
+						fBuffer.setFindNode(node1);
+					}else{
+						MessageDialog.openInformation(shlRedisClient, "find results",
+								"No match result found!");
+					}
+				}
+			}
+		}
+	}
+
+	protected void find() {
+		FindKeyDialog dialog = new FindKeyDialog(shlRedisClient, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
+		FindInfo info = (FindInfo) dialog.open();
+		if(info != null) {
+			TreeItem treeItem;
+			
+			ContainerInfo cinfo = new ContainerInfo();
+			if (itemSelected instanceof TreeItem) {
+				treeItem = (TreeItem) itemSelected;
+			} else {
+				treeItem = getTreeItemByTableItem((TableItem) itemSelected);
+			}
+
+			parseContainer(treeItem, cinfo);
+			NodeType searchFrom = (NodeType) treeItem.getData(NODE_TYPE);
+			
+			Set<Node> nodes = service2.find(searchFrom, cinfo.getId(), cinfo.getDb(), cinfo.getContainer(), info.getSearchNodeType(), info.getPattern(), info.isForward());
+			if(!nodes.isEmpty()) {
+				Node node = nodes.iterator().next();
+				go(node.getId(), node.getDb(), node.getKey(), true, true);
+				
+				fBuffer = new FindBuffer(node, searchFrom, cinfo.getId(), cinfo.getDb(), cinfo.getContainer(), info.getSearchNodeType(), info.getPattern());
+			}else{
+				MessageDialog.openInformation(shlRedisClient, "find results",
+						"No match result found!");
+			}
+		}
 	}
 
 	private void export() {
@@ -1379,7 +1589,7 @@ public class RedisClient {
 			menuData.getItem(2).setEnabled(true);
 			menuData.getItem(5).setEnabled(true);
 			menuData.getItem(6).setEnabled(true);
-			if(buffer.canPaste())
+			if(pBuffer.canPaste())
 				menuData.getItem(7).setEnabled(true);
 			else
 				menuData.getItem(7).setEnabled(false);
@@ -1391,7 +1601,7 @@ public class RedisClient {
 			menuData.getItem(2).setEnabled(false);
 			menuData.getItem(5).setEnabled(false);
 			menuData.getItem(6).setEnabled(true);
-			if(buffer.canPaste())
+			if(pBuffer.canPaste())
 				menuData.getItem(7).setEnabled(true);
 			else
 				menuData.getItem(7).setEnabled(false);
@@ -1750,13 +1960,13 @@ public class RedisClient {
 		parseContainer(treeItem, cinfo);
 
 		if(itemSelected instanceof TreeItem)
-			buffer.cut(cinfo, treeItem);
+			pBuffer.cut(cinfo, treeItem);
 		else {
 			NodeType type = (NodeType) itemSelected.getData(NODE_TYPE);
 			if(type == NodeType.CONTAINER || type == NodeType.DATABASE)
-				buffer.cut(cinfo, treeItem);
+				pBuffer.cut(cinfo, treeItem);
 			else
-				buffer.cut(cinfo, itemSelected.getText(), treeItem);
+				pBuffer.cut(cinfo, itemSelected.getText(), treeItem);
 		}
 	}
 	
@@ -1773,13 +1983,13 @@ public class RedisClient {
 		parseContainer(treeItem, cinfo);
 
 		if(itemSelected instanceof TreeItem)
-			buffer.copy(cinfo);
+			pBuffer.copy(cinfo);
 		else {
 			NodeType type = (NodeType) itemSelected.getData(NODE_TYPE);
 			if(type == NodeType.CONTAINER || type == NodeType.DATABASE)
-				buffer.copy(cinfo);
+				pBuffer.copy(cinfo);
 			else
-				buffer.copy(cinfo, itemSelected.getText());
+				pBuffer.copy(cinfo, itemSelected.getText());
 		}
 	}
 	
@@ -1795,20 +2005,20 @@ public class RedisClient {
 
 		parseContainer(treeItem, target);
 
-		ContainerInfo source = buffer.paste();
+		ContainerInfo source = pBuffer.paste();
 		
-		if(!buffer.isCopy() && ! buffer.isKey()){
-			 buffer.getCutItem().dispose();
+		if(!pBuffer.isCopy() && ! pBuffer.isKey()){
+			 pBuffer.getCutItem().dispose();
 		}
 		
-		if(buffer.isKey()){
-			String newKey = service2.pasteKey(source.getId(), source.getDb(), source.getContainer()+buffer.getKey(), target.getId(), target.getDb(), target.getContainer()+buffer.getKey(), buffer.isCopy(), true);
+		if(pBuffer.isKey()){
+			String newKey = service2.pasteKey(source.getId(), source.getDb(), source.getContainer()+pBuffer.getKey(), target.getId(), target.getDb(), target.getContainer()+pBuffer.getKey(), pBuffer.isCopy(), true);
 			if(newKey == null)
-				go(target.getId(), target.getDb(), target.getContainer() + buffer.getKey(), true, true);
+				go(target.getId(), target.getDb(), target.getContainer() + pBuffer.getKey(), true, true);
 			else
 				go(target.getId(), target.getDb(), newKey, true, true);
 		}else{
-			service2.pasteContainer(source.getId(), source.getDb(), source.getContainer(), target.getId(), target.getDb(), target.getContainer(), buffer.isCopy(), true);
+			service2.pasteContainer(source.getId(), source.getDb(), source.getContainer(), target.getId(), target.getDb(), target.getContainer(), pBuffer.isCopy(), true);
 			go(target.getId(), target.getDb(), target.getContainer(), false, true);
 		}			
 	}
@@ -1819,7 +2029,7 @@ public class RedisClient {
 			menu.getItem(2).setEnabled(false);
 			menu.getItem(7).setEnabled(false);
 			menu.getItem(8).setEnabled(true);
-			if(buffer.canPaste())
+			if(pBuffer.canPaste())
 				menu.getItem(9).setEnabled(true);
 			else
 				menu.getItem(9).setEnabled(false);
@@ -1830,7 +2040,7 @@ public class RedisClient {
 			menu.getItem(2).setEnabled(true);
 			menu.getItem(7).setEnabled(true);
 			menu.getItem(8).setEnabled(true);
-			if(buffer.canPaste())
+			if(pBuffer.canPaste())
 				menu.getItem(9).setEnabled(true);
 			else
 				menu.getItem(9).setEnabled(false);
@@ -1839,7 +2049,7 @@ public class RedisClient {
 		}
 	}
 
-	private void go(int id, int db, String container, boolean isKey, boolean fresh) {
+	private void go(int id, int db, String container, boolean isKey, boolean refresh) {
 		rootTreeItemSelected(false);
 		TreeItem[] treeItems = rootRedisServers.getItems();
 		for (TreeItem treeItem : treeItems) {
@@ -1851,7 +2061,7 @@ public class RedisClient {
 				for (TreeItem dbItem : dbItems) {
 					if (dbItem.getText().equals(DB_PREFIX+db)) {
 						tree.setSelection(dbItem);
-						dbContainerTreeItemSelected(dbItem,	fresh);
+						dbContainerTreeItemSelected(dbItem,	refresh);
 						TreeItem[] dataItems = dbItem.getItems();
 						
 							
@@ -1861,7 +2071,7 @@ public class RedisClient {
 								for (TreeItem dataItem : dataItems) {
 									if (dataItem.getText().equals(containers[i])) {
 										tree.setSelection(dataItem);
-										dbContainerTreeItemSelected(dataItem, fresh);
+										dbContainerTreeItemSelected(dataItem, refresh);
 										dataItems = dataItem.getItems();
 										
 										break;

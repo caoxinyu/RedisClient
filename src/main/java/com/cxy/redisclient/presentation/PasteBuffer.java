@@ -8,7 +8,7 @@ import com.cxy.redisclient.dto.ContainerInfo;
  * @author xinyu
  *
  */
-public class RedisClientBuffer {
+public class PasteBuffer {
 	private ContainerInfo buffer = null;
 	private String key = null;
 	private TreeItem cutItem = null;

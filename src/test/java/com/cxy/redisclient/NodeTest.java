@@ -1,7 +1,9 @@
 package com.cxy.redisclient;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -96,14 +98,25 @@ public class NodeTest extends TestCase {
 	
 	public void testFindKeys() {
 		NodeService service = new NodeService();
-		NodeType[] types = new NodeType[]{NodeType.STRING, NodeType.LIST,NodeType.SET, NodeType.SORTEDSET, NodeType.HASH};
-		Set<Node> nodes = service.find(NodeType.DATABASE, 7, 5, "", types, "*cxy*");
+		List<NodeType> types = new ArrayList<NodeType>();
+		types.add(NodeType.SORTEDSET);
+		Set<Node> nodes = service.find(NodeType.ROOT, 5, 0, "", types, "*", true);
 		
 		for(Node node:nodes) {
 			System.out.println("server:" + node.getId()+"db:" + node.getDb()+node.getKey());
 			
 		}
 		
+	}
+	public void testFindNext() {
+		Node findNode = new Node(5, 0, "zset", NodeType.SORTEDSET);
+		
+		NodeService service = new NodeService();
+		List<NodeType> types = new ArrayList<NodeType>();
+		types.add(NodeType.SORTEDSET);
+		Node node = service.findNext(findNode, NodeType.ROOT, 5, 0, "", types, "*", true);
+		
+		System.out.println("server:" + node.getId()+"db:" + node.getDb()+node.getKey());
 	}
 
 }

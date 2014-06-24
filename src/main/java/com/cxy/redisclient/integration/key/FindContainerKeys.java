@@ -1,19 +1,23 @@
 package com.cxy.redisclient.integration.key;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
+import com.cxy.redisclient.dto.Order;
 import com.cxy.redisclient.integration.JedisCommand;
 
 public abstract class FindContainerKeys extends JedisCommand {
 	protected int db;
 	protected String container;
 	protected String keyPattern;
-	protected NodeType[] valueTypes;
+	protected List<NodeType> valueTypes;
 	protected Set<Node> keys = new TreeSet<Node>();
+	protected Order order;
 	
 	public Set<Node> getKeys() {
 		return keys;
@@ -24,15 +28,25 @@ public abstract class FindContainerKeys extends JedisCommand {
 		this.db = db;
 		this.container = container;
 		this.keyPattern = keyPattern;
-		this.valueTypes = new NodeType[] {NodeType.STRING, NodeType.HASH, NodeType.LIST, NodeType.SET, NodeType.SORTEDSET};
+		this.valueTypes = new ArrayList<NodeType>();
+		valueTypes.add(NodeType.STRING);
+		valueTypes.add(NodeType.HASH);
+		valueTypes.add(NodeType.LIST);
+		valueTypes.add(NodeType.SET);
+		valueTypes.add(NodeType.SORTEDSET);
+		this.order = Order.Ascend;
 	}
 	
-	public FindContainerKeys(int id, int db, String container, String keyPattern, NodeType[] valueTypes) {
+	public FindContainerKeys(int id, int db, String container, String keyPattern, List<NodeType> valueTypes, boolean forward) {
 		super(id);
 		this.db = db;
 		this.container = container;
 		this.keyPattern = keyPattern;
 		this.valueTypes = valueTypes;
+		if(forward)
+			this.order = Order.Ascend;
+		else
+			this.order = Order.Descend;
 	}
 
 	
@@ -47,14 +61,14 @@ public abstract class FindContainerKeys extends JedisCommand {
 			NodeType valueType = getValueType(nextKey);
 
 			if(inValueTypes(valueType)){
-				Node node = new Node(id, db, nextKey, valueType);
+				Node node = new Node(id, db, nextKey, valueType, order);
 				keys.add(node);
 			}
 		}
 	}
 	private boolean inValueTypes(NodeType valueType) {
-		for(int i = 0; i < valueTypes.length ; i ++) {
-			if(valueType == valueTypes[i])
+		for(NodeType nodeType: valueTypes) {
+			if(valueType == nodeType)
 				return true;
 		}
 		return false;

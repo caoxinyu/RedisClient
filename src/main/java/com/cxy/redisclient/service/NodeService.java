@@ -190,45 +190,70 @@ public class NodeService {
 		return command.isExist();
 	}
 	
-	public Set<Node> find(NodeType searchFrom, int id, int db, String container, NodeType[] searchNodeType, String pattern) {
+	public Node findNext(Node findNode, NodeType searchFrom, int id, int db, String container, List<NodeType> searchNodeType, String pattern, boolean forward){
+		Set<Node> nodes = find(searchFrom, id, db, container, searchNodeType, pattern, forward);
+		boolean find = false;
+		
+		for(Node node: nodes) {
+			if(find)
+				return node;
+			else if(findNode.equals(node))
+				find = true;
+		}
+		return null;
+	}
+	public Set<Node> find(NodeType searchFrom, int id, int db, String container, List<NodeType> searchNodeType, String pattern, boolean forward) {
 		switch(searchFrom) {
 		case ROOT:
 			ServerService service = new ServerService();
 			List<Server> servers = service.listAll();
 			Set<Node> nodes = new TreeSet<Node>();
-			
-			for(Server server:servers)
-				nodes.addAll(findKeysFromServer(server.getId(), searchNodeType, pattern));
+			if(forward){
+				for(Server server:servers)
+					nodes.addAll(findKeysFromServer(server.getId(), searchNodeType, pattern, true));
+			} else {
+				for(int i = servers.size(); i > 0 ; i --){
+					Server server1 = servers.get(i-1);
+					nodes.addAll(findKeysFromServer(server1.getId(), searchNodeType, pattern, false));
+				}
+			}
 			return nodes;
 			
 		case SERVER:
-			return findKeysFromServer(id, searchNodeType, pattern);
+			return findKeysFromServer(id, searchNodeType, pattern, forward);
 		
 		case DATABASE:
-			return findKeys(id, db, "", searchNodeType, pattern);
+			return findKeys(id, db, "", searchNodeType, pattern, forward);
 		
 		case CONTAINER:
-			return findKeys(id, db, container, searchNodeType, pattern);
+			return findKeys(id, db, container, searchNodeType, pattern, forward);
 		default:
 			throw new IllegalArgumentException();
 		}
 	}
 
-	private Set<Node> findKeysFromServer(int id, NodeType[] searchNodeType,
-			String pattern) {
+	private Set<Node> findKeysFromServer(int id, List<NodeType> searchNodeType,
+			String pattern, boolean forward) {
 		ServerService service = new ServerService();
 		int amount = service.listDBs(id);
 		
 		Set<Node> nodes = new TreeSet<Node>();
 		
-		for(int i = 0; i < amount; i ++) {
-			nodes.addAll(findKeys(id, i, "", searchNodeType, pattern));
+		if(forward){
+			for(int i = 0; i < amount; i ++) {
+				nodes.addAll(findKeys(id, i, "", searchNodeType, pattern, true));
+			}
+		}else{
+			for(int i = amount; i > 0 ; i--){
+				nodes.addAll(findKeys(id, i-1, "", searchNodeType, pattern, false));
+			}
 		}
 		return nodes;
 	}
 	
-	public Set<Node> findKeys(int id, int db, String container, NodeType[] searchNodeType, String keyPattern) {
-		FindContainerKeys command = new FindContainerKeysFactory(id, db, container, searchNodeType, keyPattern).getListContainerAllKeys();
+	
+	public Set<Node> findKeys(int id, int db, String container, List<NodeType> searchNodeType, String keyPattern, boolean forward) {
+		FindContainerKeys command = new FindContainerKeysFactory(id, db, container, searchNodeType, keyPattern, forward).getListContainerAllKeys();
 		command.execute();
 		return command.getKeys();
 	}

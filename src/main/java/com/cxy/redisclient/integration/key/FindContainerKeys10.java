@@ -1,5 +1,6 @@
 package com.cxy.redisclient.integration.key;
 
+import java.util.List;
 import java.util.Set;
 
 import com.cxy.redisclient.domain.NodeType;
@@ -11,8 +12,8 @@ public class FindContainerKeys10 extends FindContainerKeys {
 		super(id, db, container, keyPattern);
 	}
 	
-	public FindContainerKeys10(int id, int db, String container, String keyPattern, NodeType[] valueTypes) {
-		super(id, db, container, keyPattern, valueTypes);
+	public FindContainerKeys10(int id, int db, String container, String keyPattern, List<NodeType> valueTypes, boolean forward) {
+		super(id, db, container, keyPattern, valueTypes, forward);
 	}
 
 	protected Set<String> getResult() {

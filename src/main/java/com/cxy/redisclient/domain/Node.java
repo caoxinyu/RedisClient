@@ -11,6 +11,8 @@ public class Node implements Comparable<Node> {
 	
 	public Node(int id, int db, String key, NodeType type, Order order) {
 		super();
+		this.id = id;
+		this.db = db;
 		this.key = key;
 		this.type = type;
 		this.order = order;
@@ -18,6 +20,8 @@ public class Node implements Comparable<Node> {
 	
 	public Node(int id, int db, String key, NodeType type) {
 		super();
+		this.id = id;
+		this.db = db;
 		this.key = key;
 		this.type = type;
 		this.order = Order.Ascend;
