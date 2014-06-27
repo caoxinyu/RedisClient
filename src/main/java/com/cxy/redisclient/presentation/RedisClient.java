@@ -2224,53 +2224,50 @@ public class RedisClient {
 	private TreeItem gotoDBContainer(int id, int db, String container, boolean isKey, boolean refresh) {
 		rootTreeItemSelected(false);
 		TreeItem dbItem = findDBTreeItem(id, db);
-		TreeItem dataItemSelected = null;
+		TreeItem dataItemSelected = dbItem;
 		
 		if(dbItem != null) {
 			dbContainerTreeItemSelected(dbItem,	refresh);
 			TreeItem[] dataItems = dbItem.getItems();
 						
-			if(container.length() == 0)		
-				return dbItem;
-			else {
-				String[] containers = container.split(":");
-				if(!isKey){
-					for (int i = 0; i < containers.length; i++) {
-						for (TreeItem dataItem : dataItems) {
-							if (dataItem.getText().equals(containers[i])) {
-								tree.setSelection(dataItem);
-								dbContainerTreeItemSelected(dataItem, refresh);
-								dataItems = dataItem.getItems();
-								dataItemSelected = dataItem;
-								break;
-							}
-						}
-					}
-				} else {
-					for (int i = 0; i < containers.length - 1; i++) {
-						for (TreeItem dataItem : dataItems) {
-							if (dataItem.getText().equals(containers[i])) {
-								tree.setSelection(dataItem);
-								dbContainerTreeItemSelected(dataItem, false);
-								dataItems = dataItem.getItems();
-								dataItemSelected = dataItem;
-								break;
-							}
-						}
-					}
-					TableItem[] tableItems = table.getItems();
-					for(TableItem tableItem : tableItems) {
-						NodeType type = (NodeType) tableItem.getData(NODE_TYPE);
-						if(type != NodeType.SERVER && type != NodeType.DATABASE && type != NodeType.CONTAINER && tableItem.getText().equals(containers[containers.length -1])){
-							table.setSelection(tableItem);
-							dataItemSelected();
+			String[] containers = container.split(":");
+			if(!isKey){
+				for (int i = 0; i < containers.length; i++) {
+					for (TreeItem dataItem : dataItems) {
+						if (dataItem.getText().equals(containers[i])) {
+							tree.setSelection(dataItem);
+							dbContainerTreeItemSelected(dataItem, refresh);
+							dataItems = dataItem.getItems();
+							dataItemSelected = dataItem;
 							break;
 						}
-							
 					}
+				}
+			} else {
+				for (int i = 0; i < containers.length - 1; i++) {
+					for (TreeItem dataItem : dataItems) {
+						if (dataItem.getText().equals(containers[i])) {
+							tree.setSelection(dataItem);
+							dbContainerTreeItemSelected(dataItem, false);
+							dataItems = dataItem.getItems();
+							dataItemSelected = dataItem;
+							break;
+						}
+					}
+				}
+				TableItem[] tableItems = table.getItems();
+				for(TableItem tableItem : tableItems) {
+					NodeType type = (NodeType) tableItem.getData(NODE_TYPE);
+					if(type != NodeType.SERVER && type != NodeType.DATABASE && type != NodeType.CONTAINER && tableItem.getText().equals(containers[containers.length -1])){
+						table.setSelection(tableItem);
+						dataItemSelected();
+						break;
+					}
+						
 				}
 			}
 		}
+
 		return dataItemSelected;
 	}
 	
