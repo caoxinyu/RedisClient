@@ -6,8 +6,8 @@ This is a redis client GUI tool written by Java SWT and Jedis. It's my objective
 
 Features
 ===========
-Windows Explorer style UI
-Multiple Redis version adaptive
+**Windows Explorer style UI**
+**Multiple Redis version adaptive**
 
  1. Manage redis server
  2. Manage redis data favorite
