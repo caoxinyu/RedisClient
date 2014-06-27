@@ -14,7 +14,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -176,7 +175,6 @@ public class RedisClient {
 		initMenu();
 
 		initSash();
-
 	}
 
 	private void initImage() {
@@ -211,25 +209,31 @@ public class RedisClient {
 		shlRedisClient = new Shell();
 		shlRedisClient.setSize(1074, 772);
 		shlRedisClient.setText("Redis client");
-		shlRedisClient.setLayout(new FillLayout(SWT.HORIZONTAL));
+		shlRedisClient.setLayout(new GridLayout(1, false));
 	}
 
 	private void initSash() {
-		SashForm sashForm_2 = new SashForm(shlRedisClient, SWT.VERTICAL);
-		sashForm_2.setSashWidth(0);
-		Composite composite = new Composite(sashForm_2, SWT.NONE);
+		Composite composite_1 = new Composite(shlRedisClient, SWT.NONE);
+		GridLayout gl_composite_1 = new GridLayout(1, false);
+		gl_composite_1.verticalSpacing = 0;
+		gl_composite_1.marginWidth = 0;
+		gl_composite_1.marginHeight = 0;
+		gl_composite_1.horizontalSpacing = 0;
+		composite_1.setLayout(gl_composite_1);
+		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		Composite composite = new Composite(composite_1, SWT.NONE);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		GridLayout gl_composite = new GridLayout(5, false);
+		gl_composite.marginBottom = 5;
 		gl_composite.verticalSpacing = 0;
 		gl_composite.horizontalSpacing = 0;
-		gl_composite.marginRight = 5;
-		gl_composite.marginBottom = 5;
-		gl_composite.marginLeft = 5;
-		gl_composite.marginTop = 5;
 		gl_composite.marginWidth = 0;
 		gl_composite.marginHeight = 0;
 		composite.setLayout(gl_composite);
 		
 		btnBackward = new Button(composite, SWT.CENTER);
+		btnBackward.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
 		btnBackward.setEnabled(false);
 		btnBackward.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -251,6 +255,7 @@ public class RedisClient {
 		btnBackward.setImage(leftImage);
 		
 		btnForward = new Button(composite, SWT.NONE);
+		btnForward.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
 		btnForward.setEnabled(false);
 		btnForward.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -271,6 +276,7 @@ public class RedisClient {
 		btnForward.setImage(rightImage);
 		
 		Button btnUP = new Button(composite, SWT.CENTER);
+		btnUP.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
 		btnUP.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -287,6 +293,7 @@ public class RedisClient {
 		btnUP.setImage(upImage);
 		
 		Button btnRefresh = new Button(composite, SWT.CENTER);
+		btnRefresh.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
 		btnRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -296,10 +303,11 @@ public class RedisClient {
 		btnRefresh.setImage(refreshImage);
 		
 		text = new Text(composite, SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
 		text.setEditable(false);
 				
-		SashForm sashForm = new SashForm(sashForm_2, SWT.NONE);
+		SashForm sashForm = new SashForm(composite_1, SWT.NONE);
+		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		initTree(sashForm);
 
@@ -327,7 +335,6 @@ public class RedisClient {
 		initServers();
 		
 		tree.select(rootRedisServers);
-		sashForm_2.setWeights(new int[] {43, 643});
 				
 		treeItemSelected(false);
 		
@@ -699,7 +706,6 @@ public class RedisClient {
 				TableItem selectedItem = table.getItem(point);
 
 				if (selectedItem != null){
-					//treeItemSelected(true);
 					boolean find = false;
 					for (TreeItem treeItem : treeItems[0].getItems()) {
 						String treeText = treeItem.getText();
