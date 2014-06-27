@@ -24,3 +24,4 @@ Multiple Redis version adaptive
   3.4 import, export redis data
   3.5 search redis data
   3.6 order redis data by key, data type, size
+  3.7 Navigation history
