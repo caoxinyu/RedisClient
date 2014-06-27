@@ -233,7 +233,6 @@ public class RedisClient {
 		composite.setLayout(gl_composite);
 		
 		btnBackward = new Button(composite, SWT.CENTER);
-		btnBackward.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
 		btnBackward.setEnabled(false);
 		btnBackward.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -255,7 +254,6 @@ public class RedisClient {
 		btnBackward.setImage(leftImage);
 		
 		btnForward = new Button(composite, SWT.NONE);
-		btnForward.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
 		btnForward.setEnabled(false);
 		btnForward.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -276,7 +274,6 @@ public class RedisClient {
 		btnForward.setImage(rightImage);
 		
 		Button btnUP = new Button(composite, SWT.CENTER);
-		btnUP.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
 		btnUP.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -293,7 +290,6 @@ public class RedisClient {
 		btnUP.setImage(upImage);
 		
 		Button btnRefresh = new Button(composite, SWT.CENTER);
-		btnRefresh.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
 		btnRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -303,7 +299,7 @@ public class RedisClient {
 		btnRefresh.setImage(refreshImage);
 		
 		text = new Text(composite, SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
+		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		text.setEditable(false);
 				
 		SashForm sashForm = new SashForm(composite_1, SWT.NONE);
