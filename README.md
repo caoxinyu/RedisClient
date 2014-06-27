@@ -15,9 +15,9 @@ Windows Explorer style UI
 
 Multiple Redis version adaptive
 
-1. manage redis server
-2. manage favorite
-3. manage redis data
+1. Manage redis server
+2. Manage redis data favorite
+3. Manage redis data
   3.1 new redis data: string, list, hash, set, sorted set
   3.2 rename, delete redis data
   3.3 cut, copy paste redis data
