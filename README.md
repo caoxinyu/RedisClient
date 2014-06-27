@@ -18,10 +18,10 @@ Multiple Redis version adaptive
 1. Manage redis server
 2. Manage redis data favorite
 3. Manage redis data
-  3.1 new redis data: string, list, hash, set, sorted set
-  3.2 rename, delete redis data
-  3.3 cut, copy paste redis data
-  3.4 import, export redis data
-  3.5 search redis data
-  3.6 order redis data by key, data type, size
-  3.7 Navigation history
+  * new redis data: string, list, hash, set, sorted set
+  * rename, delete redis data
+  * cut, copy paste redis data
+  * import, export redis data
+  * search redis data
+  * order redis data by key, data type, size
+  * Navigation history
