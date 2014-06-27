@@ -14,3 +14,13 @@ Features
 Windows Explorer style UI
 
 Multiple Redis version adaptive
+
+1. manage redis server
+2. manage favorite
+3. manage redis data
+  3.1 new redis data: string, list, hash, set, sorted set
+  3.2 rename, delete redis data
+  3.3 cut, copy paste redis data
+  3.4 import, export redis data
+  3.5 search redis data
+  3.6 order redis data by key, data type, size
