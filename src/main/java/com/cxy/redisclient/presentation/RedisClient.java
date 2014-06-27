@@ -1281,7 +1281,7 @@ public class RedisClient {
 				
 				fBuffer.setFindNode(node);
 			} else {
-				boolean ok = MessageDialog.openConfirm(shlRedisClient, "find forward", "Finished find result, find again?");
+				boolean ok = MessageDialog.openConfirm(shlRedisClient, "find forward", "All result found, find again?");
 				if(ok){
 					Set<Node> nodes = service2.find(fBuffer.getSearchFrom(), fBuffer.getId(), fBuffer.getDb(), fBuffer.getContainer(), fBuffer.getSearchNodeType(), fBuffer.getPattern(), true);
 					if(!nodes.isEmpty()) {
@@ -1315,7 +1315,7 @@ public class RedisClient {
 				
 				fBuffer.setFindNode(node);
 			} else {
-				boolean ok = MessageDialog.openConfirm(shlRedisClient, "find backward", "Finished find result, find again?");
+				boolean ok = MessageDialog.openConfirm(shlRedisClient, "find backward", "All result found, find again?");
 				if(ok){
 					Set<Node> nodes = service2.find(fBuffer.getSearchFrom(), fBuffer.getId(), fBuffer.getDb(), fBuffer.getContainer(), fBuffer.getSearchNodeType(), fBuffer.getPattern(), false);
 					if(!nodes.isEmpty()) {

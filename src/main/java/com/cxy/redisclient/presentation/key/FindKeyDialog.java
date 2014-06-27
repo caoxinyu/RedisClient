@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.dto.FindInfo;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 
 public class FindKeyDialog extends Dialog {
 
@@ -63,28 +65,30 @@ public class FindKeyDialog extends Dialog {
 	 */
 	private void createContents() {
 		shlFind = new Shell(getParent(), getStyle());
-		shlFind.setSize(612, 426);
+		shlFind.setSize(612, 369);
 		shlFind.setText("Find");
 
 		Rectangle screenSize = shlFind.getParent().getBounds();
 		Rectangle shellSize = shlFind.getBounds();
 		shlFind.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
 				screenSize.y + screenSize.height / 2 - shellSize.height / 2);
+		shlFind.setLayout(new GridLayout(1, false));
 		
 		TabFolder tabFolder = new TabFolder(shlFind, SWT.NONE);
-		tabFolder.setBounds(10, 10, 586, 286);
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
 		TabItem tbtmFind = new TabItem(tabFolder, SWT.NONE);
 		tbtmFind.setText("Find");
 		
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tbtmFind.setControl(composite);
+		composite.setLayout(new GridLayout(6, true));
 		
 		Label lblFind = new Label(composite, SWT.NONE);
-		lblFind.setBounds(10, 10, 90, 24);
 		lblFind.setText("Find key");
 		
 		pattern = new Text(composite, SWT.BORDER);
+		pattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
 		pattern.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
 				String p = pattern.getText() == null?"":pattern.getText();
@@ -94,40 +98,12 @@ public class FindKeyDialog extends Dialog {
 					btnFind.setEnabled(true);
 			}
 		});
-		pattern.setBounds(106, 10, 462, 30);
-		
-		Group grpKeyType = new Group(composite, SWT.NONE);
-		grpKeyType.setText("Key type");
-		grpKeyType.setBounds(295, 56, 273, 183);
-		
-		final Button btnString = new Button(grpKeyType, SWT.CHECK);
-		btnString.setSelection(true);
-		btnString.setBounds(18, 27, 143, 24);
-		btnString.setText("String");
-		
-		final Button btnHash = new Button(grpKeyType, SWT.CHECK);
-		btnHash.setSelection(true);
-		btnHash.setBounds(179, 27, 84, 24);
-		btnHash.setText("Hash");
-		
-		final Button btnList = new Button(grpKeyType, SWT.CHECK);
-		btnList.setSelection(true);
-		btnList.setBounds(18, 78, 143, 24);
-		btnList.setText("List");
-		
-		final Button btnSet = new Button(grpKeyType, SWT.CHECK);
-		btnSet.setSelection(true);
-		btnSet.setBounds(179, 78, 84, 24);
-		btnSet.setText("Set");
-		
-		final Button btnSortedSet = new Button(grpKeyType, SWT.CHECK);
-		btnSortedSet.setSelection(true);
-		btnSortedSet.setBounds(18, 129, 143, 24);
-		btnSortedSet.setText("Sorted Set");
+		pattern.setFocus();
 		
 		Group grpFindDirection = new Group(composite, SWT.NONE);
+		grpFindDirection.setLayout(new GridLayout(1, false));
+		grpFindDirection.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
 		grpFindDirection.setText("Find direction");
-		grpFindDirection.setBounds(10, 56, 273, 183);
 		
 		final Button btnForward = new Button(grpFindDirection, SWT.RADIO);
 		btnForward.setSelection(true);
@@ -136,14 +112,43 @@ public class FindKeyDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 			}
 		});
-		btnForward.setBounds(27, 45, 141, 24);
 		btnForward.setText("Forward");
 		
 		Button btnBackward = new Button(grpFindDirection, SWT.RADIO);
-		btnBackward.setBounds(27, 114, 141, 24);
 		btnBackward.setText("Backward");
 		
-		btnFind = new Button(shlFind, SWT.NONE);
+		Group grpKeyType = new Group(composite, SWT.NONE);
+		grpKeyType.setLayout(new GridLayout(1, false));
+		grpKeyType.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
+		grpKeyType.setText("Key type");
+		
+		final Button btnString = new Button(grpKeyType, SWT.CHECK);
+		btnString.setSelection(true);
+		btnString.setText("String");
+		
+		final Button btnHash = new Button(grpKeyType, SWT.CHECK);
+		btnHash.setSelection(true);
+		btnHash.setText("Hash");
+		
+		final Button btnList = new Button(grpKeyType, SWT.CHECK);
+		btnList.setSelection(true);
+		btnList.setText("List");
+		
+		final Button btnSet = new Button(grpKeyType, SWT.CHECK);
+		btnSet.setSelection(true);
+		btnSet.setText("Set");
+		
+		final Button btnSortedSet = new Button(grpKeyType, SWT.CHECK);
+		btnSortedSet.setSelection(true);
+		btnSortedSet.setText("Sorted Set");
+		
+		
+		Composite composite1 = new Composite(shlFind, SWT.NONE);
+		composite1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+	    composite1.setLayout(new GridLayout(2, false));
+	    
+		btnFind = new Button(composite1, SWT.NONE);
+		btnFind.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		btnFind.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -172,10 +177,10 @@ public class FindKeyDialog extends Dialog {
 			}
 		});
 		btnFind.setEnabled(false);
-		btnFind.setBounds(128, 325, 114, 34);
 		btnFind.setText("Find");
 		
-		Button btnCancel = new Button(shlFind, SWT.NONE);
+		Button btnCancel = new Button(composite1, SWT.NONE);
+		btnCancel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -183,7 +188,6 @@ public class FindKeyDialog extends Dialog {
 				shlFind.dispose();
 			}
 		});
-		btnCancel.setBounds(370, 325, 114, 34);
 		btnCancel.setText("Cancel");
 		
 	}
