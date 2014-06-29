@@ -20,6 +20,9 @@ import com.cxy.redisclient.domain.Favorite;
 import com.cxy.redisclient.service.FavoriteService;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 
 public class OrganizeFavoriteDialog extends Dialog {
 
@@ -76,12 +79,40 @@ public class OrganizeFavoriteDialog extends Dialog {
 		Rectangle shellSize = shell.getBounds();
 		shell.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
 				screenSize.y + screenSize.height / 2 - shellSize.height / 2);
+		shell.setLayout(new GridLayout(1, false));
 		
 		Group grpFavorites = new Group(shell, SWT.NONE);
+		grpFavorites.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		grpFavorites.setSize(417, 231);
 		grpFavorites.setText("Favorites");
-		grpFavorites.setBounds(10, 0, 424, 238);
+		grpFavorites.setLayout(new GridLayout(2, false));
 		
-		btnRenameButton = new Button(grpFavorites, SWT.NONE);
+		table = new Table(grpFavorites, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		table.setSize(308, 45);
+		table.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				tableItemSelected();
+			}
+		});
+		table.setLinesVisible(true);
+		table.setHeaderVisible(true);
+		
+		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
+		tblclmnNewColumn.setWidth(100);
+		tblclmnNewColumn.setText("Name");
+		
+		TableColumn tblclmnNewColumn_1 = new TableColumn(table, SWT.NONE);
+		tblclmnNewColumn_1.setWidth(187);
+		tblclmnNewColumn_1.setText("Favorite");
+		
+		Composite composite_1 = new Composite(grpFavorites, SWT.NONE);
+		composite_1.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+		composite_1.setLayout(new GridLayout(1, false));
+		
+		btnRenameButton = new Button(composite_1, SWT.NONE);
+		btnRenameButton.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		btnRenameButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -97,10 +128,10 @@ public class OrganizeFavoriteDialog extends Dialog {
 			}
 		});
 		btnRenameButton.setEnabled(false);
-		btnRenameButton.setBounds(346, 23, 68, 23);
 		btnRenameButton.setText("Rename");
 		
-		btnRemoveButton = new Button(grpFavorites, SWT.NONE);
+		btnRemoveButton = new Button(composite_1, SWT.NONE);
+		btnRemoveButton.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		btnRemoveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -112,10 +143,14 @@ public class OrganizeFavoriteDialog extends Dialog {
 			}
 		});
 		btnRemoveButton.setEnabled(false);
-		btnRemoveButton.setBounds(346, 62, 68, 23);
 		btnRemoveButton.setText("Remove");
 		
-		Button btnOk = new Button(shell, SWT.NONE);
+		Composite composite = new Composite(shell, SWT.NONE);
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		composite.setLayout(new GridLayout(2, false));
+		
+		Button btnOk = new Button(composite, SWT.NONE);
+		btnOk.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		btnOk.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -128,10 +163,10 @@ public class OrganizeFavoriteDialog extends Dialog {
 				shell.dispose();
 			}
 		});
-		btnOk.setBounds(104, 244, 68, 23);
 		btnOk.setText("OK");
 		
-		Button btnCancel = new Button(shell, SWT.NONE);
+		Button btnCancel = new Button(composite, SWT.NONE);
+		btnCancel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -139,27 +174,7 @@ public class OrganizeFavoriteDialog extends Dialog {
 				shell.dispose();
 			}
 		});
-		btnCancel.setBounds(276, 244, 68, 23);
 		btnCancel.setText("Cancel");
-		
-		table = new Table(grpFavorites, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
-		table.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				tableItemSelected();
-			}
-		});
-		table.setLinesVisible(true);
-		table.setBounds(10, 23, 322, 205);
-		table.setHeaderVisible(true);
-		
-		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
-		tblclmnNewColumn.setWidth(100);
-		tblclmnNewColumn.setText("Name");
-		
-		TableColumn tblclmnNewColumn_1 = new TableColumn(table, SWT.NONE);
-		tblclmnNewColumn_1.setWidth(187);
-		tblclmnNewColumn_1.setText("Favorite");
 		
 		
 		List<Favorite> favorites = service.listAll();

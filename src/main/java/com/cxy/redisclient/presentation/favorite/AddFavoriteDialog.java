@@ -14,6 +14,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 
 public class AddFavoriteDialog extends Dialog {
 
@@ -60,27 +62,34 @@ public class AddFavoriteDialog extends Dialog {
 		Rectangle shellSize = shell.getBounds();
 		shell.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
 				screenSize.y + screenSize.height / 2 - shellSize.height / 2);
+		shell.setLayout(new GridLayout(1, false));
 		
 		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
-		tabFolder.setBounds(10, 10, 300, 121);
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		tabFolder.setSize(290, 90);
 		
 		TabItem tbtmString = new TabItem(tabFolder, SWT.NONE);
 		tbtmString.setText("Favorite");
 		
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tbtmString.setControl(composite);
+		composite.setLayout(new GridLayout(2, false));
 		
 		Label lblNewKey = new Label(composite, SWT.NONE);
 		lblNewKey.setText("Name");
-		lblNewKey.setBounds(10, 44, 45, 13);
 		
 		final Text text_2 = new Text(composite, SWT.BORDER);
+		text_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		text_2.setText(container==null?"": container);
-		text_2.setBounds(62, 41, 220, 19);
 		text_2.selectAll();
 		text_2.setFocus();
 		
-		Button button = new Button(shell, SWT.NONE);
+		Composite composite_1 = new Composite(shell, SWT.NONE);
+		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		composite_1.setLayout(new GridLayout(2, false));
+		
+		Button button = new Button(composite_1, SWT.NONE);
+		button.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		button.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
@@ -95,9 +104,9 @@ public class AddFavoriteDialog extends Dialog {
 			}
 		});
 		button.setText("OK");
-		button.setBounds(61, 144, 68, 23);
 		
-		Button button_1 = new Button(shell, SWT.NONE);
+		Button button_1 = new Button(composite_1, SWT.NONE);
+		button_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		button_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
@@ -105,7 +114,5 @@ public class AddFavoriteDialog extends Dialog {
 			}
 		});
 		button_1.setText("Cancel");
-		button_1.setBounds(188, 144, 68, 23);
 	}
-
 }
