@@ -55,7 +55,7 @@ public class AddFavoriteDialog extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(326, 201);
+		shell.setSize(373, 221);
 		shell.setText("Add favorite");
 
 		Rectangle screenSize = shell.getParent().getBounds();

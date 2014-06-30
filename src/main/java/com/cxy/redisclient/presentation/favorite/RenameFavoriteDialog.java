@@ -58,7 +58,7 @@ public class RenameFavoriteDialog extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(326, 201);
+		shell.setSize(340, 234);
 		shell.setText("Update favorite");
 
 		Rectangle screenSize = shell.getParent().getBounds();

@@ -18,6 +18,8 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 
 import com.cxy.redisclient.dto.StringInfo;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 
 public class NewStringDialog extends Dialog {
 
@@ -65,33 +67,43 @@ public class NewStringDialog extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(326, 201);
+		shell.setSize(482, 283);
 		shell.setText("Add String");
 		
 		Rectangle screenSize = shell.getParent().getBounds();
 		Rectangle shellSize = shell.getBounds();
 		shell.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
 				screenSize.y + screenSize.height / 2 - shellSize.height / 2);
+		shell.setLayout(new GridLayout(1, false));
 		
 		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
-		tabFolder.setBounds(10, 10, 300, 128);
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		tabFolder.setSize(290, 124);
 		
 		TabItem tbtmString = new TabItem(tabFolder, SWT.NONE);
 		tbtmString.setText("String");
 		
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tbtmString.setControl(composite);
+		composite.setLayout(new GridLayout(4, true));
 		
 		Label lblKey = new Label(composite, SWT.NONE);
 		lblKey.setText("Server");
-		lblKey.setBounds(10, 12, 45, 16);
+		
+		Label label_1 = new Label(composite, SWT.NONE);
+		label_1.setText(server);
+		
+		Label lblDatabase = new Label(composite, SWT.NONE);
+		lblDatabase.setText("Database");
+		
+		Label label_3 = new Label(composite, SWT.NONE);
+		label_3.setText(String.valueOf(db));
 		
 		Label lblValue = new Label(composite, SWT.NONE);
 		lblValue.setText("key");
-		lblValue.setBounds(10, 40, 45, 16);
 		
 		text_1 = new Text(composite, SWT.BORDER);
-		text_1.setBounds(62, 40, 220, 19);
+		text_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		text_1.setText(key);
 		text_1.selectAll();
 		text_1.setFocus();
@@ -107,24 +119,16 @@ public class NewStringDialog extends Dialog {
 		
 		Label label = new Label(composite, SWT.NONE);
 		label.setText("Value");
-		label.setBounds(10, 68, 45, 16);
 		
 		text_2 = new Text(composite, SWT.BORDER);
-		text_2.setBounds(62, 68, 220, 19);
+		text_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
-		Label label_1 = new Label(composite, SWT.NONE);
-		label_1.setBounds(61, 12, 89, 16);
-		label_1.setText(server);
+		Composite composite_1 = new Composite(shell, SWT.NONE);
+		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		composite_1.setLayout(new GridLayout(2, false));
 		
-		Label lblDatabase = new Label(composite, SWT.NONE);
-		lblDatabase.setText("Database");
-		lblDatabase.setBounds(156, 12, 61, 16);
-		
-		Label label_3 = new Label(composite, SWT.NONE);
-		label_3.setBounds(223, 12, 45, 16);
-		label_3.setText(String.valueOf(db));
-		
-		btnOk = new Button(shell, SWT.NONE);
+		btnOk = new Button(composite_1, SWT.NONE);
+		btnOk.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		btnOk.setEnabled(false);
 		btnOk.addMouseListener(new MouseAdapter() {
 			@Override
@@ -141,9 +145,9 @@ public class NewStringDialog extends Dialog {
 			}
 		});
 		btnOk.setText("OK");
-		btnOk.setBounds(61, 144, 68, 23);
 		
-		Button button_1 = new Button(shell, SWT.NONE);
+		Button button_1 = new Button(composite_1, SWT.NONE);
+		button_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		button_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
@@ -151,7 +155,6 @@ public class NewStringDialog extends Dialog {
 			}
 		});
 		button_1.setText("Cancel");
-		button_1.setBounds(188, 144, 68, 23);
 
 	}
 }

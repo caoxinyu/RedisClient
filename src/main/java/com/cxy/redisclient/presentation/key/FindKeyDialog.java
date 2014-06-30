@@ -75,7 +75,7 @@ public class FindKeyDialog extends Dialog {
 		shlFind.setLayout(new GridLayout(1, false));
 		
 		TabFolder tabFolder = new TabFolder(shlFind, SWT.NONE);
-		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		TabItem tbtmFind = new TabItem(tabFolder, SWT.NONE);
 		tbtmFind.setText("Find");

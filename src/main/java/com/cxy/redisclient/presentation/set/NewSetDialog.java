@@ -26,6 +26,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.dto.SetInfo;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 
 public class NewSetDialog extends Dialog {
 
@@ -38,8 +40,10 @@ public class NewSetDialog extends Dialog {
 	private Table table;
 	private Button btnDelete;
 	private Button btnOk;
+
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parent
 	 * @param style
 	 */
@@ -49,11 +53,12 @@ public class NewSetDialog extends Dialog {
 		setText("SWT Dialog");
 		this.server = server;
 		this.db = db;
-		this.key = key == null?"":key;
+		this.key = key == null ? "" : key;
 	}
 
 	/**
 	 * Open the dialog.
+	 * 
 	 * @return the result
 	 */
 	public Object open() {
@@ -74,57 +79,73 @@ public class NewSetDialog extends Dialog {
 	 */
 	private void createContents() {
 		shlNewSet = new Shell(getParent(), getStyle());
-		shlNewSet.setSize(450, 319);
+		shlNewSet.setSize(495, 382);
 		shlNewSet.setText("New Set");
 
 		Rectangle screenSize = shlNewSet.getParent().getBounds();
 		Rectangle shellSize = shlNewSet.getBounds();
-		shlNewSet.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width
-				/ 2, screenSize.y + screenSize.height / 2 - shellSize.height
-				/ 2);
+		shlNewSet.setLocation(screenSize.x + screenSize.width / 2
+				- shellSize.width / 2, screenSize.y + screenSize.height / 2
+				- shellSize.height / 2);
+		shlNewSet.setLayout(new GridLayout(1, false));
 
 		TabFolder tabFolder = new TabFolder(shlNewSet, SWT.NONE);
-		tabFolder.setBounds(10, 10, 424, 242);
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
+				1));
+		tabFolder.setSize(414, 239);
 
 		TabItem tbtmList = new TabItem(tabFolder, SWT.NONE);
 		tbtmList.setText("Set");
 
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tbtmList.setControl(composite);
+		composite.setLayout(new GridLayout(4, true));
+
+		Label label = new Label(composite, SWT.NONE);
+		label.setText("Server");
+
+		Label label_1 = new Label(composite, SWT.NONE);
+		label_1.setText(server);
+
+		Label label_2 = new Label(composite, SWT.NONE);
+		label_2.setText("Database");
+
+		Label label_3 = new Label(composite, SWT.NONE);
+		label_3.setText(String.valueOf(db));
 
 		Label lblKey = new Label(composite, SWT.NONE);
-		lblKey.setBounds(10, 32, 49, 19);
 		lblKey.setText("Key");
 
 		text = new Text(composite, SWT.BORDER);
-		text.setBounds(61, 32, 345, 19);
+		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		text.setText(key);
 		text.selectAll();
 		text.setFocus();
 		text.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				String newKey = text.getText() == null?"":text.getText();
-				if(newKey.equals(key)) 
+				String newKey = text.getText() == null ? "" : text.getText();
+				if (newKey.equals(key))
 					btnOk.setEnabled(false);
 				else
 					btnOk.setEnabled(true);
 			}
 		});
-		
 
 		Group grpValues = new Group(composite, SWT.NONE);
+		grpValues.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4,
+				1));
 		grpValues.setText("Values");
-		grpValues.setBounds(10, 57, 396, 145);
+		grpValues.setLayout(new GridLayout(4, false));
 
 		table = new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION
 				| SWT.MULTI);
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 2));
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				tableItemSelected();
 			}
 		});
-		table.setBounds(10, 20, 262, 115);
 		table.setLinesVisible(true);
 
 		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
@@ -132,6 +153,7 @@ public class NewSetDialog extends Dialog {
 		tblclmnNewColumn.setText("New Column");
 
 		Button btnAdd = new Button(grpValues, SWT.NONE);
+		btnAdd.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		btnAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -148,10 +170,11 @@ public class NewSetDialog extends Dialog {
 				}
 			}
 		});
-		btnAdd.setBounds(318, 20, 68, 23);
 		btnAdd.setText("Add");
 
 		btnDelete = new Button(grpValues, SWT.NONE);
+		btnDelete.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false,
+				1, 1));
 		btnDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -163,26 +186,16 @@ public class NewSetDialog extends Dialog {
 			}
 		});
 		btnDelete.setEnabled(false);
-		btnDelete.setBounds(318, 49, 68, 23);
 		btnDelete.setText("Delete");
 
-		Label label = new Label(composite, SWT.NONE);
-		label.setText("Server");
-		label.setBounds(10, 10, 49, 16);
+		Composite composite_1 = new Composite(shlNewSet, SWT.NONE);
+		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
+		composite_1.setLayout(new GridLayout(2, false));
 
-		Label label_1 = new Label(composite, SWT.NONE);
-		label_1.setText(server);
-		label_1.setBounds(61, 10, 89, 16);
-
-		Label label_2 = new Label(composite, SWT.NONE);
-		label_2.setText("Database");
-		label_2.setBounds(248, 10, 65, 16);
-
-		Label label_3 = new Label(composite, SWT.NONE);
-		label_3.setText(String.valueOf(db));
-		label_3.setBounds(331, 10, 45, 13);
-
-		btnOk = new Button(shlNewSet, SWT.NONE);
+		btnOk = new Button(composite_1, SWT.NONE);
+		btnOk.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1,
+				1));
 		btnOk.setEnabled(false);
 		btnOk.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -190,9 +203,10 @@ public class NewSetDialog extends Dialog {
 				TableItem[] items = table.getItems();
 				String key = text.getText();
 				Set<String> values = new HashSet<String>();
-				
-				if(key.length() == 0 || items.length == 0)
-					MessageDialog.openError(shlNewSet, "error","please input set information!");
+
+				if (key.length() == 0 || items.length == 0)
+					MessageDialog.openError(shlNewSet, "error",
+							"please input set information!");
 				else {
 					for (TableItem item : items) {
 						values.add(item.getText());
@@ -200,24 +214,24 @@ public class NewSetDialog extends Dialog {
 					result = new SetInfo(key, values);
 					shlNewSet.dispose();
 				}
-					
-				
+
 			}
 		});
-		btnOk.setBounds(104, 258, 68, 23);
 		btnOk.setText("OK");
 
-		Button btnCancel = new Button(shlNewSet, SWT.NONE);
+		Button btnCancel = new Button(composite_1, SWT.NONE);
+		btnCancel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 1, 1));
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				shlNewSet.dispose();
 			}
 		});
-		btnCancel.setBounds(276, 258, 68, 23);
 		btnCancel.setText("Cancel");
 
 	}
+
 	protected void tableItemSelected() {
 		TableItem[] items = table.getSelection();
 		if (items.length == 1) {

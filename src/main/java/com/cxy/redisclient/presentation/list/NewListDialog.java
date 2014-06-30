@@ -5,25 +5,27 @@ import java.util.List;
 
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TabFolder;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Dialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.dto.ListInfo;
 
@@ -55,7 +57,7 @@ public class NewListDialog extends Dialog {
 		setText("SWT Dialog");
 		this.server = server;
 		this.db = db;
-		this.key = key == null?"":key;
+		this.key = key == null ? "" : key;
 	}
 
 	/**
@@ -81,7 +83,7 @@ public class NewListDialog extends Dialog {
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(450, 441);
+		shell.setSize(665, 528);
 		shell.setText("New List");
 
 		Rectangle screenSize = shell.getParent().getBounds();
@@ -89,98 +91,65 @@ public class NewListDialog extends Dialog {
 		shell.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width
 				/ 2, screenSize.y + screenSize.height / 2 - shellSize.height
 				/ 2);
+		shell.setLayout(new GridLayout(1, false));
 
 		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
-		tabFolder.setBounds(10, 10, 424, 365);
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
+				1));
+		tabFolder.setSize(414, 360);
 
 		TabItem tbtmList = new TabItem(tabFolder, SWT.NONE);
 		tbtmList.setText("List");
 
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tbtmList.setControl(composite);
+		composite.setLayout(new GridLayout(4, true));
 
-		Group grpOrderToAdd = new Group(composite, SWT.NONE);
-		grpOrderToAdd.setText("Order to add into list");
-		grpOrderToAdd.setBounds(10, 205, 396, 52);
+		Label label = new Label(composite, SWT.NONE);
+		label.setText("Server");
 
-		Button button_1 = new Button(grpOrderToAdd, SWT.RADIO);
-		button_1.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				headTail = true;
-			}
-		});
-		button_1.setSelection(true);
-		button_1.setText("From head to tail");
-		button_1.setBounds(10, 26, 158, 16);
+		Label label_1 = new Label(composite, SWT.NONE);
+		label_1.setText(server);
 
-		Button btnFromTailTo = new Button(grpOrderToAdd, SWT.RADIO);
-		btnFromTailTo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				headTail = false;
-			}
-		});
-		btnFromTailTo.setText("From tail to head");
-		btnFromTailTo.setBounds(228, 26, 158, 16);
+		Label label_2 = new Label(composite, SWT.NONE);
+		label_2.setText("Database");
 
-		Group grpWhenListNot = new Group(composite, SWT.NONE);
-		grpWhenListNot.setText("If list does not exist");
-		grpWhenListNot.setBounds(10, 271, 396, 52);
-
-		Button btnCreateList = new Button(grpWhenListNot, SWT.RADIO);
-		btnCreateList.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				exist = true;
-			}
-		});
-		btnCreateList.setSelection(true);
-		btnCreateList.setText("Create a list");
-		btnCreateList.setBounds(10, 26, 158, 16);
-
-		Button btnNothingToDo = new Button(grpWhenListNot, SWT.RADIO);
-		btnNothingToDo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				exist = false;
-			}
-		});
-		btnNothingToDo.setText("Do nothing");
-		btnNothingToDo.setBounds(228, 26, 158, 16);
+		Label label_3 = new Label(composite, SWT.NONE);
+		label_3.setText(String.valueOf(db));
 
 		Label lblKey = new Label(composite, SWT.NONE);
-		lblKey.setBounds(10, 32, 49, 19);
 		lblKey.setText("Key");
 
 		text = new Text(composite, SWT.BORDER);
-		text.setBounds(61, 32, 345, 19);
+		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		text.setText(key);
 		text.selectAll();
 		text.setFocus();
 		text.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				String newKey = text.getText() == null?"":text.getText();
-				if(newKey.equals(key)) 
+				String newKey = text.getText() == null ? "" : text.getText();
+				if (newKey.equals(key))
 					btnOk.setEnabled(false);
 				else
 					btnOk.setEnabled(true);
 			}
 		});
-		
+
 		Group grpValues = new Group(composite, SWT.NONE);
+		grpValues.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4,
+				1));
 		grpValues.setText("Values");
-		grpValues.setBounds(10, 54, 396, 145);
+		grpValues.setLayout(new GridLayout(4, false));
 
 		table = new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION
 				| SWT.MULTI);
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 4));
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				tableItemSelected();
 			}
 		});
-		table.setBounds(10, 20, 262, 115);
 		table.setLinesVisible(true);
 
 		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
@@ -188,6 +157,7 @@ public class NewListDialog extends Dialog {
 		tblclmnNewColumn.setText("New Column");
 
 		Button btnAdd = new Button(grpValues, SWT.NONE);
+		btnAdd.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		btnAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -204,10 +174,11 @@ public class NewListDialog extends Dialog {
 				}
 			}
 		});
-		btnAdd.setBounds(318, 20, 68, 23);
 		btnAdd.setText("Add");
 
 		btnDelete = new Button(grpValues, SWT.NONE);
+		btnDelete.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false,
+				1, 1));
 		btnDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -219,10 +190,10 @@ public class NewListDialog extends Dialog {
 			}
 		});
 		btnDelete.setEnabled(false);
-		btnDelete.setBounds(318, 49, 68, 23);
 		btnDelete.setText("Delete");
 
 		btnUp = new Button(grpValues, SWT.NONE);
+		btnUp.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		btnUp.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -242,10 +213,11 @@ public class NewListDialog extends Dialog {
 			}
 		});
 		btnUp.setEnabled(false);
-		btnUp.setBounds(318, 78, 68, 23);
 		btnUp.setText("UP");
 
 		btnDown = new Button(grpValues, SWT.NONE);
+		btnDown.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1,
+				1));
 		btnDown.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -265,26 +237,74 @@ public class NewListDialog extends Dialog {
 			}
 		});
 		btnDown.setEnabled(false);
-		btnDown.setBounds(318, 107, 68, 23);
 		btnDown.setText("Down");
 
-		Label label = new Label(composite, SWT.NONE);
-		label.setText("Server");
-		label.setBounds(10, 10, 45, 16);
+		Group grpOrderToAdd = new Group(composite, SWT.NONE);
+		grpOrderToAdd.setLayout(new GridLayout(2, false));
+		grpOrderToAdd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
+				false, 4, 1));
+		grpOrderToAdd.setText("Order to add into list");
 
-		Label label_1 = new Label(composite, SWT.NONE);
-		label_1.setText(server);
-		label_1.setBounds(61, 10, 89, 19);
+		Button button_1 = new Button(grpOrderToAdd, SWT.RADIO);
+		button_1.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false,
+				1, 1));
+		button_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				headTail = true;
+			}
+		});
+		button_1.setSelection(true);
+		button_1.setText("From head to tail");
 
-		Label label_2 = new Label(composite, SWT.NONE);
-		label_2.setText("Database");
-		label_2.setBounds(248, 10, 62, 16);
+		Button btnFromTailTo = new Button(grpOrderToAdd, SWT.RADIO);
+		btnFromTailTo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
+				false, 1, 1));
+		btnFromTailTo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				headTail = false;
+			}
+		});
+		btnFromTailTo.setText("From tail to head");
 
-		Label label_3 = new Label(composite, SWT.NONE);
-		label_3.setText(String.valueOf(db));
-		label_3.setBounds(331, 10, 45, 16);
+		Group grpWhenListNot = new Group(composite, SWT.NONE);
+		grpWhenListNot.setLayout(new GridLayout(2, true));
+		grpWhenListNot.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 4, 1));
+		grpWhenListNot.setText("If list does not exist");
 
-		btnOk = new Button(shell, SWT.NONE);
+		Button btnCreateList = new Button(grpWhenListNot, SWT.RADIO);
+		btnCreateList.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
+				false, 1, 1));
+		btnCreateList.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				exist = true;
+			}
+		});
+		btnCreateList.setSelection(true);
+		btnCreateList.setText("Create a list");
+
+		Button btnNothingToDo = new Button(grpWhenListNot, SWT.RADIO);
+		btnNothingToDo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
+				false, 1, 1));
+		btnNothingToDo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				exist = false;
+			}
+		});
+		btnNothingToDo.setText("Do nothing");
+
+		Composite composite_1 = new Composite(shell, SWT.NONE);
+		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
+		composite_1.setLayout(new GridLayout(2, false));
+
+		btnOk = new Button(composite_1, SWT.NONE);
+		btnOk.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1,
+				1));
 		btnOk.setEnabled(false);
 		btnOk.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -292,9 +312,10 @@ public class NewListDialog extends Dialog {
 				TableItem[] items = table.getItems();
 				String key = text.getText();
 				List<String> values = new ArrayList<String>();
-				
-				if(key.length() == 0 || items.length == 0)
-					MessageDialog.openError(shell, "error","please input list information!");
+
+				if (key.length() == 0 || items.length == 0)
+					MessageDialog.openError(shell, "error",
+							"please input list information!");
 				else {
 					for (TableItem item : items) {
 						values.add(item.getText());
@@ -302,21 +323,20 @@ public class NewListDialog extends Dialog {
 					result = new ListInfo(key, values, headTail, exist);
 					shell.dispose();
 				}
-					
-				
+
 			}
 		});
-		btnOk.setBounds(104, 380, 68, 23);
 		btnOk.setText("OK");
 
-		Button btnCancel = new Button(shell, SWT.NONE);
+		Button btnCancel = new Button(composite_1, SWT.NONE);
+		btnCancel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 1, 1));
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				shell.dispose();
 			}
 		});
-		btnCancel.setBounds(276, 380, 68, 23);
 		btnCancel.setText("Cancel");
 	}
 

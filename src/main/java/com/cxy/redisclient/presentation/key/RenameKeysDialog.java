@@ -18,6 +18,8 @@ import org.eclipse.swt.widgets.Text;
 import com.cxy.redisclient.dto.RenameInfo;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 
 public class RenameKeysDialog extends Dialog {
 
@@ -64,33 +66,43 @@ public class RenameKeysDialog extends Dialog {
 	 */
 	private void createContents() {
 		shlRenameKey = new Shell(getParent(), getStyle());
-		shlRenameKey.setSize(326, 201);
+		shlRenameKey.setSize(430, 258);
 		shlRenameKey.setText("Rename Key");
 		
 		Rectangle screenSize = shlRenameKey.getParent().getBounds();
 		Rectangle shellSize = shlRenameKey.getBounds();
 		shlRenameKey.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
 				screenSize.y + screenSize.height / 2 - shellSize.height / 2);
+		shlRenameKey.setLayout(new GridLayout(1, false));
 		
 		TabFolder tabFolder = new TabFolder(shlRenameKey, SWT.NONE);
-		tabFolder.setBounds(10, 10, 300, 121);
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		tabFolder.setSize(290, 122);
 		
 		TabItem tbtmString = new TabItem(tabFolder, SWT.NONE);
 		tbtmString.setText("Key");
 		
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tbtmString.setControl(composite);
+		composite.setLayout(new GridLayout(4, true));
 		
 		Label lblKey = new Label(composite, SWT.NONE);
 		lblKey.setText("Server");
-		lblKey.setBounds(10, 13, 45, 19);
+		
+		Label label_1 = new Label(composite, SWT.NONE);
+		label_1.setText(server);
+		
+		Label lblDatabase = new Label(composite, SWT.NONE);
+		lblDatabase.setText("Database");
+		
+		Label label_3 = new Label(composite, SWT.NONE);
+		label_3.setText(String.valueOf(db));
 		
 		Label lblNewKey = new Label(composite, SWT.NONE);
 		lblNewKey.setText("New key");
-		lblNewKey.setBounds(10, 44, 56, 16);
 		
 		text_2 = new Text(composite, SWT.BORDER);
-		text_2.setBounds(72, 41, 210, 19);
+		text_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		text_2.setText(oldContainer);
 		text_2.selectAll();
 		text_2.setFocus();
@@ -104,24 +116,17 @@ public class RenameKeysDialog extends Dialog {
 			}
 		});
 		
-		Label label_1 = new Label(composite, SWT.NONE);
-		label_1.setBounds(72, 13, 78, 19);
-		label_1.setText(server);
-		
-		Label lblDatabase = new Label(composite, SWT.NONE);
-		lblDatabase.setText("Database");
-		lblDatabase.setBounds(156, 13, 61, 19);
-		
-		Label label_3 = new Label(composite, SWT.NONE);
-		label_3.setBounds(223, 13, 45, 19);
-		label_3.setText(String.valueOf(db));
-		
 		final Button btnCheckButton = new Button(composite, SWT.CHECK);
+		btnCheckButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
 		btnCheckButton.setSelection(true);
-		btnCheckButton.setBounds(10, 69, 272, 16);
 		btnCheckButton.setText("Overwritten if exists");
 		
-		button = new Button(shlRenameKey, SWT.NONE);
+		Composite composite_1 = new Composite(shlRenameKey, SWT.NONE);
+		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		composite_1.setLayout(new GridLayout(2, false));
+		
+		button = new Button(composite_1, SWT.NONE);
+		button.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		button.setEnabled(false);
 		button.addMouseListener(new MouseAdapter() {
 			@Override
@@ -138,9 +143,9 @@ public class RenameKeysDialog extends Dialog {
 			}
 		});
 		button.setText("OK");
-		button.setBounds(61, 144, 68, 23);
 		
-		Button button_1 = new Button(shlRenameKey, SWT.NONE);
+		Button button_1 = new Button(composite_1, SWT.NONE);
+		button_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		button_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
@@ -148,7 +153,6 @@ public class RenameKeysDialog extends Dialog {
 			}
 		});
 		button_1.setText("Cancel");
-		button_1.setBounds(188, 144, 68, 23);
 
 	}
 }

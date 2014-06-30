@@ -26,6 +26,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.ModifyEvent;
 
 import com.cxy.redisclient.dto.ZSetInfo;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.GridData;
 
 public class NewZSetDialog extends Dialog {
 
@@ -38,9 +40,10 @@ public class NewZSetDialog extends Dialog {
 	private Table table;
 	private Button btnDelete;
 	private Button btnOk;
-	
+
 	/**
 	 * Create the dialog.
+	 * 
 	 * @param parent
 	 * @param style
 	 */
@@ -50,11 +53,12 @@ public class NewZSetDialog extends Dialog {
 		setText("SWT Dialog");
 		this.server = server;
 		this.db = db;
-		this.key = key == null?"":key;
+		this.key = key == null ? "" : key;
 	}
 
 	/**
 	 * Open the dialog.
+	 * 
 	 * @return the result
 	 */
 	public Object open() {
@@ -75,50 +79,67 @@ public class NewZSetDialog extends Dialog {
 	 */
 	private void createContents() {
 		shlNewSortedSet = new Shell(getParent(), getStyle());
-		shlNewSortedSet.setSize(450, 319);
+		shlNewSortedSet.setSize(479, 373);
 		shlNewSortedSet.setText("New Sorted Set");
 
 		Rectangle screenSize = shlNewSortedSet.getParent().getBounds();
 		Rectangle shellSize = shlNewSortedSet.getBounds();
-		shlNewSortedSet.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width
-				/ 2, screenSize.y + screenSize.height / 2 - shellSize.height
-				/ 2);
+		shlNewSortedSet.setLocation(screenSize.x + screenSize.width / 2
+				- shellSize.width / 2, screenSize.y + screenSize.height / 2
+				- shellSize.height / 2);
+		shlNewSortedSet.setLayout(new GridLayout(1, false));
 
 		TabFolder tabFolder = new TabFolder(shlNewSortedSet, SWT.NONE);
-		tabFolder.setBounds(10, 10, 424, 244);
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
+				1));
+		tabFolder.setSize(414, 241);
 
 		TabItem tbtmList = new TabItem(tabFolder, SWT.NONE);
 		tbtmList.setText("Sorted Set");
 
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tbtmList.setControl(composite);
+		composite.setLayout(new GridLayout(4, true));
+
+		Label label = new Label(composite, SWT.NONE);
+		label.setText("Server");
+
+		Label label_1 = new Label(composite, SWT.NONE);
+		label_1.setText(server);
+
+		Label label_2 = new Label(composite, SWT.NONE);
+		label_2.setText("Database");
+
+		Label label_3 = new Label(composite, SWT.NONE);
+		label_3.setText(String.valueOf(db));
 
 		Label lblKey = new Label(composite, SWT.NONE);
-		lblKey.setBounds(10, 34, 49, 19);
 		lblKey.setText("Key");
 
 		text = new Text(composite, SWT.BORDER);
-		text.setBounds(61, 34, 345, 22);
+		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		text.setText(key);
 		text.selectAll();
 		text.setFocus();
 		text.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				String newKey = text.getText() == null?"":text.getText();
-				if(newKey.equals(key)) 
+				String newKey = text.getText() == null ? "" : text.getText();
+				if (newKey.equals(key))
 					btnOk.setEnabled(false);
 				else
 					btnOk.setEnabled(true);
 			}
 		});
-		
 
 		Group grpValues = new Group(composite, SWT.NONE);
+		grpValues.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4,
+				1));
 		grpValues.setText("Values");
-		grpValues.setBounds(10, 59, 396, 145);
+		grpValues.setLayout(new GridLayout(4, false));
 
 		table = new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION
 				| SWT.MULTI);
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 3));
 		table.setHeaderVisible(true);
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -126,24 +147,26 @@ public class NewZSetDialog extends Dialog {
 				tableItemSelected();
 			}
 		});
-		table.setBounds(10, 20, 262, 115);
 		table.setLinesVisible(true);
 
 		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
-		tblclmnNewColumn.setWidth(56);
+		tblclmnNewColumn.setWidth(88);
 		tblclmnNewColumn.setText("Score");
-		
+
 		TableColumn tblclmnMember = new TableColumn(table, SWT.NONE);
 		tblclmnMember.setWidth(164);
 		tblclmnMember.setText("Member");
 
 		Button btnAdd = new Button(grpValues, SWT.NONE);
+		btnAdd.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		btnAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				InputDialog inputDialog = new InputDialog(shlNewSortedSet,
+				InputDialog inputDialog = new InputDialog(
+						shlNewSortedSet,
 						"Input values",
-						"Values(multiple values are separated by ; score and member are separated by ,)", "", null);
+						"Values(multiple values are separated by ; score and member are separated by ,)",
+						"", null);
 				if (inputDialog.open() == InputDialog.OK) {
 					String values = inputDialog.getValue();
 					String[] zsetValues = values.split(";");
@@ -155,10 +178,11 @@ public class NewZSetDialog extends Dialog {
 				}
 			}
 		});
-		btnAdd.setBounds(318, 20, 68, 23);
 		btnAdd.setText("Add");
 
 		btnDelete = new Button(grpValues, SWT.NONE);
+		btnDelete.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false,
+				1, 1));
 		btnDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -170,26 +194,18 @@ public class NewZSetDialog extends Dialog {
 			}
 		});
 		btnDelete.setEnabled(false);
-		btnDelete.setBounds(318, 49, 68, 23);
 		btnDelete.setText("Delete");
+		new Label(grpValues, SWT.NONE);
+		
 
-		Label label = new Label(composite, SWT.NONE);
-		label.setText("Server");
-		label.setBounds(10, 10, 45, 18);
+		Composite composite_1 = new Composite(shlNewSortedSet, SWT.NONE);
+		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
+		composite_1.setLayout(new GridLayout(2, false));
 
-		Label label_1 = new Label(composite, SWT.NONE);
-		label_1.setText(server);
-		label_1.setBounds(61, 10, 89, 19);
-
-		Label label_2 = new Label(composite, SWT.NONE);
-		label_2.setText("Database");
-		label_2.setBounds(248, 10, 65, 15);
-
-		Label label_3 = new Label(composite, SWT.NONE);
-		label_3.setText(String.valueOf(db));
-		label_3.setBounds(331, 10, 45, 15);
-
-		btnOk = new Button(shlNewSortedSet, SWT.NONE);
+		btnOk = new Button(composite_1, SWT.NONE);
+		btnOk.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1,
+				1));
 		btnOk.setEnabled(false);
 		btnOk.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -197,34 +213,36 @@ public class NewZSetDialog extends Dialog {
 				TableItem[] items = table.getItems();
 				String key = text.getText();
 				Map<String, Double> values = new HashMap<String, Double>();
-				
-				if(key.length() == 0 || items.length == 0)
-					MessageDialog.openError(shlNewSortedSet, "error","please input sorted set information!");
+
+				if (key.length() == 0 || items.length == 0)
+					MessageDialog.openError(shlNewSortedSet, "error",
+							"please input sorted set information!");
 				else {
 					for (TableItem item : items) {
-						values.put(item.getText(1), Double.valueOf(item.getText(0)));
+						values.put(item.getText(1),
+								Double.valueOf(item.getText(0)));
 					}
 					result = new ZSetInfo(key, values);
 					shlNewSortedSet.dispose();
 				}
-					
-				
+
 			}
 		});
-		btnOk.setBounds(104, 260, 68, 23);
 		btnOk.setText("OK");
 
-		Button btnCancel = new Button(shlNewSortedSet, SWT.NONE);
+		Button btnCancel = new Button(composite_1, SWT.NONE);
+		btnCancel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 1, 1));
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				shlNewSortedSet.dispose();
 			}
 		});
-		btnCancel.setBounds(276, 260, 68, 23);
 		btnCancel.setText("Cancel");
 
 	}
+
 	protected void tableItemSelected() {
 		TableItem[] items = table.getSelection();
 		if (items.length == 1) {

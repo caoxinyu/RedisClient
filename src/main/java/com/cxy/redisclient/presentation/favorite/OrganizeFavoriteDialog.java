@@ -6,8 +6,13 @@ import java.util.List;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
@@ -18,11 +23,6 @@ import org.eclipse.swt.widgets.TableItem;
 
 import com.cxy.redisclient.domain.Favorite;
 import com.cxy.redisclient.service.FavoriteService;
-import org.eclipse.swt.events.ShellAdapter;
-import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.GridData;
 
 public class OrganizeFavoriteDialog extends Dialog {
 
@@ -85,10 +85,10 @@ public class OrganizeFavoriteDialog extends Dialog {
 		grpFavorites.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpFavorites.setSize(417, 231);
 		grpFavorites.setText("Favorites");
-		grpFavorites.setLayout(new GridLayout(2, false));
+		grpFavorites.setLayout(new GridLayout(4, false));
 		
 		table = new Table(grpFavorites, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 2));
 		table.setSize(308, 45);
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -107,18 +107,14 @@ public class OrganizeFavoriteDialog extends Dialog {
 		tblclmnNewColumn_1.setWidth(187);
 		tblclmnNewColumn_1.setText("Favorite");
 		
-		Composite composite_1 = new Composite(grpFavorites, SWT.NONE);
-		composite_1.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
-		composite_1.setLayout(new GridLayout(1, false));
-		
-		btnRenameButton = new Button(composite_1, SWT.NONE);
+		btnRenameButton = new Button(grpFavorites, SWT.NONE);
 		btnRenameButton.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		btnRenameButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				TableItem[] items = table.getSelection();
 				Favorite favorite = (Favorite) items[0].getData();
-				RenameFavoriteDialog dialog = new RenameFavoriteDialog(shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL, favorite);
+				RenameFavoriteDialog dialog = new RenameFavoriteDialog(shell, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, favorite);
 				String name =  (String) dialog.open();
 				if(name != null) {
 					items[0].setText(new String[] { name, favorite.getFavorite() });
@@ -130,7 +126,8 @@ public class OrganizeFavoriteDialog extends Dialog {
 		btnRenameButton.setEnabled(false);
 		btnRenameButton.setText("Rename");
 		
-		btnRemoveButton = new Button(composite_1, SWT.NONE);
+		
+		btnRemoveButton = new Button(grpFavorites, SWT.NONE);
 		btnRemoveButton.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
 		btnRemoveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -144,7 +141,7 @@ public class OrganizeFavoriteDialog extends Dialog {
 		});
 		btnRemoveButton.setEnabled(false);
 		btnRemoveButton.setText("Remove");
-		
+				
 		Composite composite = new Composite(shell, SWT.NONE);
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		composite.setLayout(new GridLayout(2, false));
