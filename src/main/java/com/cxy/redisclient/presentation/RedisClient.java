@@ -3,6 +3,7 @@ package com.cxy.redisclient.presentation;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -49,6 +50,7 @@ import com.cxy.redisclient.dto.ZSetInfo;
 import com.cxy.redisclient.presentation.favorite.AddFavoriteDialog;
 import com.cxy.redisclient.presentation.favorite.OrganizeFavoriteDialog;
 import com.cxy.redisclient.presentation.hash.NewHashDialog;
+import com.cxy.redisclient.presentation.hash.UpdateHashDialog;
 import com.cxy.redisclient.presentation.key.FindKeyDialog;
 import com.cxy.redisclient.presentation.key.RenameKeysDialog;
 import com.cxy.redisclient.presentation.list.NewListDialog;
@@ -805,14 +807,13 @@ public class RedisClient {
 	private void properties() {
 		TableItem[] items = table.getSelection();
 		NodeType type = (NodeType) items[0].getData(NODE_TYPE);
+		
+		TreeItem treeItem = getTreeItemByTableItem(items[0]);
+		ContainerInfo cinfo = new ContainerInfo();
+		parseContainer(treeItem, cinfo);
+		String key = cinfo.getContainer() + items[0].getText();
+		
 		if(type == NodeType.STRING) {
-			TreeItem treeItem = getTreeItemByTableItem(items[0]);
-			
-			ContainerInfo cinfo = new ContainerInfo();
-	
-			parseContainer(treeItem, cinfo);
-			
-			String key = cinfo.getContainer() + items[0].getText();
 			String value = service2.readString(cinfo.getId(), cinfo.getDb(), key);
 			
 			UpdateStringDialog dialog = new UpdateStringDialog(shlRedisClient,
@@ -822,6 +823,20 @@ public class RedisClient {
 			
 			if(info != null)
 				service2.updateString(cinfo.getId(), cinfo.getDb(), info.getKey(), info.getValue());
+		} else if(type == NodeType.HASH) {
+			Map<String, String> value = service7.read(cinfo.getId(), cinfo.getDb(), key);
+			
+			UpdateHashDialog dialog = new UpdateHashDialog(shlRedisClient,
+					SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+					cinfo.getDb(), key, value);
+			
+			HashInfo info = (HashInfo) dialog.open();
+			if (info != null) {
+				service7.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
+						info.getValues());
+				treeItem.setData(ITEM_OPENED, false);
+				dbContainerTreeItemSelected(treeItem, false);
+			}
 		}
 	}
 

@@ -24,12 +24,16 @@ public abstract class JedisCommand implements Comparable<JedisCommand>{
 
 	public void execute() {
 		server = service.listById(id);
-		jedis = new Jedis(server.getHost(), Integer.parseInt(server.getPort()));
+		this.jedis = new Jedis(server.getHost(), Integer.parseInt(server.getPort()));
 
 		command();
 		jedis.close();
 	}
 
+	public void execute(Jedis jedis) {
+		this.jedis = jedis;
+		command();
+	}
 	protected abstract void command();
 
 	public abstract RedisVersion getVersion();

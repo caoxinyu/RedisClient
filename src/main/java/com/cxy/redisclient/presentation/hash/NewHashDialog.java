@@ -32,15 +32,25 @@ import org.eclipse.swt.layout.FillLayout;
 
 public class NewHashDialog extends Dialog {
 
+	protected final class ModifyKey implements ModifyListener {
+		public void modifyText(ModifyEvent e) {
+			String newKey = text.getText() == null ? "" : text.getText();
+			if (newKey.equals(key))
+				btnOk.setEnabled(false);
+			else
+				btnOk.setEnabled(true);
+		}
+	}
+
 	protected Object result;
 	protected Shell shlNewHash;
 	private String server;
 	private int db;
 	private String key;
-	private Text text;
-	private Table table;
+	protected Text text;
+	protected Table table;
 	private Button btnDelete;
-	private Button btnOk;
+	protected Button btnOk;
 
 	/**
 	 * Create the dialog.
@@ -78,7 +88,7 @@ public class NewHashDialog extends Dialog {
 	/**
 	 * Create contents of the dialog.
 	 */
-	private void createContents() {
+	protected void createContents() {
 		shlNewHash = new Shell(getParent(), getStyle());
 		shlNewHash.setSize(479, 363);
 		shlNewHash.setText("New Hash");
@@ -122,15 +132,7 @@ public class NewHashDialog extends Dialog {
 		text.setText(key);
 		text.selectAll();
 		text.setFocus();
-		text.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				String newKey = text.getText() == null ? "" : text.getText();
-				if (newKey.equals(key))
-					btnOk.setEnabled(false);
-				else
-					btnOk.setEnabled(true);
-			}
-		});
+		text.addModifyListener(new ModifyKey());
 
 		Group grpValues = new Group(composite, SWT.NONE);
 		grpValues.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4,
@@ -170,8 +172,8 @@ public class NewHashDialog extends Dialog {
 						"", null);
 				if (inputDialog.open() == InputDialog.OK) {
 					String values = inputDialog.getValue();
-					String[] zsetValues = values.split(";");
-					for (String value : zsetValues) {
+					String[] hashValues = values.split(";");
+					for (String value : hashValues) {
 						TableItem item = new TableItem(table, SWT.NONE);
 						String[] zset = value.split(",");
 						item.setText(zset);
