@@ -20,17 +20,28 @@ import org.eclipse.swt.events.MouseEvent;
 import com.cxy.redisclient.dto.StringInfo;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.FillLayout;
 
 public class NewStringDialog extends Dialog {
 
+	protected final class ModifyKey implements ModifyListener {
+		public void modifyText(ModifyEvent e) {
+			String newKey = text_key.getText() == null?"":text_key.getText();
+			if(newKey.equals(key)) 
+				btnOk.setEnabled(false);
+			else
+				btnOk.setEnabled(true);
+		}
+	}
+
 	protected Object result;
-	protected Shell shell;
-	private Text text_1;
-	private Text text_2;
+	protected Shell shlNString;
+	protected Text text_key;
+	protected Text text_value;
 	private String server;
 	private int db;
-	private String key;
-	private Button btnOk;
+	protected String key;
+	protected Button btnOk;
 
 	/**
 	 * Create the dialog.
@@ -51,10 +62,10 @@ public class NewStringDialog extends Dialog {
 	 */
 	public Object open() {
 		createContents();
-		shell.open();
-		shell.layout();
+		shlNString.open();
+		shlNString.layout();
 		Display display = getParent().getDisplay();
-		while (!shell.isDisposed()) {
+		while (!shlNString.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
@@ -65,18 +76,18 @@ public class NewStringDialog extends Dialog {
 	/**
 	 * Create contents of the dialog.
 	 */
-	private void createContents() {
-		shell = new Shell(getParent(), getStyle());
-		shell.setSize(482, 283);
-		shell.setText("Add String");
+	protected void createContents() {
+		shlNString = new Shell(getParent(), getStyle());
+		shlNString.setSize(482, 279);
+		shlNString.setText("New String");
 		
-		Rectangle screenSize = shell.getParent().getBounds();
-		Rectangle shellSize = shell.getBounds();
-		shell.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
+		Rectangle screenSize = shlNString.getParent().getBounds();
+		Rectangle shellSize = shlNString.getBounds();
+		shlNString.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
 				screenSize.y + screenSize.height / 2 - shellSize.height / 2);
-		shell.setLayout(new GridLayout(1, false));
+		shlNString.setLayout(new GridLayout(1, false));
 		
-		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
+		TabFolder tabFolder = new TabFolder(shlNString, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		tabFolder.setSize(290, 124);
 		
@@ -102,56 +113,46 @@ public class NewStringDialog extends Dialog {
 		Label lblValue = new Label(composite, SWT.NONE);
 		lblValue.setText("key");
 		
-		text_1 = new Text(composite, SWT.BORDER);
-		text_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
-		text_1.setText(key);
-		text_1.selectAll();
-		text_1.setFocus();
-		text_1.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				String newKey = text_1.getText() == null?"":text_1.getText();
-				if(newKey.equals(key)) 
-					btnOk.setEnabled(false);
-				else
-					btnOk.setEnabled(true);
-			}
-		});
+		text_key = new Text(composite, SWT.BORDER);
+		text_key.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		text_key.setText(key);
+		text_key.selectAll();
+		text_key.setFocus();
+		text_key.addModifyListener(new ModifyKey());
 		
 		Label label = new Label(composite, SWT.NONE);
 		label.setText("Value");
 		
-		text_2 = new Text(composite, SWT.BORDER);
-		text_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		text_value = new Text(composite, SWT.BORDER);
+		text_value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
-		Composite composite_1 = new Composite(shell, SWT.NONE);
-		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		composite_1.setLayout(new GridLayout(2, false));
+		Composite composite_1 = new Composite(shlNString, SWT.NONE);
+		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
+		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		
 		btnOk = new Button(composite_1, SWT.NONE);
-		btnOk.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		btnOk.setEnabled(false);
 		btnOk.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				String key = text_1.getText();
-				String value = text_2.getText();
+				String key = text_key.getText();
+				String value = text_value.getText();
 				
 				if( key.length() == 0 || value.length() == 0){
-					MessageDialog.openError(shell, "error","please input string information!");
+					MessageDialog.openError(shlNString, "error","please input string information!");
 				} else {
 					result = new StringInfo(key, value);
-					shell.dispose();
+					shlNString.dispose();
 				}
 			}
 		});
 		btnOk.setText("OK");
 		
 		Button button_1 = new Button(composite_1, SWT.NONE);
-		button_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		button_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				shell.dispose();
+				shlNString.dispose();
 			}
 		});
 		button_1.setText("Cancel");

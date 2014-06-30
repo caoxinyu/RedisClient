@@ -25,6 +25,7 @@ import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.dto.FindInfo;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.FillLayout;
 
 public class FindKeyDialog extends Dialog {
 
@@ -144,11 +145,10 @@ public class FindKeyDialog extends Dialog {
 		
 		
 		Composite composite1 = new Composite(shlFind, SWT.NONE);
-		composite1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-	    composite1.setLayout(new GridLayout(2, false));
+		composite1.setLayout(new FillLayout(SWT.HORIZONTAL));
+		composite1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 	    
 		btnFind = new Button(composite1, SWT.NONE);
-		btnFind.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		btnFind.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -180,7 +180,6 @@ public class FindKeyDialog extends Dialog {
 		btnFind.setText("Find");
 		
 		Button btnCancel = new Button(composite1, SWT.NONE);
-		btnCancel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

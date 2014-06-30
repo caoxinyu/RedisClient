@@ -25,6 +25,7 @@ import com.cxy.redisclient.integration.key.RestoreKey;
 import com.cxy.redisclient.integration.server.QueryServerVersion;
 import com.cxy.redisclient.integration.string.AddString;
 import com.cxy.redisclient.integration.string.ReadString;
+import com.cxy.redisclient.integration.string.UpdateString;
 
 public class NodeService {
 	public void addString(int id, int db, String key, String value) {
@@ -38,6 +39,10 @@ public class NodeService {
 		return command.getValue();
 	}
 	
+	public void updateString(int id, int db, String key, String value) {
+		UpdateString command = new UpdateString(id, db, key, value);
+		command.execute();
+	}
 	public void deleteKey(int id, int db, String key) {
 		DeleteKey command = new DeleteKey(id, db, key);
 		command.execute();

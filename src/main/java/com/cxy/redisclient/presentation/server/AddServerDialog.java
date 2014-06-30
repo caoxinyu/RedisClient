@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.domain.Server;
+import org.eclipse.swt.layout.FillLayout;
 
 public class AddServerDialog extends Dialog {
 
@@ -101,11 +102,10 @@ public class AddServerDialog extends Dialog {
 		text_5.selectAll();
 		
 		Composite composite_1 = new Composite(shell, SWT.NONE);
-		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		composite_1.setLayout(new GridLayout(2, false));
+		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
+		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		
 		Button btnOk = new Button(composite_1, SWT.NONE);
-		btnOk.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		btnOk.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent arg0) {
@@ -125,7 +125,6 @@ public class AddServerDialog extends Dialog {
 		btnOk.setText("OK");
 		
 		Button btnCancel = new Button(composite_1, SWT.NONE);
-		btnCancel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnCancel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent arg0) {

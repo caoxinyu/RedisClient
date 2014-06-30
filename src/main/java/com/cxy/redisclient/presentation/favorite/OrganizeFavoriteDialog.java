@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 import com.cxy.redisclient.domain.Favorite;
 import com.cxy.redisclient.service.FavoriteService;
+import org.eclipse.swt.layout.FillLayout;
 
 public class OrganizeFavoriteDialog extends Dialog {
 
@@ -143,11 +144,10 @@ public class OrganizeFavoriteDialog extends Dialog {
 		btnRemoveButton.setText("Remove");
 				
 		Composite composite = new Composite(shell, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		composite.setLayout(new GridLayout(2, false));
+		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
+		composite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		
 		Button btnOk = new Button(composite, SWT.NONE);
-		btnOk.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		btnOk.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -163,7 +163,6 @@ public class OrganizeFavoriteDialog extends Dialog {
 		btnOk.setText("OK");
 		
 		Button btnCancel = new Button(composite, SWT.NONE);
-		btnCancel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

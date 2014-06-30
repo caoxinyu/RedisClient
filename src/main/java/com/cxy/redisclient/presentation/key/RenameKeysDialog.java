@@ -20,6 +20,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.FillLayout;
 
 public class RenameKeysDialog extends Dialog {
 
@@ -122,11 +123,10 @@ public class RenameKeysDialog extends Dialog {
 		btnCheckButton.setText("Overwritten if exists");
 		
 		Composite composite_1 = new Composite(shlRenameKey, SWT.NONE);
-		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		composite_1.setLayout(new GridLayout(2, false));
+		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		button = new Button(composite_1, SWT.NONE);
-		button.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		button.setEnabled(false);
 		button.addMouseListener(new MouseAdapter() {
 			@Override
@@ -145,7 +145,6 @@ public class RenameKeysDialog extends Dialog {
 		button.setText("OK");
 		
 		Button button_1 = new Button(composite_1, SWT.NONE);
-		button_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		button_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {

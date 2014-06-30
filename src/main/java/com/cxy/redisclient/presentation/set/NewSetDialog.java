@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Text;
 import com.cxy.redisclient.dto.SetInfo;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.FillLayout;
 
 public class NewSetDialog extends Dialog {
 
@@ -189,13 +190,11 @@ public class NewSetDialog extends Dialog {
 		btnDelete.setText("Delete");
 
 		Composite composite_1 = new Composite(shlNewSet, SWT.NONE);
-		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
+		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false,
 				false, 1, 1));
-		composite_1.setLayout(new GridLayout(2, false));
 
 		btnOk = new Button(composite_1, SWT.NONE);
-		btnOk.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1,
-				1));
 		btnOk.setEnabled(false);
 		btnOk.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -220,8 +219,6 @@ public class NewSetDialog extends Dialog {
 		btnOk.setText("OK");
 
 		Button btnCancel = new Button(composite_1, SWT.NONE);
-		btnCancel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
-				false, 1, 1));
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

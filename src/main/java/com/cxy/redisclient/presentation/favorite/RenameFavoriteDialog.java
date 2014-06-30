@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Text;
 import com.cxy.redisclient.domain.Favorite;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.FillLayout;
 
 public class RenameFavoriteDialog extends Dialog {
 
@@ -96,12 +97,11 @@ public class RenameFavoriteDialog extends Dialog {
 		text.setText(oldFavorite.getFavorite());
 		
 		Composite composite_1 = new Composite(shell, SWT.NONE);
-		composite_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		composite_1.setLayout(new GridLayout(2, false));
+		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
+		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		
 		
 		Button button = new Button(composite_1, SWT.NONE);
-		button.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		button.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
@@ -118,7 +118,6 @@ public class RenameFavoriteDialog extends Dialog {
 		button.setText("OK");
 		
 		Button button_1 = new Button(composite_1, SWT.NONE);
-		button_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		button_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
