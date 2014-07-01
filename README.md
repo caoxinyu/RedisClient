@@ -15,6 +15,7 @@ Features
  3. Manage redis data
  	* New redis data: string, list, hash, set, sorted set
  	* Rename, delete redis data
+ 	* Update redis data
  	* Cut, copy paste redis data
  	* Import, export redis data
  	* Search redis data
