@@ -213,6 +213,7 @@ public class RedisClient {
 		shlRedisClient.setSize(1074, 772);
 		shlRedisClient.setText("Redis client");
 		shlRedisClient.setLayout(new GridLayout(1, false));
+		shlRedisClient.setMaximized(true);
 	}
 
 	private void initSash() {
@@ -409,42 +410,48 @@ public class RedisClient {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				TreeItem[] items = tree.getSelection();
-				
+
 				if((itemSelected instanceof TreeItem && items[0] != itemSelected) ) {
 					history.add(items[0]);
 					btnBackward.setEnabled(true);
 					btnForward.setEnabled(false);
-					treeItemSelected(false);
 				} else if(itemSelected instanceof TableItem  && items[0] != treeItemSelected){
 					history.add(items[0]);
 					btnBackward.setEnabled(true);
 					btnForward.setEnabled(false);
-					treeItemSelected(false);
 				}
+				treeItemSelected(false);
+				
 			}
 		});
 		tree.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent arg0) {
-				Point point = new Point(arg0.x, arg0.y);
-				TreeItem selectedItem = tree.getItem(point);
 				if (arg0.button == 3) {
-					if (selectedItem == rootRedisServers || selectedItem == null)
-						tree.setMenu(menu_null);
-					else {
-						//itemSelected = selectedItem;
+					Point point = new Point(arg0.x, arg0.y);
+					TreeItem selectedItem = tree.getItem(point);
+					
+					itemSelected = selectedItem;
 
+					if (selectedItem == rootRedisServers || selectedItem == null){
+						tree.setMenu(menu_null);
+						rootItemSelected();
+					} else {
+						
 						NodeType type = (NodeType) selectedItem
 								.getData(NODE_TYPE);
 
-						if (type == NodeType.ROOT)
+						if (type == NodeType.ROOT){
 							tree.setMenu(menu_null);
-						else if (type == NodeType.SERVER)
+							rootItemSelected();
+						}else if (type == NodeType.SERVER){
 							tree.setMenu(menuTreeServer);
-						else if (type == NodeType.DATABASE
+							serverItemSelected();
+						}else if (type == NodeType.DATABASE
 								|| type == NodeType.CONTAINER) {
 							updateMenuDBContainer(type, menuTreeDBContainer);
 							tree.setMenu(menuTreeDBContainer);
+							dbContainerItemSelected(selectedItem);
 						}
 
 					}
@@ -2336,6 +2343,7 @@ public class RedisClient {
 					NodeType type = (NodeType) tableItem.getData(NODE_TYPE);
 					if(type != NodeType.SERVER && type != NodeType.DATABASE && type != NodeType.CONTAINER && tableItem.getText().equals(containers[containers.length -1])){
 						table.setSelection(tableItem);
+						table.setFocus();
 						dataItemSelected();
 						break;
 					}
