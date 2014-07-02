@@ -18,7 +18,7 @@ public class UpdateStringDialog extends NewStringDialog {
 		super.createContents();
 		shlNString.setText("String Properties");
 		
-		text_key.setEnabled(false);
+		text_key.setEditable(false);
 		text_key.removeModifyListener(new ModifyKey());
 		
 		text_value.setText(value);

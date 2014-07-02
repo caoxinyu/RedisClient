@@ -22,7 +22,7 @@ public class UpdateZSetDialog extends NewZSetDialog {
 	protected void createContents() {
 		super.createContents();
 		shlNewSortedSet.setText("Sorted Set Properties");
-		text.setEnabled(false);
+		text.setEditable(false);
 		text.removeModifyListener(new ModifyKey());
 		btnOk.setEnabled(true);
 		

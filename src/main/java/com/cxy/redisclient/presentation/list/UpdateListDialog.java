@@ -18,7 +18,7 @@ public class UpdateListDialog extends NewListDialog {
 		super.createContents();
 		shell.setText("List Properties");
 		grpWhenListNot.setVisible(false);
-		text.setEnabled(false);
+		text.setEditable(false);
 		text.removeModifyListener(new ModifyKey());
 		btnOk.setEnabled(true);
 		

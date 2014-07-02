@@ -19,7 +19,7 @@ public class UpdateSetDialog extends NewSetDialog {
 	protected void createContents() {
 		super.createContents();
 		shlNewSet.setText("Set Properties");
-		text.setEnabled(false);
+		text.setEditable(false);
 		text.removeModifyListener(new ModifyKey());
 		btnOk.setEnabled(true);
 		

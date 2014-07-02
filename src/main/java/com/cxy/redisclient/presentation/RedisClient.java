@@ -371,7 +371,7 @@ public class RedisClient {
 		mntmProperties_1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				properties();
+				dataProperties();
 				
 			}
 		});
@@ -515,7 +515,7 @@ public class RedisClient {
 	}
 
 	private Menu initMenuTableDB() {
-		menu_dbContainer = new Menu(shlRedisClient);
+		Menu menu_dbContainer = new Menu(shlRedisClient);
 
 		MenuItem mntmNew_1 = new MenuItem(menu_dbContainer, SWT.CASCADE);
 		mntmNew_1.setText("new");
@@ -695,25 +695,7 @@ public class RedisClient {
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				TableItem[] items = table.getSelection();
-				itemSelected = items[0];
-				TreeItem[] treeItems = tree.getSelection();
-				treeItemSelected = treeItems[0];
-				
-				NodeType type = (NodeType) items[0].getData(NODE_TYPE);
-				switch (type) {
-				case SERVER:
-					serverItemSelected();
-					break;
-				case DATABASE:
-				case CONTAINER:
-					dbContainerItemSelected(items[0]);
-					break;
-				default:
-					dataItemSelected();
-					break;
-				}
-
+				tableItemSelected();
 			}
 		});
 		table.addMouseListener(new MouseAdapter() {
@@ -750,7 +732,7 @@ public class RedisClient {
 							MessageDialog.openInformation(shlRedisClient, "information", "New key found, please refresh container: "+text.getText());
 					}else {
 						
-						properties();
+						dataProperties();
 						
 					}
 				} 
@@ -816,7 +798,28 @@ public class RedisClient {
 
 	}
 
-	private void properties() {
+	private void tableItemSelected() {
+		TableItem[] items = table.getSelection();
+		itemSelected = items[0];
+		TreeItem[] treeItems = tree.getSelection();
+		treeItemSelected = treeItems[0];
+		
+		NodeType type = (NodeType) items[0].getData(NODE_TYPE);
+		switch (type) {
+		case SERVER:
+			serverItemSelected();
+			break;
+		case DATABASE:
+		case CONTAINER:
+			dbContainerItemSelected(items[0]);
+			break;
+		default:
+			dataItemSelected();
+			break;
+		}
+	}
+	
+	private void dataProperties() {
 		TableItem[] items = table.getSelection();
 		NodeType type = (NodeType) items[0].getData(NODE_TYPE);
 		
@@ -1205,12 +1208,13 @@ public class RedisClient {
 			public void widgetSelected(SelectionEvent e) {
 				if(itemSelected instanceof TreeItem){
 					
-				}else {
+				} 
+				if(itemSelected instanceof TableItem) {
 					NodeType type = (NodeType) itemSelected.getData(NODE_TYPE);
 					if(type == NodeType.CONTAINER)
 						;
 					else
-						properties();
+						dataProperties();
 				}
 			}
 		});
@@ -2392,7 +2396,7 @@ public class RedisClient {
 					if(type != NodeType.SERVER && type != NodeType.DATABASE && type != NodeType.CONTAINER && tableItem.getText().equals(containers[containers.length -1])){
 						table.setSelection(tableItem);
 						table.setFocus();
-						dataItemSelected();
+						tableItemSelected();
 						break;
 					}
 						

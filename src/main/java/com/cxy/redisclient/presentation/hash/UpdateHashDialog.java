@@ -22,7 +22,7 @@ public class UpdateHashDialog extends NewHashDialog {
 	protected void createContents() {
 		super.createContents();
 		shlNewHash.setText("Hash Properties");
-		text.setEnabled(false);
+		text.setEditable(false);
 		text.removeModifyListener(new ModifyKey());
 		
 		btnOk.setEnabled(true);
