@@ -90,7 +90,7 @@ public class NewZSetDialog extends Dialog {
 	 */
 	protected void createContents() {
 		shlNewSortedSet = new Shell(getParent(), getStyle());
-		shlNewSortedSet.setSize(479, 373);
+		shlNewSortedSet.setSize(586, 531);
 		shlNewSortedSet.setText("New Sorted Set");
 
 		Rectangle screenSize = shlNewSortedSet.getParent().getBounds();

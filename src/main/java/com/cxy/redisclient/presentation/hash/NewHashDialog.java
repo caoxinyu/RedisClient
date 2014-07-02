@@ -90,7 +90,7 @@ public class NewHashDialog extends Dialog {
 	 */
 	protected void createContents() {
 		shlNewHash = new Shell(getParent(), getStyle());
-		shlNewHash.setSize(479, 363);
+		shlNewHash.setSize(654, 524);
 		shlNewHash.setText("New Hash");
 
 		Rectangle screenSize = shlNewHash.getParent().getBounds();
@@ -153,11 +153,11 @@ public class NewHashDialog extends Dialog {
 		table.setLinesVisible(true);
 
 		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
-		tblclmnNewColumn.setWidth(56);
+		tblclmnNewColumn.setWidth(132);
 		tblclmnNewColumn.setText("Field");
 
 		TableColumn tblclmnMember = new TableColumn(table, SWT.NONE);
-		tblclmnMember.setWidth(164);
+		tblclmnMember.setWidth(236);
 		tblclmnMember.setText("Value");
 
 		Button btnAdd = new Button(grpValues, SWT.NONE);

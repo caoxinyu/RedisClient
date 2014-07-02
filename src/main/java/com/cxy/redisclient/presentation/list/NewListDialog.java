@@ -95,7 +95,7 @@ public class NewListDialog extends Dialog {
 	 */
 	protected void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(665, 528);
+		shell.setSize(805, 638);
 		shell.setText("New List");
 
 		Rectangle screenSize = shell.getParent().getBounds();

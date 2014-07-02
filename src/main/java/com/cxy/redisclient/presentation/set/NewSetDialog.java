@@ -90,7 +90,7 @@ public class NewSetDialog extends Dialog {
 	 */
 	protected void createContents() {
 		shlNewSet = new Shell(getParent(), getStyle());
-		shlNewSet.setSize(495, 382);
+		shlNewSet.setSize(691, 540);
 		shlNewSet.setText("New Set");
 
 		Rectangle screenSize = shlNewSet.getParent().getBounds();

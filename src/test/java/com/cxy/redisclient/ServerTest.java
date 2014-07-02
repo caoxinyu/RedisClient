@@ -83,4 +83,10 @@ public class ServerTest extends TestCase {
 		ServerService service = new ServerService();
 		assertTrue(service.listDBs(1) == 16);
 	}
+	
+	public void testInfo() {
+		ServerService service = new ServerService();
+		service.listInfo(5);
+		
+	}
 }

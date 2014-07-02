@@ -78,7 +78,7 @@ public class NewStringDialog extends Dialog {
 	 */
 	protected void createContents() {
 		shlNString = new Shell(getParent(), getStyle());
-		shlNString.setSize(482, 279);
+		shlNString.setSize(622, 284);
 		shlNString.setText("New String");
 		
 		Rectangle screenSize = shlNString.getParent().getBounds();

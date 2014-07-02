@@ -3,10 +3,12 @@ package com.cxy.redisclient.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.cxy.redisclient.domain.Server;
 import com.cxy.redisclient.integration.ConfigFile;
 import com.cxy.redisclient.integration.server.QueryDBAmount;
+import com.cxy.redisclient.integration.server.QueryServerProperties;
 
 public class ServerService {
 
@@ -98,5 +100,11 @@ public class ServerService {
 
 	public int listDBs(Server server) throws IOException {
 		return listDBs(server.getId());
+	}
+	
+	public Map<String, String[]> listInfo(int id) {
+		QueryServerProperties command = new QueryServerProperties(id);
+		command.execute();
+		return command.getServerInfo();
 	}
 }
