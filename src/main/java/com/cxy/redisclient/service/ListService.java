@@ -7,10 +7,16 @@ import com.cxy.redisclient.integration.list.InsertList;
 import com.cxy.redisclient.integration.list.ListList;
 import com.cxy.redisclient.integration.list.RemoveValue;
 import com.cxy.redisclient.integration.list.SetValue;
+import com.cxy.redisclient.integration.list.UpdateList;
 
 public class ListService {
 	public void add(int id, int db, String key, List<String> values, boolean headTail, boolean exist) {
 		AddList command = new AddList(id, db, key, values, headTail, exist);
+		command.execute();
+	}
+	
+	public void update(int id, int db, String key, List<String> values, boolean headTail){
+		UpdateList command = new UpdateList(id, db, key, values, headTail);
 		command.execute();
 	}
 	

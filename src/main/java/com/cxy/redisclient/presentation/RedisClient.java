@@ -32,6 +32,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 
+import redis.clients.jedis.Tuple;
+
 import com.cxy.redisclient.domain.DataNode;
 import com.cxy.redisclient.domain.Favorite;
 import com.cxy.redisclient.domain.Node;
@@ -54,12 +56,15 @@ import com.cxy.redisclient.presentation.hash.UpdateHashDialog;
 import com.cxy.redisclient.presentation.key.FindKeyDialog;
 import com.cxy.redisclient.presentation.key.RenameKeysDialog;
 import com.cxy.redisclient.presentation.list.NewListDialog;
+import com.cxy.redisclient.presentation.list.UpdateListDialog;
 import com.cxy.redisclient.presentation.server.AddServerDialog;
 import com.cxy.redisclient.presentation.server.UpdateServerDialog;
 import com.cxy.redisclient.presentation.set.NewSetDialog;
+import com.cxy.redisclient.presentation.set.UpdateSetDialog;
 import com.cxy.redisclient.presentation.string.NewStringDialog;
 import com.cxy.redisclient.presentation.string.UpdateStringDialog;
 import com.cxy.redisclient.presentation.zset.NewZSetDialog;
+import com.cxy.redisclient.presentation.zset.UpdateZSetDialog;
 import com.cxy.redisclient.service.ExportService;
 import com.cxy.redisclient.service.FavoriteService;
 import com.cxy.redisclient.service.HashService;
@@ -840,6 +845,49 @@ public class RedisClient {
 			HashInfo info = (HashInfo) dialog.open();
 			if (info != null) {
 				service7.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
+						info.getValues());
+				treeItem.setData(ITEM_OPENED, false);
+				dbContainerTreeItemSelected(treeItem, false);
+			}
+		} else if(type == NodeType.LIST) {
+			List<String> values = service4.list(cinfo.getId(), cinfo.getDb(), key);
+			
+			UpdateListDialog dialog = new UpdateListDialog(shlRedisClient,
+					SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+					cinfo.getDb(), key, values);
+			
+			ListInfo info = (ListInfo)dialog.open();
+			
+			if (info != null) {
+				service4.update(cinfo.getId(), cinfo.getDb(), info.getKey(),
+						info.getValues(), info.isHeadTail());
+				treeItem.setData(ITEM_OPENED, false);
+				dbContainerTreeItemSelected(treeItem, false);
+			}
+		} else if(type == NodeType.SET) {
+			Set<String> values = service5.list(cinfo.getId(), cinfo.getDb(), key);
+			
+			UpdateSetDialog dialog = new UpdateSetDialog(shlRedisClient,
+					SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+					cinfo.getDb(), key, values);
+			
+			SetInfo info = (SetInfo) dialog.open();
+			if (info != null) {
+				service5.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
+						info.getValues());
+				treeItem.setData(ITEM_OPENED, false);
+				dbContainerTreeItemSelected(treeItem, false);
+			}
+		} else if(type == NodeType.SORTEDSET) {
+			Set<Tuple> values = service6.list(cinfo.getId(), cinfo.getDb(), key);
+			
+			UpdateZSetDialog dialog = new UpdateZSetDialog(shlRedisClient,
+					SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+					cinfo.getDb(), key, values);
+			
+			ZSetInfo info = (ZSetInfo) dialog.open();
+			if (info != null) {
+				service6.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
 						info.getValues());
 				treeItem.setData(ITEM_OPENED, false);
 				dbContainerTreeItemSelected(treeItem, false);

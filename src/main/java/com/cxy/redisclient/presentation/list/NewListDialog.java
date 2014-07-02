@@ -32,10 +32,20 @@ import org.eclipse.swt.layout.FillLayout;
 
 public class NewListDialog extends Dialog {
 
+	protected final class ModifyKey implements ModifyListener {
+		public void modifyText(ModifyEvent e) {
+			String newKey = text.getText() == null ? "" : text.getText();
+			if (newKey.equals(key))
+				btnOk.setEnabled(false);
+			else
+				btnOk.setEnabled(true);
+		}
+	}
+
 	protected ListInfo result = null;
 	protected Shell shell;
-	private Text text;
-	private Table table;
+	protected Text text;
+	protected Table table;
 	private String server;
 	private int db;
 	private String key;
@@ -44,7 +54,8 @@ public class NewListDialog extends Dialog {
 	private Button btnDown;
 	private boolean headTail = true;
 	private boolean exist = true;
-	private Button btnOk;
+	protected Button btnOk;
+	protected Group grpWhenListNot;
 
 	/**
 	 * Create the dialog.
@@ -82,7 +93,7 @@ public class NewListDialog extends Dialog {
 	/**
 	 * Create contents of the dialog.
 	 */
-	private void createContents() {
+	protected void createContents() {
 		shell = new Shell(getParent(), getStyle());
 		shell.setSize(665, 528);
 		shell.setText("New List");
@@ -126,15 +137,7 @@ public class NewListDialog extends Dialog {
 		text.setText(key);
 		text.selectAll();
 		text.setFocus();
-		text.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				String newKey = text.getText() == null ? "" : text.getText();
-				if (newKey.equals(key))
-					btnOk.setEnabled(false);
-				else
-					btnOk.setEnabled(true);
-			}
-		});
+		text.addModifyListener(new ModifyKey());
 
 		Group grpValues = new Group(composite, SWT.NONE);
 		grpValues.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4,
@@ -158,7 +161,7 @@ public class NewListDialog extends Dialog {
 		tblclmnNewColumn.setText("New Column");
 
 		Button btnAdd = new Button(grpValues, SWT.NONE);
-		btnAdd.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+		btnAdd.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -178,7 +181,7 @@ public class NewListDialog extends Dialog {
 		btnAdd.setText("Add");
 
 		btnDelete = new Button(grpValues, SWT.NONE);
-		btnDelete.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false,
+		btnDelete.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false,
 				1, 1));
 		btnDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -194,7 +197,7 @@ public class NewListDialog extends Dialog {
 		btnDelete.setText("Delete");
 
 		btnUp = new Button(grpValues, SWT.NONE);
-		btnUp.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+		btnUp.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnUp.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -217,7 +220,7 @@ public class NewListDialog extends Dialog {
 		btnUp.setText("UP");
 
 		btnDown = new Button(grpValues, SWT.NONE);
-		btnDown.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1,
+		btnDown.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1,
 				1));
 		btnDown.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -269,7 +272,7 @@ public class NewListDialog extends Dialog {
 		});
 		btnFromTailTo.setText("From tail to head");
 
-		Group grpWhenListNot = new Group(composite, SWT.NONE);
+		grpWhenListNot = new Group(composite, SWT.NONE);
 		grpWhenListNot.setLayout(new GridLayout(2, true));
 		grpWhenListNot.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 4, 1));
@@ -297,7 +300,7 @@ public class NewListDialog extends Dialog {
 			}
 		});
 		btnNothingToDo.setText("Do nothing");
-
+		
 		Composite composite_1 = new Composite(shell, SWT.NONE);
 		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
 		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false,

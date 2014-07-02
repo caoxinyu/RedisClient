@@ -7,8 +7,8 @@ import com.cxy.redisclient.domain.RedisVersion;
 import com.cxy.redisclient.integration.JedisCommand;
 
 public class AddList extends JedisCommand {
-	private int db;
-	private String key;
+	protected int db;
+	protected String key;
 	private List<String> values;
 	private boolean headTail;
 	private boolean exist;
@@ -30,17 +30,23 @@ public class AddList extends JedisCommand {
 			throw new RuntimeException("Key: " + key
 					+ " alreay exist, and type is not list.");
 
+		beforeAdd();
+		
 		for (String value : values) {
 			if (headTail && exist)
-				jedis.lpush(key, value);
-			else if (headTail && !exist)
-				jedis.lpushx(key, value);
-			else if (!headTail && exist)
 				jedis.rpush(key, value);
-			else
+			else if (headTail && !exist)
 				jedis.rpushx(key, value);
+			else if (!headTail && exist)
+				jedis.lpush(key, value);
+			else
+				jedis.lpushx(key, value);
 		}
 
+	}
+
+	protected void beforeAdd() {
+		
 	}
 
 	@Override

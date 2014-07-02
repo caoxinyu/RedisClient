@@ -32,15 +32,25 @@ import org.eclipse.swt.layout.FillLayout;
 
 public class NewSetDialog extends Dialog {
 
+	protected final class ModifyKey implements ModifyListener {
+		public void modifyText(ModifyEvent e) {
+			String newKey = text.getText() == null ? "" : text.getText();
+			if (newKey.equals(key))
+				btnOk.setEnabled(false);
+			else
+				btnOk.setEnabled(true);
+		}
+	}
+
 	protected Object result;
 	protected Shell shlNewSet;
 	private String server;
 	private int db;
 	private String key;
-	private Text text;
-	private Table table;
+	protected Text text;
+	protected Table table;
 	private Button btnDelete;
-	private Button btnOk;
+	protected Button btnOk;
 
 	/**
 	 * Create the dialog.
@@ -78,7 +88,7 @@ public class NewSetDialog extends Dialog {
 	/**
 	 * Create contents of the dialog.
 	 */
-	private void createContents() {
+	protected void createContents() {
 		shlNewSet = new Shell(getParent(), getStyle());
 		shlNewSet.setSize(495, 382);
 		shlNewSet.setText("New Set");
@@ -122,15 +132,7 @@ public class NewSetDialog extends Dialog {
 		text.setText(key);
 		text.selectAll();
 		text.setFocus();
-		text.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				String newKey = text.getText() == null ? "" : text.getText();
-				if (newKey.equals(key))
-					btnOk.setEnabled(false);
-				else
-					btnOk.setEnabled(true);
-			}
-		});
+		text.addModifyListener(new ModifyKey());
 
 		Group grpValues = new Group(composite, SWT.NONE);
 		grpValues.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4,
@@ -154,7 +156,7 @@ public class NewSetDialog extends Dialog {
 		tblclmnNewColumn.setText("New Column");
 
 		Button btnAdd = new Button(grpValues, SWT.NONE);
-		btnAdd.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+		btnAdd.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -174,7 +176,7 @@ public class NewSetDialog extends Dialog {
 		btnAdd.setText("Add");
 
 		btnDelete = new Button(grpValues, SWT.NONE);
-		btnDelete.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false,
+		btnDelete.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false,
 				1, 1));
 		btnDelete.addSelectionListener(new SelectionAdapter() {
 			@Override

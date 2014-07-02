@@ -161,7 +161,7 @@ public class NewHashDialog extends Dialog {
 		tblclmnMember.setText("Value");
 
 		Button btnAdd = new Button(grpValues, SWT.NONE);
-		btnAdd.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+		btnAdd.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -184,7 +184,7 @@ public class NewHashDialog extends Dialog {
 		btnAdd.setText("Add");
 
 		btnDelete = new Button(grpValues, SWT.NONE);
-		btnDelete.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false,
+		btnDelete.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false,
 				1, 1));
 		btnDelete.addSelectionListener(new SelectionAdapter() {
 			@Override

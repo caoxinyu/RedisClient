@@ -22,6 +22,10 @@ public class UpdateHashDialog extends NewHashDialog {
 	protected void createContents() {
 		super.createContents();
 		shlNewHash.setText("Hash Properties");
+		text.setEnabled(false);
+		text.removeModifyListener(new ModifyKey());
+		
+		btnOk.setEnabled(true);
 		
 		Set<Entry<String, String>> set = value.entrySet();
 		Iterator<Entry<String, String>> i = set.iterator();
@@ -33,11 +37,6 @@ public class UpdateHashDialog extends NewHashDialog {
 			
 			item.setText(values);
 		}
-		
-		text.setEnabled(false);
-		text.removeModifyListener(new ModifyKey());
-		
-		btnOk.setEnabled(true);
 	}
 
 }
