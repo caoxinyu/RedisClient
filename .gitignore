@@ -1,6 +1,4 @@
 /bin/
 /.settings/
 /conf.properties
-/.classpath
-/.project
-/target/
+

@@ -28,7 +28,7 @@ public class DonationDialog extends RedisClientDialog {
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shell.setSize(450, 406);
+		shell.setSize(480, 500);
 		shell.setText("Donation");
 		shell.setLayout(new GridLayout(1, false));
 		
