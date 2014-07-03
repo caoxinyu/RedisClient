@@ -77,7 +77,7 @@ import com.cxy.redisclient.service.SetService;
 import com.cxy.redisclient.service.ZSetService;
 
 public class RedisClient {
-	private Shell shlRedisClient;
+	private Shell shell;
 	private PasteBuffer pBuffer = new PasteBuffer();
 	private FindBuffer fBuffer = null;
 	private NavHistory history = new NavHistory();
@@ -158,16 +158,16 @@ public class RedisClient {
 		display = Display.getDefault();
 		createContents();
 
-		shlRedisClient.open();
-		shlRedisClient.layout();
+		shell.open();
+		shell.layout();
 
-		while (!shlRedisClient.isDisposed()) {
+		while (!shell.isDisposed()) {
 			try {
 				if (!display.readAndDispatch()) {
 					display.sleep();
 				}
 			} catch (Exception e) {
-				MessageDialog.openError(shlRedisClient, "Error", e.getMessage());
+				MessageDialog.openError(shell, "Error", e.getMessage());
 			}
 		}
 		display.dispose();
@@ -180,57 +180,57 @@ public class RedisClient {
 	protected void createContents() {
 		initShell();
 
-		initImage();
-
 		initMenu();
+
+		initImage();
 
 		initSash();
 	}
 
 	private void initImage() {
-		redisImage = new Image(shlRedisClient.getDisplay(), getClass()
+		redisImage = new Image(shell.getDisplay(), getClass()
 				.getResourceAsStream("/redis.png"));
-		dbImage = new Image(shlRedisClient.getDisplay(), getClass().getResourceAsStream(
+		dbImage = new Image(shell.getDisplay(), getClass().getResourceAsStream(
 				"/db.png"));
-		strImage = new Image(shlRedisClient.getDisplay(), getClass().getResourceAsStream(
+		strImage = new Image(shell.getDisplay(), getClass().getResourceAsStream(
 				"/string.png"));
-		setImage = new Image(shlRedisClient.getDisplay(), getClass().getResourceAsStream(
+		setImage = new Image(shell.getDisplay(), getClass().getResourceAsStream(
 				"/set.png"));
-		listImage = new Image(shlRedisClient.getDisplay(), getClass()
+		listImage = new Image(shell.getDisplay(), getClass()
 				.getResourceAsStream("/list.png"));
-		zsetImage = new Image(shlRedisClient.getDisplay(), getClass()
+		zsetImage = new Image(shell.getDisplay(), getClass()
 				.getResourceAsStream("/zset.png"));
-		hashImage = new Image(shlRedisClient.getDisplay(), getClass()
+		hashImage = new Image(shell.getDisplay(), getClass()
 				.getResourceAsStream("/hash.png"));
-		containerImage = new Image(shlRedisClient.getDisplay(), getClass()
+		containerImage = new Image(shell.getDisplay(), getClass()
 				.getResourceAsStream("/container.png"));
 		
-		leftImage = new Image(shlRedisClient.getDisplay(), getClass()
+		leftImage = new Image(shell.getDisplay(), getClass()
 				.getResourceAsStream("/left.png"));
-		rightImage = new Image(shlRedisClient.getDisplay(), getClass()
+		rightImage = new Image(shell.getDisplay(), getClass()
 				.getResourceAsStream("/right.png"));
-		upImage = new Image(shlRedisClient.getDisplay(), getClass()
+		upImage = new Image(shell.getDisplay(), getClass()
 				.getResourceAsStream("/up.png"));
-		refreshImage = new Image(shlRedisClient.getDisplay(), getClass()
+		refreshImage = new Image(shell.getDisplay(), getClass()
 				.getResourceAsStream("/refresh.png"));
 		
-		iconImage = new Image(shlRedisClient.getDisplay(), getClass()
+		iconImage = new Image(shell.getDisplay(), getClass()
 				.getResourceAsStream("/icon.png"));
 		
-		codeImage = new Image(shlRedisClient.getDisplay(), getClass()
+		codeImage = new Image(shell.getDisplay(), getClass()
 				.getResourceAsStream("/code.png"));
 	}
 
 	private void initShell() {
-		shlRedisClient = new Shell();
-		shlRedisClient.setSize(1074, 772);
-		shlRedisClient.setText("Redis client");
-		shlRedisClient.setLayout(new GridLayout(1, false));
+		shell = new Shell();
+		shell.setSize(1074, 772);
+		shell.setText("Redis client");
+		shell.setLayout(new GridLayout(1, false));
 		
 	}
 
 	private void initSash() {
-		Composite composite_1 = new Composite(shlRedisClient, SWT.NONE);
+		Composite composite_1 = new Composite(shell, SWT.NONE);
 		GridLayout gl_composite_1 = new GridLayout(1, false);
 		gl_composite_1.verticalSpacing = 0;
 		gl_composite_1.marginWidth = 0;
@@ -264,7 +264,7 @@ public class RedisClient {
 					btnForward.setEnabled(true);
 					
 				}else {
-					MessageDialog.openInformation(shlRedisClient, "error", "container is deleted!");
+					MessageDialog.openInformation(shell, "error", "container is deleted!");
 				}
 			}
 		});
@@ -284,7 +284,7 @@ public class RedisClient {
 						btnForward.setEnabled(false);
 					
 				}else {
-					MessageDialog.openInformation(shlRedisClient, "error", "container is deleted!");
+					MessageDialog.openInformation(shell, "error", "container is deleted!");
 				}
 			}
 		});
@@ -353,12 +353,12 @@ public class RedisClient {
 		
 		history.add(rootRedisServers);
 		
-		shlRedisClient.setImage(iconImage);
+		shell.setImage(iconImage);
 		
 	}
 
 	private void initMenuData() {
-		menu_key = new Menu(shlRedisClient);
+		menu_key = new Menu(shell);
 
 		MenuItem mntmRename = new MenuItem(menu_key, SWT.NONE);
 		mntmRename.addSelectionListener(new SelectionAdapter() {
@@ -510,7 +510,7 @@ public class RedisClient {
 	}
 
 	private Menu initMenuTableDB() {
-		Menu menu_dbContainer = new Menu(shlRedisClient);
+		Menu menu_dbContainer = new Menu(shell);
 
 		MenuItem mntmNew_1 = new MenuItem(menu_dbContainer, SWT.CASCADE);
 		mntmNew_1.setText("new");
@@ -730,7 +730,7 @@ public class RedisClient {
 							}
 						}
 						if(!find)
-							MessageDialog.openInformation(shlRedisClient, "information", "New key found, please refresh container: "+text.getText());
+							MessageDialog.openInformation(shell, "information", "New key found, please refresh container: "+text.getText());
 					}else {
 						
 						dataProperties();
@@ -828,7 +828,7 @@ public class RedisClient {
 		Set<Node> nodes = service2.listContainerAllKeys(cinfo.getId(), cinfo.getDb(), container);
 		str += nodes.size();
 		
-		MessageDialog.openInformation(shlRedisClient, type.toString() + " Properties", str);
+		MessageDialog.openInformation(shell, type.toString() + " Properties", str);
 		
 	}
 
@@ -865,7 +865,7 @@ public class RedisClient {
 		if(type == NodeType.STRING) {
 			String value = service2.readString(cinfo.getId(), cinfo.getDb(), key);
 			
-			UpdateStringDialog dialog = new UpdateStringDialog(shlRedisClient,
+			UpdateStringDialog dialog = new UpdateStringDialog(shell,
 					iconImage,  cinfo.getServerName(),
 					cinfo.getDb(), key, value);
 			StringInfo info = (StringInfo) dialog.open();
@@ -875,7 +875,7 @@ public class RedisClient {
 		} else if(type == NodeType.HASH) {
 			Map<String, String> value = service7.read(cinfo.getId(), cinfo.getDb(), key);
 			
-			UpdateHashDialog dialog = new UpdateHashDialog(shlRedisClient,
+			UpdateHashDialog dialog = new UpdateHashDialog(shell,
 					iconImage, cinfo.getServerName(),
 					cinfo.getDb(), key, value);
 			
@@ -889,7 +889,7 @@ public class RedisClient {
 		} else if(type == NodeType.LIST) {
 			List<String> values = service4.list(cinfo.getId(), cinfo.getDb(), key);
 			
-			UpdateListDialog dialog = new UpdateListDialog(shlRedisClient,
+			UpdateListDialog dialog = new UpdateListDialog(shell,
 					iconImage, cinfo.getServerName(),
 					cinfo.getDb(), key, values);
 			
@@ -904,7 +904,7 @@ public class RedisClient {
 		} else if(type == NodeType.SET) {
 			Set<String> values = service5.list(cinfo.getId(), cinfo.getDb(), key);
 			
-			UpdateSetDialog dialog = new UpdateSetDialog(shlRedisClient,
+			UpdateSetDialog dialog = new UpdateSetDialog(shell,
 					iconImage, cinfo.getServerName(),
 					cinfo.getDb(), key, values);
 			
@@ -918,7 +918,7 @@ public class RedisClient {
 		} else if(type == NodeType.SORTEDSET) {
 			Set<Tuple> values = service6.list(cinfo.getId(), cinfo.getDb(), key);
 			
-			UpdateZSetDialog dialog = new UpdateZSetDialog(shlRedisClient,
+			UpdateZSetDialog dialog = new UpdateZSetDialog(shell,
 					iconImage, cinfo.getServerName(),
 					cinfo.getDb(), key, values);
 			
@@ -972,7 +972,7 @@ public class RedisClient {
 	}
 
 	private Menu initMenuTableServer() {
-		Menu menu_server_1 = new Menu(shlRedisClient);
+		Menu menu_server_1 = new Menu(shell);
 
 		MenuItem mntmUpdate = new MenuItem(menu_server_1, SWT.NONE);
 		mntmUpdate.addSelectionListener(new SelectionAdapter() {
@@ -1034,7 +1034,7 @@ public class RedisClient {
 	}
 
 	private void initMenuNull() {
-		menu_null = new Menu(shlRedisClient);
+		menu_null = new Menu(shell);
 
 		MenuItem mntmNewConnection = new MenuItem(menu_null, SWT.NONE);
 		mntmNewConnection.addSelectionListener(new SelectionAdapter() {
@@ -1087,8 +1087,8 @@ public class RedisClient {
 	}
 
 	private void initMenu() {
-		menu = new Menu(shlRedisClient, SWT.BAR);
-		shlRedisClient.setMenuBar(menu);
+		menu = new Menu(shell, SWT.BAR);
+		shell.setMenuBar(menu);
 
 		MenuItem mntmServer = new MenuItem(menu, SWT.CASCADE);
 		mntmServer.setText("&Server");
@@ -1141,7 +1141,7 @@ public class RedisClient {
 		mntmExit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				shlRedisClient.close();
+				shell.close();
 			}
 		});
 		mntmExit.setText("Exit");
@@ -1386,7 +1386,7 @@ public class RedisClient {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				OrganizeFavoriteDialog dialog = new OrganizeFavoriteDialog(
-						shlRedisClient, iconImage);
+						shell, iconImage);
 
 				List<Favorite> favorites = (List<Favorite>) dialog.open();
 				if (favorites != null) {
@@ -1412,7 +1412,7 @@ public class RedisClient {
 		mntmDonation.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				DonationDialog dialog = new DonationDialog(shlRedisClient, iconImage, codeImage);
+				DonationDialog dialog = new DonationDialog(shell, iconImage, codeImage);
 				dialog.open();
 			}
 		});
@@ -1424,7 +1424,7 @@ public class RedisClient {
 		mntmAbout.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				AboutDialog dialog = new AboutDialog(shlRedisClient, iconImage);
+				AboutDialog dialog = new AboutDialog(shell, iconImage);
 				dialog.open();
 			}
 		});
@@ -1444,7 +1444,7 @@ public class RedisClient {
 				
 				fBuffer.setFindNode(node);
 			} else {
-				boolean ok = MessageDialog.openConfirm(shlRedisClient, "find forward", "All result found, find again?");
+				boolean ok = MessageDialog.openConfirm(shell, "find forward", "All result found, find again?");
 				if(ok){
 					Set<Node> nodes = service2.find(fBuffer.getSearchFrom(), fBuffer.getId(), fBuffer.getDb(), fBuffer.getContainer(), fBuffer.getSearchNodeType(), fBuffer.getPattern(), true);
 					if(!nodes.isEmpty()) {
@@ -1456,7 +1456,7 @@ public class RedisClient {
 						
 						fBuffer.setFindNode(node1);
 					}else{
-						MessageDialog.openInformation(shlRedisClient, "find results",
+						MessageDialog.openInformation(shell, "find results",
 								"No match result found!");
 					}
 				}
@@ -1478,7 +1478,7 @@ public class RedisClient {
 				
 				fBuffer.setFindNode(node);
 			} else {
-				boolean ok = MessageDialog.openConfirm(shlRedisClient, "find backward", "All result found, find again?");
+				boolean ok = MessageDialog.openConfirm(shell, "find backward", "All result found, find again?");
 				if(ok){
 					Set<Node> nodes = service2.find(fBuffer.getSearchFrom(), fBuffer.getId(), fBuffer.getDb(), fBuffer.getContainer(), fBuffer.getSearchNodeType(), fBuffer.getPattern(), false);
 					if(!nodes.isEmpty()) {
@@ -1491,7 +1491,7 @@ public class RedisClient {
 						
 						fBuffer.setFindNode(node1);
 					}else{
-						MessageDialog.openInformation(shlRedisClient, "find results",
+						MessageDialog.openInformation(shell, "find results",
 								"No match result found!");
 					}
 				}
@@ -1500,7 +1500,7 @@ public class RedisClient {
 	}
 
 	protected void find() {
-		FindKeyDialog dialog = new FindKeyDialog(shlRedisClient, iconImage);
+		FindKeyDialog dialog = new FindKeyDialog(shell, iconImage);
 		FindInfo info = (FindInfo) dialog.open();
 		if(info != null) {
 			TreeItem treeItem;
@@ -1526,7 +1526,7 @@ public class RedisClient {
 				
 				fBuffer = new FindBuffer(node, searchFrom, cinfo.getId(), cinfo.getDb(), cinfo.getContainer(), info.getSearchNodeType(), info.getPattern());
 			}else{
-				MessageDialog.openInformation(shlRedisClient, "find results",
+				MessageDialog.openInformation(shell, "find results",
 						"No match result found!");
 			}
 		}
@@ -1544,7 +1544,7 @@ public class RedisClient {
 
 		parseContainer(treeItem, cinfo);
 		
-		FileDialog dialog = new FileDialog(shlRedisClient,SWT.SAVE);
+		FileDialog dialog = new FileDialog(shell,SWT.SAVE);
 		dialog.setText("Export redis data file");
 		String[] filterExt = { "*.*" };
 		dialog.setFilterExtensions(filterExt);
@@ -1555,7 +1555,7 @@ public class RedisClient {
 			boolean ok = false;
 			boolean exist = exportFile.exists();
 			if(exist)
-				ok = MessageDialog.openConfirm(shlRedisClient, "file exists",
+				ok = MessageDialog.openConfirm(shell, "file exists",
 						"File exists, are you sure replace this file?");
 			if(!exist || ok) {
 				ExportService service = new ExportService(file, cinfo.getId(), cinfo.getDb(), cinfo.getContainer());
@@ -1579,7 +1579,7 @@ public class RedisClient {
 
 		parseContainer(treeItem, cinfo);
 		
-		FileDialog dialog = new FileDialog(shlRedisClient, SWT.OPEN);
+		FileDialog dialog = new FileDialog(shell, SWT.OPEN);
 		dialog.setText("Import redis data file");
 		String[] filterExt = { "*.*" };
 		dialog.setFilterExtensions(filterExt);
@@ -1659,7 +1659,7 @@ public class RedisClient {
 	}
 
 	private void addServer() {
-		AddServerDialog dialog = new AddServerDialog(shlRedisClient,
+		AddServerDialog dialog = new AddServerDialog(shell,
 				iconImage);
 		Server server = (Server) dialog.open();
 
@@ -1668,14 +1668,18 @@ public class RedisClient {
 					server.getPort()));
 			TreeItem item = addServerTreeItem(server);
 			serverTreeItemSelected(item, false);
+			history.add(item); 
+			btnBackward.setEnabled(true);
+			btnForward.setEnabled(false);
 		}
+		
 	}
 
 	private void updateServer() {
 		int id = (Integer) itemSelected.getData(NODE_ID);
 
 		Server server = service1.listById(id);
-		UpdateServerDialog dialog = new UpdateServerDialog(shlRedisClient,
+		UpdateServerDialog dialog = new UpdateServerDialog(shell,
 				iconImage, server);
 		server = (Server) dialog.open();
 		if (server != null) {
@@ -1687,7 +1691,7 @@ public class RedisClient {
 	}
 
 	private void removeServer() {
-		boolean ok = MessageDialog.openConfirm(shlRedisClient, "remove server",
+		boolean ok = MessageDialog.openConfirm(shell, "remove server",
 				"Are you sure remove this server?");
 		if (ok) {
 			int id = ((Integer) (itemSelected.getData(NODE_ID))).intValue();
@@ -1735,7 +1739,7 @@ public class RedisClient {
 
 		parseContainer(treeItem, cinfo);
 
-		RenameKeysDialog dialog = new RenameKeysDialog(shlRedisClient,
+		RenameKeysDialog dialog = new RenameKeysDialog(shell,
 				iconImage, cinfo.getServerName(),
 				cinfo.getDb(), cinfo.getContainer());
 		RenameInfo rinfo = (RenameInfo) dialog.open();
@@ -1750,14 +1754,14 @@ public class RedisClient {
 				String failString = "Rename following keys failed because of exist:\n";
 				for (String container : result)
 					failString += container + "\n";
-				MessageDialog.openError(shlRedisClient, "rename keys result",
+				MessageDialog.openError(shell, "rename keys result",
 						failString);
 			}
 		}
 	}
 
 	private void deleteCotainer() {
-		boolean ok = MessageDialog.openConfirm(shlRedisClient, "delete keys",
+		boolean ok = MessageDialog.openConfirm(shell, "delete keys",
 				"Are you sure delete all keys under it?");
 		if (ok) {
 			TreeItem treeItem;
@@ -1799,7 +1803,7 @@ public class RedisClient {
 
 		parseContainer(treeItem, cinfo);
 
-		AddFavoriteDialog dialog = new AddFavoriteDialog(shlRedisClient,
+		AddFavoriteDialog dialog = new AddFavoriteDialog(shell,
 				iconImage, fullContainer);
 		String name = (String) dialog.open();
 		if (name != null)
@@ -2105,7 +2109,7 @@ public class RedisClient {
 
 		parseContainer(treeItem, cinfo);
 
-		NewStringDialog dialog = new NewStringDialog(shlRedisClient,
+		NewStringDialog dialog = new NewStringDialog(shell,
 				iconImage,  cinfo.getServerName(),
 				cinfo.getDb(), cinfo.getContainer());
 		StringInfo info = (StringInfo) dialog.open();
@@ -2130,7 +2134,7 @@ public class RedisClient {
 
 		parseContainer(treeItem, cinfo);
 
-		NewListDialog dialog = new NewListDialog(shlRedisClient,
+		NewListDialog dialog = new NewListDialog(shell,
 				iconImage, cinfo.getServerName(),
 				cinfo.getDb(), cinfo.getContainer());
 		ListInfo info = (ListInfo) dialog.open();
@@ -2153,7 +2157,7 @@ public class RedisClient {
 
 		parseContainer(treeItem, cinfo);
 
-		NewSetDialog dialog = new NewSetDialog(shlRedisClient, iconImage, cinfo.getServerName(), cinfo.getDb(),
+		NewSetDialog dialog = new NewSetDialog(shell, iconImage, cinfo.getServerName(), cinfo.getDb(),
 				cinfo.getContainer());
 		SetInfo info = (SetInfo) dialog.open();
 		if (info != null) {
@@ -2175,7 +2179,7 @@ public class RedisClient {
 
 		parseContainer(treeItem, cinfo);
 
-		NewZSetDialog dialog = new NewZSetDialog(shlRedisClient,
+		NewZSetDialog dialog = new NewZSetDialog(shell,
 				iconImage,  cinfo.getServerName(),
 				cinfo.getDb(), cinfo.getContainer());
 		ZSetInfo info = (ZSetInfo) dialog.open();
@@ -2199,7 +2203,7 @@ public class RedisClient {
 
 		parseContainer(treeItem, cinfo);
 
-		NewHashDialog dialog = new NewHashDialog(shlRedisClient,
+		NewHashDialog dialog = new NewHashDialog(shell,
 				iconImage, cinfo.getServerName(),
 				cinfo.getDb(), cinfo.getContainer());
 		HashInfo info = (HashInfo) dialog.open();
@@ -2250,7 +2254,7 @@ public class RedisClient {
 		String key = cinfo.getContainer() == null?"": cinfo.getContainer();
 		key += itemSelected.getText();
 		
-		RenameKeysDialog dialog = new RenameKeysDialog(shlRedisClient,
+		RenameKeysDialog dialog = new RenameKeysDialog(shell,
 				iconImage, cinfo.getServerName(),
 				cinfo.getDb(), key);
 		RenameInfo rinfo = (RenameInfo) dialog.open();
@@ -2263,14 +2267,14 @@ public class RedisClient {
 			
 			if (!rinfo.isOverwritten() && !result) {
 				String failString = "Rename key failed because of exist";
-				MessageDialog.openError(shlRedisClient, "rename keys result",
+				MessageDialog.openError(shell, "rename keys result",
 						failString);
 			}
 		}
 	}
 
 	private void deleteKey() {
-		boolean ok = MessageDialog.openConfirm(shlRedisClient, "delete key",
+		boolean ok = MessageDialog.openConfirm(shell, "delete key",
 				"Are you sure delete this key?");
 		if (ok) {
 			ContainerInfo cinfo = new ContainerInfo();
@@ -2488,7 +2492,7 @@ public class RedisClient {
 		
 		Map<String, String[]> values = service1.listInfo(id);
 		
-		PropertiesDialog dialog = new PropertiesDialog(shlRedisClient,
+		PropertiesDialog dialog = new PropertiesDialog(shell,
 				iconImage,  info, values);
 		dialog.open();
 	}
