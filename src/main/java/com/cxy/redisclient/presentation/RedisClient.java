@@ -129,6 +129,7 @@ public class RedisClient {
 	private Image rightImage;
 	private Image upImage;
 	private Image refreshImage;
+	private Image iconImage;
 
 	private TableColumn tblclmnName;
 	private TableColumn tblclmnType;
@@ -211,6 +212,9 @@ public class RedisClient {
 				.getResourceAsStream("/up.png"));
 		refreshImage = new Image(shlRedisClient.getDisplay(), getClass()
 				.getResourceAsStream("/refresh.png"));
+		
+		iconImage = new Image(shlRedisClient.getDisplay(), getClass()
+				.getResourceAsStream("/icon.png"));
 	}
 
 	private void initShell() {
@@ -218,7 +222,7 @@ public class RedisClient {
 		shlRedisClient.setSize(1074, 772);
 		shlRedisClient.setText("Redis client");
 		shlRedisClient.setLayout(new GridLayout(1, false));
-		shlRedisClient.setMaximized(true);
+		
 	}
 
 	private void initSash() {
@@ -344,6 +348,9 @@ public class RedisClient {
 		treeItemSelected(false);
 		
 		history.add(rootRedisServers);
+		
+		shlRedisClient.setImage(iconImage);
+		
 	}
 
 	private void initMenuData() {
@@ -1391,45 +1398,11 @@ public class RedisClient {
 
 		addFavoriteMenuItem();
 
-		MenuItem mntmTool = new MenuItem(menu, SWT.CASCADE);
-		mntmTool.setText("Tool");
-
-		Menu menu_6 = new Menu(mntmTool);
-		mntmTool.setMenu(menu_6);
-
-		MenuItem mntmSet_2 = new MenuItem(menu_6, SWT.CASCADE);
-		mntmSet_2.setText("Set");
-
-		Menu menu_3 = new Menu(mntmSet_2);
-		mntmSet_2.setMenu(menu_3);
-
-		MenuItem mntmDiff = new MenuItem(menu_3, SWT.NONE);
-		mntmDiff.setText("Difference");
-
-		MenuItem mntmInter = new MenuItem(menu_3, SWT.NONE);
-		mntmInter.setText("Intersection");
-
-		MenuItem mntmUnion = new MenuItem(menu_3, SWT.NONE);
-		mntmUnion.setText("Union");
-
-		new MenuItem(menu_6, SWT.SEPARATOR);
-
-		MenuItem mntmPubsub = new MenuItem(menu_6, SWT.NONE);
-		mntmPubsub.setText("Pub/Sub");
-
 		MenuItem mntmHelp = new MenuItem(menu, SWT.CASCADE);
 		mntmHelp.setText("Help");
 
 		Menu menu_2 = new Menu(mntmHelp);
 		mntmHelp.setMenu(menu_2);
-
-		MenuItem mntmReportBug = new MenuItem(menu_2, SWT.NONE);
-		mntmReportBug.setText("Report bug");
-
-		MenuItem mntmDonation = new MenuItem(menu_2, SWT.NONE);
-		mntmDonation.setText("Donation");
-
-		new MenuItem(menu_2, SWT.SEPARATOR);
 
 		MenuItem mntmAbout = new MenuItem(menu_2, SWT.NONE);
 		mntmAbout.setText("About");

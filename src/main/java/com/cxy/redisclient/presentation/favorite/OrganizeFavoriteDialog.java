@@ -73,7 +73,7 @@ public class OrganizeFavoriteDialog extends Dialog {
 				shell.dispose();
 			}
 		});
-		shell.setSize(450, 300);
+		shell.setSize(546, 423);
 		shell.setText("Organize Favorites");
 		
 		Rectangle screenSize = shell.getParent().getBounds();
@@ -109,7 +109,7 @@ public class OrganizeFavoriteDialog extends Dialog {
 		tblclmnNewColumn_1.setText("Favorite");
 		
 		btnRenameButton = new Button(grpFavorites, SWT.NONE);
-		btnRenameButton.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+		btnRenameButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnRenameButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -129,7 +129,7 @@ public class OrganizeFavoriteDialog extends Dialog {
 		
 		
 		btnRemoveButton = new Button(grpFavorites, SWT.NONE);
-		btnRemoveButton.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1));
+		btnRemoveButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnRemoveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
