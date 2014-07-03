@@ -4,13 +4,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
@@ -18,12 +17,10 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.domain.Server;
-import org.eclipse.swt.layout.FillLayout;
+import com.cxy.redisclient.presentation.RedisClientDialog;
 
-public class AddServerDialog extends Dialog {
+public class AddServerDialog extends RedisClientDialog {
 
-	protected Object result = null;
-	protected Shell shell;
 	protected Text text_3;
 	protected Text text_4;
 	protected Text text_5;
@@ -33,41 +30,17 @@ public class AddServerDialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public AddServerDialog(Shell parent, int style) {
-		super(parent, style);
-		setText("SWT Dialog");
-	}
-
-	/**
-	 * Open the dialog.
-	 * 
-	 * @return the result
-	 */
-	public Object open() {
-		createContents();
-		shell.open();
-		shell.layout();
-		Display display = getParent().getDisplay();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		return result;
+	public AddServerDialog(Shell parent, Image image) {
+		super(parent, image);
 	}
 
 	/**
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shell = new Shell(getParent(), getStyle());
 		shell.setSize(362, 284);
 		shell.setText(getTitle());
 
-		Rectangle screenSize = shell.getParent().getBounds();
-		Rectangle shellSize = shell.getBounds();
-		shell.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
-				screenSize.y + screenSize.height / 2 - shellSize.height / 2);
 		shell.setLayout(new GridLayout(1, false));
 		
 		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
@@ -132,7 +105,7 @@ public class AddServerDialog extends Dialog {
 			}
 		});
 		btnCancel.setText("Cancel");
-		
+		super.createContents();
 	}
 
 	protected String getTitle() {

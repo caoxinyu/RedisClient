@@ -3,14 +3,15 @@ package com.cxy.redisclient.presentation.list;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 
 public class UpdateListDialog extends NewListDialog {
 	private List<String> values;
-	public UpdateListDialog(Shell parent, int style, String server, int db,
+	public UpdateListDialog(Shell parent, Image image, String server, int db,
 			String key, List<String> values) {
-		super(parent, style, server, db, key);
+		super(parent, image, server, db, key);
 		this.values = values;
 	}
 	@Override

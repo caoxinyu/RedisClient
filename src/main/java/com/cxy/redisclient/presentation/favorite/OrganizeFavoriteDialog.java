@@ -8,13 +8,12 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
@@ -22,13 +21,10 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 import com.cxy.redisclient.domain.Favorite;
+import com.cxy.redisclient.presentation.RedisClientDialog;
 import com.cxy.redisclient.service.FavoriteService;
-import org.eclipse.swt.layout.FillLayout;
 
-public class OrganizeFavoriteDialog extends Dialog {
-
-	protected List<Favorite> result = new ArrayList<Favorite>();
-	protected Shell shell;
+public class OrganizeFavoriteDialog extends RedisClientDialog {
 	private Table table;
 	private FavoriteService service = new FavoriteService();
 	private Button btnRenameButton;
@@ -39,33 +35,15 @@ public class OrganizeFavoriteDialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public OrganizeFavoriteDialog(Shell parent, int style) {
-		super(parent, style);
-		setText("SWT Dialog");
-	}
-
-	/**
-	 * Open the dialog.
-	 * @return the result
-	 */
-	public List<Favorite> open() {
-		createContents();
-		shell.open();
-		shell.layout();
-		Display display = getParent().getDisplay();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		return result;
+	public OrganizeFavoriteDialog(Shell parent, Image image) {
+		super(parent, image);
+		result = new ArrayList<Favorite>();
 	}
 
 	/**
 	 * Create contents of the dialog.
 	 */
-	private void createContents() {
-		shell = new Shell(getParent(), getStyle());
+	protected void createContents() {
 		shell.addShellListener(new ShellAdapter() {
 			@Override
 			public void shellClosed(ShellEvent e) {
@@ -76,10 +54,7 @@ public class OrganizeFavoriteDialog extends Dialog {
 		shell.setSize(546, 423);
 		shell.setText("Organize Favorites");
 		
-		Rectangle screenSize = shell.getParent().getBounds();
-		Rectangle shellSize = shell.getBounds();
-		shell.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
-				screenSize.y + screenSize.height / 2 - shellSize.height / 2);
+		
 		shell.setLayout(new GridLayout(1, false));
 		
 		Group grpFavorites = new Group(shell, SWT.NONE);
@@ -115,7 +90,7 @@ public class OrganizeFavoriteDialog extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				TableItem[] items = table.getSelection();
 				Favorite favorite = (Favorite) items[0].getData();
-				RenameFavoriteDialog dialog = new RenameFavoriteDialog(shell, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, favorite);
+				RenameFavoriteDialog dialog = new RenameFavoriteDialog(shell, image, favorite);
 				String name =  (String) dialog.open();
 				if(name != null) {
 					items[0].setText(new String[] { name, favorite.getFavorite() });
@@ -154,7 +129,7 @@ public class OrganizeFavoriteDialog extends Dialog {
 				TableItem[] items = table.getItems();
 				
 				for(TableItem item : items){
-					result.add((Favorite) item.getData());
+					((ArrayList<Favorite>) result).add((Favorite) item.getData());
 				}
 				
 				shell.dispose();
@@ -180,6 +155,8 @@ public class OrganizeFavoriteDialog extends Dialog {
 				favorite.getFavorite() });
 			item.setData(favorite);
 		}
+		
+		super.createContents();
 	}
 
 	protected void tableItemSelected() {

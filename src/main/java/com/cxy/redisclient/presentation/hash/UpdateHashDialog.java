@@ -6,22 +6,23 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 
 public class UpdateHashDialog extends NewHashDialog {
 	private Map<String, String> value;
 	
-	public UpdateHashDialog(Shell parent, int style, String server, int db,
+	public UpdateHashDialog(Shell parent, Image image, String server, int db,
 			String key, Map<String , String> value) {
-		super(parent, style, server, db, key);
+		super(parent, image, server, db, key);
 		this.value = value;
 	}
 
 	@Override
 	protected void createContents() {
 		super.createContents();
-		shlNewHash.setText("Hash Properties");
+		shell.setText("Hash Properties");
 		text.setEditable(false);
 		text.removeModifyListener(new ModifyKey());
 		

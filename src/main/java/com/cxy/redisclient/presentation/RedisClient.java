@@ -130,6 +130,7 @@ public class RedisClient {
 	private Image upImage;
 	private Image refreshImage;
 	private Image iconImage;
+	private Image codeImage;
 
 	private TableColumn tblclmnName;
 	private TableColumn tblclmnType;
@@ -215,6 +216,9 @@ public class RedisClient {
 		
 		iconImage = new Image(shlRedisClient.getDisplay(), getClass()
 				.getResourceAsStream("/icon.png"));
+		
+		codeImage = new Image(shlRedisClient.getDisplay(), getClass()
+				.getResourceAsStream("/code.png"));
 	}
 
 	private void initShell() {
@@ -862,7 +866,7 @@ public class RedisClient {
 			String value = service2.readString(cinfo.getId(), cinfo.getDb(), key);
 			
 			UpdateStringDialog dialog = new UpdateStringDialog(shlRedisClient,
-					SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+					iconImage,  cinfo.getServerName(),
 					cinfo.getDb(), key, value);
 			StringInfo info = (StringInfo) dialog.open();
 			
@@ -872,7 +876,7 @@ public class RedisClient {
 			Map<String, String> value = service7.read(cinfo.getId(), cinfo.getDb(), key);
 			
 			UpdateHashDialog dialog = new UpdateHashDialog(shlRedisClient,
-					SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+					iconImage, cinfo.getServerName(),
 					cinfo.getDb(), key, value);
 			
 			HashInfo info = (HashInfo) dialog.open();
@@ -886,7 +890,7 @@ public class RedisClient {
 			List<String> values = service4.list(cinfo.getId(), cinfo.getDb(), key);
 			
 			UpdateListDialog dialog = new UpdateListDialog(shlRedisClient,
-					SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+					iconImage, cinfo.getServerName(),
 					cinfo.getDb(), key, values);
 			
 			ListInfo info = (ListInfo)dialog.open();
@@ -901,7 +905,7 @@ public class RedisClient {
 			Set<String> values = service5.list(cinfo.getId(), cinfo.getDb(), key);
 			
 			UpdateSetDialog dialog = new UpdateSetDialog(shlRedisClient,
-					SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+					iconImage, cinfo.getServerName(),
 					cinfo.getDb(), key, values);
 			
 			SetInfo info = (SetInfo) dialog.open();
@@ -915,7 +919,7 @@ public class RedisClient {
 			Set<Tuple> values = service6.list(cinfo.getId(), cinfo.getDb(), key);
 			
 			UpdateZSetDialog dialog = new UpdateZSetDialog(shlRedisClient,
-					SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+					iconImage, cinfo.getServerName(),
 					cinfo.getDb(), key, values);
 			
 			ZSetInfo info = (ZSetInfo) dialog.open();
@@ -1382,7 +1386,7 @@ public class RedisClient {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				OrganizeFavoriteDialog dialog = new OrganizeFavoriteDialog(
-						shlRedisClient, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
+						shlRedisClient, iconImage);
 
 				List<Favorite> favorites = (List<Favorite>) dialog.open();
 				if (favorites != null) {
@@ -1403,8 +1407,27 @@ public class RedisClient {
 
 		Menu menu_2 = new Menu(mntmHelp);
 		mntmHelp.setMenu(menu_2);
+		
+		MenuItem mntmDonation = new MenuItem(menu_2, SWT.NONE);
+		mntmDonation.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				DonationDialog dialog = new DonationDialog(shlRedisClient, iconImage, codeImage);
+				dialog.open();
+			}
+		});
+		mntmDonation.setText("Donation");
+		
+		new MenuItem(menu_2, SWT.SEPARATOR);
 
 		MenuItem mntmAbout = new MenuItem(menu_2, SWT.NONE);
+		mntmAbout.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				AboutDialog dialog = new AboutDialog(shlRedisClient, iconImage);
+				dialog.open();
+			}
+		});
 		mntmAbout.setText("About");
 	}
 
@@ -1477,7 +1500,7 @@ public class RedisClient {
 	}
 
 	protected void find() {
-		FindKeyDialog dialog = new FindKeyDialog(shlRedisClient, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
+		FindKeyDialog dialog = new FindKeyDialog(shlRedisClient, iconImage);
 		FindInfo info = (FindInfo) dialog.open();
 		if(info != null) {
 			TreeItem treeItem;
@@ -1637,7 +1660,7 @@ public class RedisClient {
 
 	private void addServer() {
 		AddServerDialog dialog = new AddServerDialog(shlRedisClient,
-				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
+				iconImage);
 		Server server = (Server) dialog.open();
 
 		if (server != null) {
@@ -1653,7 +1676,7 @@ public class RedisClient {
 
 		Server server = service1.listById(id);
 		UpdateServerDialog dialog = new UpdateServerDialog(shlRedisClient,
-				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, server);
+				iconImage, server);
 		server = (Server) dialog.open();
 		if (server != null) {
 			service1.update(id, server.getName(), server.getHost(),
@@ -1713,7 +1736,7 @@ public class RedisClient {
 		parseContainer(treeItem, cinfo);
 
 		RenameKeysDialog dialog = new RenameKeysDialog(shlRedisClient,
-				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+				iconImage, cinfo.getServerName(),
 				cinfo.getDb(), cinfo.getContainer());
 		RenameInfo rinfo = (RenameInfo) dialog.open();
 
@@ -1777,7 +1800,7 @@ public class RedisClient {
 		parseContainer(treeItem, cinfo);
 
 		AddFavoriteDialog dialog = new AddFavoriteDialog(shlRedisClient,
-				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, fullContainer);
+				iconImage, fullContainer);
 		String name = (String) dialog.open();
 		if (name != null)
 			service3.add(cinfo.getId(), name, fullContainer);
@@ -2083,7 +2106,7 @@ public class RedisClient {
 		parseContainer(treeItem, cinfo);
 
 		NewStringDialog dialog = new NewStringDialog(shlRedisClient,
-				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+				iconImage,  cinfo.getServerName(),
 				cinfo.getDb(), cinfo.getContainer());
 		StringInfo info = (StringInfo) dialog.open();
 		if (info != null) {
@@ -2108,7 +2131,7 @@ public class RedisClient {
 		parseContainer(treeItem, cinfo);
 
 		NewListDialog dialog = new NewListDialog(shlRedisClient,
-				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+				iconImage, cinfo.getServerName(),
 				cinfo.getDb(), cinfo.getContainer());
 		ListInfo info = (ListInfo) dialog.open();
 		if (info != null) {
@@ -2130,8 +2153,7 @@ public class RedisClient {
 
 		parseContainer(treeItem, cinfo);
 
-		NewSetDialog dialog = new NewSetDialog(shlRedisClient, SWT.SHELL_TRIM
-				| SWT.APPLICATION_MODAL, cinfo.getServerName(), cinfo.getDb(),
+		NewSetDialog dialog = new NewSetDialog(shlRedisClient, iconImage, cinfo.getServerName(), cinfo.getDb(),
 				cinfo.getContainer());
 		SetInfo info = (SetInfo) dialog.open();
 		if (info != null) {
@@ -2154,7 +2176,7 @@ public class RedisClient {
 		parseContainer(treeItem, cinfo);
 
 		NewZSetDialog dialog = new NewZSetDialog(shlRedisClient,
-				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+				iconImage,  cinfo.getServerName(),
 				cinfo.getDb(), cinfo.getContainer());
 		ZSetInfo info = (ZSetInfo) dialog.open();
 		if (info != null) {
@@ -2178,7 +2200,7 @@ public class RedisClient {
 		parseContainer(treeItem, cinfo);
 
 		NewHashDialog dialog = new NewHashDialog(shlRedisClient,
-				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+				iconImage, cinfo.getServerName(),
 				cinfo.getDb(), cinfo.getContainer());
 		HashInfo info = (HashInfo) dialog.open();
 		if (info != null) {
@@ -2229,7 +2251,7 @@ public class RedisClient {
 		key += itemSelected.getText();
 		
 		RenameKeysDialog dialog = new RenameKeysDialog(shlRedisClient,
-				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, cinfo.getServerName(),
+				iconImage, cinfo.getServerName(),
 				cinfo.getDb(), key);
 		RenameInfo rinfo = (RenameInfo) dialog.open();
 
@@ -2467,7 +2489,7 @@ public class RedisClient {
 		Map<String, String[]> values = service1.listInfo(id);
 		
 		PropertiesDialog dialog = new PropertiesDialog(shlRedisClient,
-				SWT.SHELL_TRIM | SWT.APPLICATION_MODAL, info, values);
+				iconImage,  info, values);
 		dialog.open();
 	}
 }

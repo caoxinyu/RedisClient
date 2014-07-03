@@ -10,13 +10,12 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -28,9 +27,9 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.dto.ListInfo;
-import org.eclipse.swt.layout.FillLayout;
+import com.cxy.redisclient.presentation.RedisClientDialog;
 
-public class NewListDialog extends Dialog {
+public class NewListDialog extends RedisClientDialog {
 
 	protected final class ModifyKey implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
@@ -42,8 +41,6 @@ public class NewListDialog extends Dialog {
 		}
 	}
 
-	protected ListInfo result = null;
-	protected Shell shell;
 	protected Text text;
 	protected Table table;
 	private String server;
@@ -63,46 +60,21 @@ public class NewListDialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public NewListDialog(Shell parent, int style, String server, int db,
+	public NewListDialog(Shell parent, Image image, String server, int db,
 			String key) {
-		super(parent, style);
-		setText("SWT Dialog");
+		super(parent,  image);
 		this.server = server;
 		this.db = db;
 		this.key = key == null ? "" : key;
 	}
 
 	/**
-	 * Open the dialog.
-	 * 
-	 * @return the result
-	 */
-	public Object open() {
-		createContents();
-		shell.open();
-		shell.layout();
-		Display display = getParent().getDisplay();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		return result;
-	}
-
-	/**
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shell = new Shell(getParent(), getStyle());
 		shell.setSize(805, 638);
 		shell.setText("New List");
 
-		Rectangle screenSize = shell.getParent().getBounds();
-		Rectangle shellSize = shell.getBounds();
-		shell.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width
-				/ 2, screenSize.y + screenSize.height / 2 - shellSize.height
-				/ 2);
 		shell.setLayout(new GridLayout(1, false));
 
 		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
@@ -338,6 +310,8 @@ public class NewListDialog extends Dialog {
 			}
 		});
 		btnCancel.setText("Cancel");
+		
+		super.createContents();
 	}
 
 	protected void tableItemSelected() {

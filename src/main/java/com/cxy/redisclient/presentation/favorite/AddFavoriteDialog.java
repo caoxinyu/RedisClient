@@ -4,65 +4,39 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.FillLayout;
 
-public class AddFavoriteDialog extends Dialog {
+import com.cxy.redisclient.presentation.RedisClientDialog;
 
-	protected Object result;
-	protected Shell shell;
+public class AddFavoriteDialog extends RedisClientDialog {
+
 	private String container;
 	/**
 	 * Create the dialog.
 	 * @param parent
 	 * @param style
 	 */
-	public AddFavoriteDialog(Shell parent, int style, String container) {
-		super(parent, style);
-		setText("SWT Dialog");
+	public AddFavoriteDialog(Shell parent, Image image, String container) {
+		super(parent, image);
 		this.container = container;
-	}
-
-	/**
-	 * Open the dialog.
-	 * @return the result
-	 */
-	public Object open() {
-		createContents();
-		shell.open();
-		shell.layout();
-		Display display = getParent().getDisplay();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		return result;
 	}
 
 	/**
 	 * Create contents of the dialog.
 	 */
-	private void createContents() {
-		shell = new Shell(getParent(), getStyle());
+	protected void createContents() {
 		shell.setSize(373, 221);
 		shell.setText("Add favorite");
-
-		Rectangle screenSize = shell.getParent().getBounds();
-		Rectangle shellSize = shell.getBounds();
-		shell.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
-				screenSize.y + screenSize.height / 2 - shellSize.height / 2);
 		shell.setLayout(new GridLayout(1, false));
 		
 		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
@@ -113,5 +87,7 @@ public class AddFavoriteDialog extends Dialog {
 			}
 		});
 		button_1.setText("Cancel");
+		
+		super.createContents();
 	}
 }

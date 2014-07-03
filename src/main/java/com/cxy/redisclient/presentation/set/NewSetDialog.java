@@ -10,11 +10,12 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -26,11 +27,9 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.dto.SetInfo;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.FillLayout;
+import com.cxy.redisclient.presentation.RedisClientDialog;
 
-public class NewSetDialog extends Dialog {
+public class NewSetDialog extends RedisClientDialog {
 
 	protected final class ModifyKey implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
@@ -42,8 +41,6 @@ public class NewSetDialog extends Dialog {
 		}
 	}
 
-	protected Object result;
-	protected Shell shlNewSet;
 	private String server;
 	private int db;
 	private String key;
@@ -58,49 +55,24 @@ public class NewSetDialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public NewSetDialog(Shell parent, int style, String server, int db,
+	public NewSetDialog(Shell parent, Image image, String server, int db,
 			String key) {
-		super(parent, style);
-		setText("SWT Dialog");
+		super(parent, image);
 		this.server = server;
 		this.db = db;
 		this.key = key == null ? "" : key;
 	}
 
 	/**
-	 * Open the dialog.
-	 * 
-	 * @return the result
-	 */
-	public Object open() {
-		createContents();
-		shlNewSet.open();
-		shlNewSet.layout();
-		Display display = getParent().getDisplay();
-		while (!shlNewSet.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		return result;
-	}
-
-	/**
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shlNewSet = new Shell(getParent(), getStyle());
-		shlNewSet.setSize(691, 540);
-		shlNewSet.setText("New Set");
+		shell.setSize(691, 540);
+		shell.setText("New Set");
 
-		Rectangle screenSize = shlNewSet.getParent().getBounds();
-		Rectangle shellSize = shlNewSet.getBounds();
-		shlNewSet.setLocation(screenSize.x + screenSize.width / 2
-				- shellSize.width / 2, screenSize.y + screenSize.height / 2
-				- shellSize.height / 2);
-		shlNewSet.setLayout(new GridLayout(1, false));
+		shell.setLayout(new GridLayout(1, false));
 
-		TabFolder tabFolder = new TabFolder(shlNewSet, SWT.NONE);
+		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
 				1));
 		tabFolder.setSize(414, 239);
@@ -160,7 +132,7 @@ public class NewSetDialog extends Dialog {
 		btnAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				InputDialog inputDialog = new InputDialog(shlNewSet,
+				InputDialog inputDialog = new InputDialog(shell,
 						"Input values",
 						"Values(multiple values are separated by ;)", "", null);
 				if (inputDialog.open() == InputDialog.OK) {
@@ -191,7 +163,7 @@ public class NewSetDialog extends Dialog {
 		btnDelete.setEnabled(false);
 		btnDelete.setText("Delete");
 
-		Composite composite_1 = new Composite(shlNewSet, SWT.NONE);
+		Composite composite_1 = new Composite(shell, SWT.NONE);
 		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
 		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false,
 				false, 1, 1));
@@ -206,14 +178,14 @@ public class NewSetDialog extends Dialog {
 				Set<String> values = new HashSet<String>();
 
 				if (key.length() == 0 || items.length == 0)
-					MessageDialog.openError(shlNewSet, "error",
+					MessageDialog.openError(shell, "error",
 							"please input set information!");
 				else {
 					for (TableItem item : items) {
 						values.add(item.getText());
 					}
 					result = new SetInfo(key, values);
-					shlNewSet.dispose();
+					shell.dispose();
 				}
 
 			}
@@ -224,11 +196,12 @@ public class NewSetDialog extends Dialog {
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				shlNewSet.dispose();
+				shell.dispose();
 			}
 		});
 		btnCancel.setText("Cancel");
 
+		super.createContents();
 	}
 
 	protected void tableItemSelected() {

@@ -6,14 +6,16 @@ import java.util.Map;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -23,14 +25,11 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.events.ModifyEvent;
 
 import com.cxy.redisclient.dto.ZSetInfo;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.FillLayout;
+import com.cxy.redisclient.presentation.RedisClientDialog;
 
-public class NewZSetDialog extends Dialog {
+public class NewZSetDialog extends RedisClientDialog {
 
 	protected final class ModifyKey implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
@@ -42,8 +41,6 @@ public class NewZSetDialog extends Dialog {
 		}
 	}
 
-	protected Object result;
-	protected Shell shlNewSortedSet;
 	private String server;
 	private int db;
 	private String key;
@@ -58,49 +55,24 @@ public class NewZSetDialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public NewZSetDialog(Shell parent, int style, String server, int db,
+	public NewZSetDialog(Shell parent, Image image, String server, int db,
 			String key) {
-		super(parent, style);
-		setText("SWT Dialog");
+		super(parent, image);
 		this.server = server;
 		this.db = db;
 		this.key = key == null ? "" : key;
 	}
 
 	/**
-	 * Open the dialog.
-	 * 
-	 * @return the result
-	 */
-	public Object open() {
-		createContents();
-		shlNewSortedSet.open();
-		shlNewSortedSet.layout();
-		Display display = getParent().getDisplay();
-		while (!shlNewSortedSet.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		return result;
-	}
-
-	/**
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shlNewSortedSet = new Shell(getParent(), getStyle());
-		shlNewSortedSet.setSize(586, 531);
-		shlNewSortedSet.setText("New Sorted Set");
+		shell.setSize(586, 531);
+		shell.setText("New Sorted Set");
 
-		Rectangle screenSize = shlNewSortedSet.getParent().getBounds();
-		Rectangle shellSize = shlNewSortedSet.getBounds();
-		shlNewSortedSet.setLocation(screenSize.x + screenSize.width / 2
-				- shellSize.width / 2, screenSize.y + screenSize.height / 2
-				- shellSize.height / 2);
-		shlNewSortedSet.setLayout(new GridLayout(1, false));
+		shell.setLayout(new GridLayout(1, false));
 
-		TabFolder tabFolder = new TabFolder(shlNewSortedSet, SWT.NONE);
+		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
 				1));
 		tabFolder.setSize(414, 241);
@@ -166,7 +138,7 @@ public class NewZSetDialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				InputDialog inputDialog = new InputDialog(
-						shlNewSortedSet,
+						shell,
 						"Input values",
 						"Values(multiple values are separated by ; score and member are separated by ,)",
 						"", null);
@@ -201,7 +173,7 @@ public class NewZSetDialog extends Dialog {
 		new Label(grpValues, SWT.NONE);
 		
 
-		Composite composite_1 = new Composite(shlNewSortedSet, SWT.NONE);
+		Composite composite_1 = new Composite(shell, SWT.NONE);
 		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
 		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false,
 				false, 1, 1));
@@ -216,7 +188,7 @@ public class NewZSetDialog extends Dialog {
 				Map<String, Double> values = new HashMap<String, Double>();
 
 				if (key.length() == 0 || items.length == 0)
-					MessageDialog.openError(shlNewSortedSet, "error",
+					MessageDialog.openError(shell, "error",
 							"please input sorted set information!");
 				else {
 					for (TableItem item : items) {
@@ -224,7 +196,7 @@ public class NewZSetDialog extends Dialog {
 								Double.valueOf(item.getText(0)));
 					}
 					result = new ZSetInfo(key, values);
-					shlNewSortedSet.dispose();
+					shell.dispose();
 				}
 
 			}
@@ -235,11 +207,12 @@ public class NewZSetDialog extends Dialog {
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				shlNewSortedSet.dispose();
+				shell.dispose();
 			}
 		});
 		btnCancel.setText("Cancel");
 
+		super.createContents();
 	}
 
 	protected void tableItemSelected() {

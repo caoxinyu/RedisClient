@@ -8,14 +8,12 @@ import java.util.Set;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
@@ -24,11 +22,10 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 import com.cxy.redisclient.domain.Server;
+import com.cxy.redisclient.presentation.RedisClientDialog;
 
-public class PropertiesDialog extends Dialog {
+public class PropertiesDialog extends RedisClientDialog {
 
-	protected Object result;
-	protected Shell shlServerProperties;
 	private Map<String, String[]> values;
 	private Server info;
 	
@@ -37,46 +34,22 @@ public class PropertiesDialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public PropertiesDialog(Shell parent, int style, Server info, Map<String,  String[]> values) {
-		super(parent, style);
+	public PropertiesDialog(Shell parent, Image image, Server info, Map<String,  String[]> values) {
+		super(parent, image);
 		setText("SWT Dialog");
 		this.info = info;
 		this.values = values;
 	}
 
 	/**
-	 * Open the dialog.
-	 * @return the result
-	 */
-	public Object open() {
-		createContents();
-		shlServerProperties.open();
-		shlServerProperties.layout();
-		Display display = getParent().getDisplay();
-		while (!shlServerProperties.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		return result;
-	}
-
-	/**
 	 * Create contents of the dialog.
 	 */
-	private void createContents() {
-		shlServerProperties = new Shell(getParent(), getStyle());
-		shlServerProperties.setSize(940, 569);
-		shlServerProperties.setText("Server Properties");
-		shlServerProperties.setLayout(new GridLayout(1, false));
+	protected void createContents() {
+		shell.setSize(940, 569);
+		shell.setText("Server Properties");
+		shell.setLayout(new GridLayout(1, false));
 		
-		Rectangle screenSize = shlServerProperties.getParent().getBounds();
-		Rectangle shellSize = shlServerProperties.getBounds();
-		shlServerProperties.setLocation(screenSize.x + screenSize.width / 2
-				- shellSize.width / 2, screenSize.y + screenSize.height / 2
-				- shellSize.height / 2);
-		
-		TabFolder tabFolder = new TabFolder(shlServerProperties, SWT.NONE);
+		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		TabItem tbtmServer = new TabItem(tabFolder, SWT.NONE);
@@ -135,7 +108,7 @@ public class PropertiesDialog extends Dialog {
 			}
 		}
 		
-		Composite composite = new Composite(shlServerProperties, SWT.NONE);
+		Composite composite = new Composite(shell, SWT.NONE);
 		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
 		composite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		composite.setBounds(0, 0, 64, 64);
@@ -144,10 +117,11 @@ public class PropertiesDialog extends Dialog {
 		btnNewButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				shlServerProperties.dispose();
+				shell.dispose();
 			}
 		});
 		btnNewButton.setText("OK");
 
+		super.createContents();
 	}
 }

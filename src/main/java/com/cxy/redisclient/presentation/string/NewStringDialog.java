@@ -1,28 +1,27 @@
 package com.cxy.redisclient.presentation.string;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.TabItem;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.dto.StringInfo;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.FillLayout;
+import com.cxy.redisclient.presentation.RedisClientDialog;
 
-public class NewStringDialog extends Dialog {
+public class NewStringDialog extends RedisClientDialog {
 
 	protected final class ModifyKey implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
@@ -34,8 +33,6 @@ public class NewStringDialog extends Dialog {
 		}
 	}
 
-	protected Object result;
-	protected Shell shlNString;
 	protected Text text_key;
 	protected Text text_value;
 	private String server;
@@ -48,46 +45,23 @@ public class NewStringDialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public NewStringDialog(Shell parent, int style, String server, int db, String key) {
-		super(parent, style);
-		setText("SWT Dialog");
+	public NewStringDialog(Shell parent, Image image, String server, int db, String key) {
+		super(parent, image);
 		this.server = server;
 		this.db = db;
 		this.key = key == null?"":key;
 	}
 
 	/**
-	 * Open the dialog.
-	 * @return the result
-	 */
-	public Object open() {
-		createContents();
-		shlNString.open();
-		shlNString.layout();
-		Display display = getParent().getDisplay();
-		while (!shlNString.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		return result;
-	}
-
-	/**
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shlNString = new Shell(getParent(), getStyle());
-		shlNString.setSize(622, 284);
-		shlNString.setText("New String");
+		shell.setSize(622, 284);
+		shell.setText("New String");
 		
-		Rectangle screenSize = shlNString.getParent().getBounds();
-		Rectangle shellSize = shlNString.getBounds();
-		shlNString.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
-				screenSize.y + screenSize.height / 2 - shellSize.height / 2);
-		shlNString.setLayout(new GridLayout(1, false));
+		shell.setLayout(new GridLayout(1, false));
 		
-		TabFolder tabFolder = new TabFolder(shlNString, SWT.NONE);
+		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		tabFolder.setSize(290, 124);
 		
@@ -126,7 +100,7 @@ public class NewStringDialog extends Dialog {
 		text_value = new Text(composite, SWT.BORDER);
 		text_value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
-		Composite composite_1 = new Composite(shlNString, SWT.NONE);
+		Composite composite_1 = new Composite(shell, SWT.NONE);
 		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
 		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		
@@ -139,10 +113,10 @@ public class NewStringDialog extends Dialog {
 				String value = text_value.getText();
 				
 				if( key.length() == 0 || value.length() == 0){
-					MessageDialog.openError(shlNString, "error","please input string information!");
+					MessageDialog.openError(shell, "error","please input string information!");
 				} else {
 					result = new StringInfo(key, value);
-					shlNString.dispose();
+					shell.dispose();
 				}
 			}
 		});
@@ -152,10 +126,11 @@ public class NewStringDialog extends Dialog {
 		button_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent e) {
-				shlNString.dispose();
+				shell.dispose();
 			}
 		});
 		button_1.setText("Cancel");
 
+		super.createContents();
 	}
 }

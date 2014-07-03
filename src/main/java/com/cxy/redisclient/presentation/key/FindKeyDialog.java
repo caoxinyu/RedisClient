@@ -9,11 +9,12 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -23,14 +24,10 @@ import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.dto.FindInfo;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.FillLayout;
+import com.cxy.redisclient.presentation.RedisClientDialog;
 
-public class FindKeyDialog extends Dialog {
+public class FindKeyDialog extends RedisClientDialog {
 
-	protected FindInfo result = null;
-	protected Shell shlFind;
 	private Text pattern;
 	private Button btnFind;
 
@@ -39,43 +36,20 @@ public class FindKeyDialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public FindKeyDialog(Shell parent, int style) {
-		super(parent, style);
-		setText("SWT Dialog");
-	}
-
-	/**
-	 * Open the dialog.
-	 * @return the result
-	 */
-	public Object open() {
-		createContents();
-		shlFind.open();
-		shlFind.layout();
-		Display display = getParent().getDisplay();
-		while (!shlFind.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		return result;
+	public FindKeyDialog(Shell parent, Image image) {
+		super(parent,  image);
 	}
 
 	/**
 	 * Create contents of the dialog.
 	 */
-	private void createContents() {
-		shlFind = new Shell(getParent(), getStyle());
-		shlFind.setSize(612, 369);
-		shlFind.setText("Find");
+	protected void createContents() {
+		shell.setSize(612, 369);
+		shell.setText("Find");
 
-		Rectangle screenSize = shlFind.getParent().getBounds();
-		Rectangle shellSize = shlFind.getBounds();
-		shlFind.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
-				screenSize.y + screenSize.height / 2 - shellSize.height / 2);
-		shlFind.setLayout(new GridLayout(1, false));
+		shell.setLayout(new GridLayout(1, false));
 		
-		TabFolder tabFolder = new TabFolder(shlFind, SWT.NONE);
+		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		TabItem tbtmFind = new TabItem(tabFolder, SWT.NONE);
@@ -144,7 +118,7 @@ public class FindKeyDialog extends Dialog {
 		btnSortedSet.setText("Sorted Set");
 		
 		
-		Composite composite1 = new Composite(shlFind, SWT.NONE);
+		Composite composite1 = new Composite(shell, SWT.NONE);
 		composite1.setLayout(new FillLayout(SWT.HORIZONTAL));
 		composite1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 	    
@@ -165,13 +139,13 @@ public class FindKeyDialog extends Dialog {
 					types.add(NodeType.SORTEDSET);
 				
 				if(types.size() == 0)
-					MessageDialog.openError(shlFind, "error","please select a key type at least!");
+					MessageDialog.openError(shell, "error","please select a key type at least!");
 				else{
 					if(btnForward.getSelection())
 						result = new FindInfo(pattern.getText(), types, true);
 					else
 						result = new FindInfo(pattern.getText(), types, false);
-					shlFind.dispose();
+					shell.dispose();
 				}
 				
 			}
@@ -184,10 +158,11 @@ public class FindKeyDialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				result = null;
-				shlFind.dispose();
+				shell.dispose();
 			}
 		});
 		btnCancel.setText("Cancel");
 		
+		super.createContents();
 	}
 }

@@ -4,11 +4,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
@@ -16,14 +17,10 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.domain.Favorite;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.FillLayout;
+import com.cxy.redisclient.presentation.RedisClientDialog;
 
-public class RenameFavoriteDialog extends Dialog {
+public class RenameFavoriteDialog extends RedisClientDialog {
 
-	protected Object result;
-	protected Shell shell;
 	private Favorite oldFavorite;
 	private Text text;
 	/**
@@ -31,41 +28,18 @@ public class RenameFavoriteDialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public RenameFavoriteDialog(Shell parent, int style, Favorite favorite) {
-		super(parent, style);
-		setText("SWT Dialog");
+	public RenameFavoriteDialog(Shell parent, Image image, Favorite favorite) {
+		super(parent,  image);
 		this.oldFavorite = favorite;
-	}
-
-	/**
-	 * Open the dialog.
-	 * @return the result
-	 */
-	public Object open() {
-		createContents();
-		shell.open();
-		shell.layout();
-		Display display = getParent().getDisplay();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		return result;
 	}
 
 	/**
 	 * Create contents of the dialog.
 	 */
-	private void createContents() {
-		shell = new Shell(getParent(), getStyle());
+	protected void createContents() {
 		shell.setSize(340, 234);
 		shell.setText("Update favorite");
 
-		Rectangle screenSize = shell.getParent().getBounds();
-		Rectangle shellSize = shell.getBounds();
-		shell.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
-				screenSize.y + screenSize.height / 2 - shellSize.height / 2);
 		shell.setLayout(new GridLayout(1, false));
 		
 		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
@@ -125,7 +99,7 @@ public class RenameFavoriteDialog extends Dialog {
 			}
 		});
 		button_1.setText("Cancel");
-		
+		super.createContents();
 	}
 
 }

@@ -10,11 +10,12 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Dialog;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -26,11 +27,9 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.dto.HashInfo;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.FillLayout;
+import com.cxy.redisclient.presentation.RedisClientDialog;
 
-public class NewHashDialog extends Dialog {
+public class NewHashDialog extends RedisClientDialog {
 
 	protected final class ModifyKey implements ModifyListener {
 		public void modifyText(ModifyEvent e) {
@@ -42,8 +41,6 @@ public class NewHashDialog extends Dialog {
 		}
 	}
 
-	protected Object result;
-	protected Shell shlNewHash;
 	private String server;
 	private int db;
 	private String key;
@@ -58,49 +55,24 @@ public class NewHashDialog extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public NewHashDialog(Shell parent, int style, String server, int db,
+	public NewHashDialog(Shell parent, Image image,  String server, int db,
 			String key) {
-		super(parent, style);
-		setText("SWT Dialog");
+		super(parent, image);
 		this.server = server;
 		this.db = db;
 		this.key = key == null ? "" : key;
 	}
 
 	/**
-	 * Open the dialog.
-	 * 
-	 * @return the result
-	 */
-	public Object open() {
-		createContents();
-		shlNewHash.open();
-		shlNewHash.layout();
-		Display display = getParent().getDisplay();
-		while (!shlNewHash.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		return result;
-	}
-
-	/**
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shlNewHash = new Shell(getParent(), getStyle());
-		shlNewHash.setSize(654, 524);
-		shlNewHash.setText("New Hash");
+		shell.setSize(654, 524);
+		shell.setText("New Hash");
 
-		Rectangle screenSize = shlNewHash.getParent().getBounds();
-		Rectangle shellSize = shlNewHash.getBounds();
-		shlNewHash.setLocation(screenSize.x + screenSize.width / 2
-				- shellSize.width / 2, screenSize.y + screenSize.height / 2
-				- shellSize.height / 2);
-		shlNewHash.setLayout(new GridLayout(1, false));
+		shell.setLayout(new GridLayout(1, false));
 
-		TabFolder tabFolder = new TabFolder(shlNewHash, SWT.NONE);
+		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
 				1));
 		tabFolder.setSize(414, 249);
@@ -166,7 +138,7 @@ public class NewHashDialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				InputDialog inputDialog = new InputDialog(
-						shlNewHash,
+						shell,
 						"Input values",
 						"Values(multiple values are separated by ; field and value are separated by ,)",
 						"", null);
@@ -200,7 +172,7 @@ public class NewHashDialog extends Dialog {
 		btnDelete.setText("Delete");
 		new Label(grpValues, SWT.NONE);
 
-		Composite composite_1 = new Composite(shlNewHash, SWT.NONE);
+		Composite composite_1 = new Composite(shell, SWT.NONE);
 		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
 		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false,
 				false, 1, 1));
@@ -215,14 +187,14 @@ public class NewHashDialog extends Dialog {
 				Map<String, String> values = new HashMap<String, String>();
 
 				if (key.length() == 0 || items.length == 0)
-					MessageDialog.openError(shlNewHash, "error",
+					MessageDialog.openError(shell, "error",
 							"please input hash information!");
 				else {
 					for (TableItem item : items) {
 						values.put(item.getText(0), item.getText(1));
 					}
 					result = new HashInfo(key, values);
-					shlNewHash.dispose();
+					shell.dispose();
 				}
 
 			}
@@ -233,11 +205,12 @@ public class NewHashDialog extends Dialog {
 		btnCancel.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				shlNewHash.dispose();
+				shell.dispose();
 			}
 		});
 		btnCancel.setText("Cancel");
 
+		super.createContents();
 	}
 
 	protected void tableItemSelected() {

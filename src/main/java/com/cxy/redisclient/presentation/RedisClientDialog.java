@@ -1,5 +1,7 @@
 package com.cxy.redisclient.presentation;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
@@ -9,15 +11,16 @@ public abstract class RedisClientDialog extends Dialog {
 
 	protected Object result;
 	protected Shell shell;
+	protected Image image;
 
 	/**
 	 * Create the dialog.
 	 * @param parent
 	 * @param style
 	 */
-	public RedisClientDialog(Shell parent, int style) {
-		super(parent, style);
-		setText("SWT Dialog");
+	public RedisClientDialog(Shell parent, Image image) {
+		super(parent, SWT.SHELL_TRIM | SWT.APPLICATION_MODAL);
+		this.image = image;
 	}
 
 	/**
@@ -25,6 +28,9 @@ public abstract class RedisClientDialog extends Dialog {
 	 * @return the result
 	 */
 	public Object open() {
+		shell = new Shell(getParent(), getStyle());
+		shell.setImage(image);
+		
 		createContents();
 		shell.open();
 		shell.layout();
@@ -41,10 +47,6 @@ public abstract class RedisClientDialog extends Dialog {
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shell = new Shell(getParent(), getStyle());
-		shell.setSize(450, 300);
-		shell.setText(getText());
-
 		Rectangle screenSize = shell.getParent().getBounds();
 		Rectangle shellSize = shell.getBounds();
 		shell.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,
