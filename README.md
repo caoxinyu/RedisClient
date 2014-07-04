@@ -25,7 +25,6 @@ Features
  	* Order redis data by key, data type, size
  	* Navigation history
 
--------------
 
 Install & run
 -------------
@@ -34,9 +33,7 @@ Install & run
  2. Extract the runable jar file **redisclient-win32.x86_64.1.0.jar** in directory /RedisClient-master/target from the zip file
  3. Run the redisclient-win32.x86_64.1.0.jar
  	* You can run it by double clicking it if your registry for jar file is configured correctly.
- 	* Or you can run it from command line, and input java -jar **redisclient-win32.x86_64.1.0.jar**. 
- 	> **NOTE:**
- 	> Please pay attention to run it as administrator in windows 8.
+ 	* Or you can run it from command line, and input java -jar **redisclient-win32.x86_64.1.0.jar**. Please pay attention to run it as administrator in windows 8.
  	
  **For 32 bit windows**
  1. Download the zip file RedisClient-master.zip from https://github.com/caoxinyu/RedisClient/archive/master.zip
