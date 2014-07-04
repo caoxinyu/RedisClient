@@ -1,5 +1,5 @@
-RedisClient
-===========
+# RedisClient
+
 
 This is a redis client GUI tool written by Java SWT and Jedis. It's my objective to build the most convenient redis client GUI tool in the world. In the first place, it will facilitate in editing redis data, such as: add, update, delete, search, cut, copy, paste etc.
 
@@ -7,8 +7,8 @@ This is a redis client GUI tool written by Java SWT and Jedis. It's my objective
 
 --------
 
-Features
---------
+## Features
+
 **Windows Explorer style UI**
 
 **Multiple Redis version adaptive**
@@ -26,8 +26,8 @@ Features
  	* Navigation history
 
 
-Install & run
--------------
+## Install & run
+
  **For 64 bit windows**
  1. Download the zip file RedisClient-master.zip from https://github.com/caoxinyu/RedisClient/archive/master.zip
  2. Extract the runable jar file **redisclient-win32.x86_64.1.0.jar** in directory /RedisClient-master/target from the zip file
