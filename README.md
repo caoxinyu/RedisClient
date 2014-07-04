@@ -29,7 +29,7 @@ This is a redis client GUI tool written by Java SWT and Jedis. It's my objective
 
 ## Install & run
 
-Before run redis client, you must install the jdk first.
+Before run redis client, you must install the JDK 5+ first.
 
 ### For 64 bit windows
  1. Download the zip file RedisClient-master.zip from [here](https://github.com/caoxinyu/RedisClient/archive/master.zip)
