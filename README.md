@@ -47,6 +47,6 @@ Before run redis client, you must install the JDK 5+ first.
 
  ## Support me
  
- If you find this software useful and would like to support it, you can do so simply by scanning my Alipay two-dimension code and donating whatever you like.
+ If you find this software useful and would like to support it, you can do so simply by scanning my Alipay two-dimension code.
  ![My code](https://github.com/caoxinyu/RedisClient/raw/master/src/main/resources/code.png)
  
