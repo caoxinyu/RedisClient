@@ -44,3 +44,9 @@ Before run redis client, you must install the JDK 5+ first.
  3. Run the redisclient-win32.x86.1.0.jar
  	* You can run it by double clicking it if your registry for jar file is configured correctly.
  	* Or you can run it from command line, and input `java -jar redisclient-win32.x86.1.0.jar`. 
+
+ ## Support me
+ 
+ If you find this software useful and would like to support it, you can do so simply by scanning my Alipay two-dimension code.
+ ![My code](https://github.com/caoxinyu/RedisClient/raw/master/src/main/resources/code.png)
+ 
