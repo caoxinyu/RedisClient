@@ -16,12 +16,13 @@ This is a redis client GUI tool written by Java SWT and Jedis. It's my objective
  1. Manage redis server
  2. Manage redis data favorite
  3. Manage redis data
- 	* New redis data: string, list, hash, set, sorted set
- 	* Rename, delete redis data
- 	* Update redis data
- 	* Cut, copy paste redis data
- 	* Import, export redis data
- 	* Search redis data
+ 	* <i class="icon-file"></i>New redis data: string, list, hash, set, sorted set
+ 	* Rename redis data 
+ 	* <i class="icon-trash"></i>Delete redis data
+ 	* <i class="icon-edit"></i>Update redis data
+ 	* <i class="icon-paste"></i>Cut, copy paste redis data
+ 	* <i class="icon-cloud-download"></i>Import, export redis data
+ 	* <i class="icon-search"></i>Search redis data
  	* Order redis data by key, data type, size
  	* Navigation history
 
