@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.cxy.redisclient.domain.Container;
+import com.cxy.redisclient.domain.ContainerKey;
 import com.cxy.redisclient.domain.DataNode;
 import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
@@ -133,13 +133,13 @@ public class NodeService {
 	public String pasteContainer(int sourceId, int sourceDb, String sourceContainer, int targetId, int targetDb, String targetContainer, boolean copy, boolean overwritten) {
 		Set<Node> nodes = listContainerAllKeys(sourceId, sourceDb, sourceContainer);
 		
-		if(sourceId == targetId && sourceDb == targetDb && targetContainer.equals(new Container(sourceContainer).getUpperContainer())){
+		if(sourceId == targetId && sourceDb == targetDb && targetContainer.equals(new ContainerKey(sourceContainer).getUpperContainer())){
 			if(!copy)
 				return null;
 			if(sourceContainer.equals(""))
 				return null;
 			else {
-				String target = new Container(sourceContainer).appendLastContainer(String.valueOf(System.currentTimeMillis()));
+				String target = new ContainerKey(sourceContainer).appendLastContainer(String.valueOf(System.currentTimeMillis()));
 				
 				for(Node node: nodes) {
 					String targetKey = node.getKey().replaceFirst(sourceContainer, target);
@@ -149,7 +149,7 @@ public class NodeService {
 			}
 		} else {
 			for(Node node: nodes) {
-				String targetKey = targetContainer + new Container(node.getKey()).getRelativeContainer(sourceContainer);
+				String targetKey = targetContainer + new ContainerKey(node.getKey()).getRelativeContainer(sourceContainer);
 				pasteKey(sourceId, sourceDb, node.getKey(), targetId, targetDb, targetKey, copy, overwritten);
 			}
 			return null;
@@ -163,7 +163,7 @@ public class NodeService {
 		if(sourceId == targetId && sourceDb == targetDb && sourceKey.equals(targetKey)) {
 			if(!copy)
 				return null;
-			String key = new Container(sourceKey).getKeyOnly();
+			String key = new ContainerKey(sourceKey).getKeyOnly();
 			
 			String source = key + String.valueOf(System.currentTimeMillis());
 			targetKey = sourceKey.replaceFirst(key, source);

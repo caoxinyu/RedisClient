@@ -1,94 +1,67 @@
 package com.cxy.redisclient.presentation; 
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.swt.widgets.TreeItem;
 
-import com.cxy.redisclient.dto.ContainerInfo;
+import com.cxy.redisclient.dto.ContainerKeyInfo;
 /**
  * This class is used for key or container cut, copy, paste operation, store the cut/copy data
  * @author xinyu
  *
  */
 public class PasteBuffer {
-	private ContainerInfo buffer = null;
-	private String key = null;
-	private TreeItem cutItem = null;
+	private List<ContainerKeyInfo> buffer;
+	private List<TreeItem> cutItem;
 	private boolean copy;
-	private boolean isKey;
+	private int pos = 0;
+	private int itemPos = 0;
+	
+	public PasteBuffer(){
+		buffer = new LinkedList<ContainerKeyInfo>();
+		cutItem = new LinkedList<TreeItem>();
+	}
 	/**
 	 * cut a container
 	 * @param info container information
 	 * @param cutItem cutted tree item
 	 */
-	public void cut(ContainerInfo info, TreeItem cutItem) {
-		this.buffer = info;
-		this.cutItem = cutItem;
+	public void cut(ContainerKeyInfo info, TreeItem cutItem) {
+		this.buffer.add(info);
+		this.cutItem.add(cutItem);
 		copy = false;
-		isKey = false;
-	}
-	/**
-	 * cut a key
-	 * @param info container information
-	 * @param key key information
-	 * @param cutItem cutted tree item
-	 */
-	public void cut(ContainerInfo info, String key, TreeItem cutItem) {
-		this.buffer = info;
-		this.cutItem = cutItem;
-		this.key = key;
-		copy = false;
-		isKey = true;
 	}
 	
-	public String getKey() {
-		return key;
-	}
-
 	/**
 	 * copy a container or database
 	 * @param info
 	 */
-	public void copy(ContainerInfo info) {
-		this.buffer = info;
+	public void copy(ContainerKeyInfo info) {
+		this.buffer.add(info);
 		copy = true;
-		isKey = false;
 	}
 	
-	/**
-	 * copy a key
-	 * @param info
-	 * @param key
-	 */
-	public void copy(ContainerInfo info, String key) {
-		this.buffer = info;
-		this.key = key;
-		copy = true;
-		isKey = true;
-	}
-	
-	/**
-	 * is it a container or a key stored in buffer
-	 * @return
-	 */
-	public boolean isKey() {
-		return isKey;
-	}
-
 	/**
 	 * paste a key or a container
 	 * @return
 	 */
-	public ContainerInfo paste() {
-		ContainerInfo info = buffer;
-		if(!copy)
-			buffer = null;
-		return info;
+	public ContainerKeyInfo paste() {
+		if(copy){
+			if(pos == buffer.size())
+				pos = 0;
+			ContainerKeyInfo info = buffer.get(pos++);
+			
+			return info;
+		}else
+			return buffer.remove(0);
 	}
 	/**
 	 * can it paste now
 	 * @return
 	 */
 	public boolean canPaste() {
-		return buffer == null? false : true;
+		return buffer.isEmpty() ? false : true;
 	}
 	/**
 	 * is it a copy or cut operation
@@ -102,7 +75,22 @@ public class PasteBuffer {
 	 * @return
 	 */
 	public TreeItem getCutItem() {
-		return cutItem;
+		if(copy){
+			TreeItem item = cutItem.get(itemPos++);
+			if(itemPos == cutItem.size())
+				itemPos = 0;
+			return item;
+		}
+		return cutItem.remove(0);
 	}
 
+	public boolean hasNext() {
+		if(copy){
+			if(pos == buffer.size())
+				return false;
+			else
+				return true;
+		}else
+			return buffer.isEmpty() ? false : true;
+	}
 }

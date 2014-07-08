@@ -40,7 +40,7 @@ public class AboutDialog extends RedisClientDialog {
 	 */
 	protected void createContents() {
 		shell.setSize(450, 300);
-		shell.setText("About Redis Client");
+		shell.setText("About RedisClient");
 		shell.setLayout(new GridLayout(1, false));
 		
 		Composite composite = new Composite(shell, SWT.NONE);
@@ -62,7 +62,7 @@ public class AboutDialog extends RedisClientDialog {
 		lblNewLabel.setFont(SWTResourceManager.getFont("Arial", 20, SWT.NORMAL));
 		lblNewLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		lblNewLabel.setBounds(0, 0, 61, 17);
-		lblNewLabel.setText("<a href=\"https://github.com/caoxinyu/RedisClient\">Redis Client for Windows</a>");
+		lblNewLabel.setText("<a href=\"https://github.com/caoxinyu/RedisClient\">RedisClient for Windows</a>");
 		
 		
 		Label label = new Label(composite, SWT.SEPARATOR | SWT.HORIZONTAL);

@@ -1,14 +1,14 @@
 package com.cxy.redisclient.domain;
 
-public class Container {
-	private String container;
+public class ContainerKey {
+	private String containerKey;
 	
-	public Container(String container) {
-		this.container = container == null?"":container;
+	public ContainerKey(String containerKey) {
+		this.containerKey = containerKey == null?"":containerKey;
 	}
 	
 	public boolean isKey() {
-		char lastChar = container.charAt(container.length() - 1);
+		char lastChar = containerKey.charAt(containerKey.length() - 1);
 		
 		if (lastChar == ':')
 			return false;
@@ -22,7 +22,7 @@ public class Container {
 	
 	public String getKeyOnly() {
 		assert(isKey());
-		String[] containers = container.split(":");
+		String[] containers = containerKey.split(":");
 		
 		return containers[containers.length - 1];
 	}
@@ -32,11 +32,11 @@ public class Container {
 		String lastContainer = beginContainers[beginContainers.length-1] + ":";
 		if(lastContainer.equals(":"))
 			lastContainer = "";
-		return container.replaceFirst(beginContainer, lastContainer);
+		return containerKey.replaceFirst(beginContainer, lastContainer);
 	}
 	
 	public String getLastContainer() {
-		String[] containers = container.split(":");
+		String[] containers = containerKey.split(":");
 		if(!isKey()) {
 			if(containers.length > 0)
 				return containers[containers.length-1] + ":";
@@ -52,7 +52,7 @@ public class Container {
 	}
 	
 	public String getUpperContainer() {
-		String[] containers = container.split(":");
+		String[] containers = containerKey.split(":");
 		
 		String upperContainer = "";
 		
@@ -65,7 +65,7 @@ public class Container {
 	
 	public String appendLastContainer(String appendStr) {
 		String target = "";
-		String[] containers = container.split(":");
+		String[] containers = containerKey.split(":");
 		containers[containers.length - 1] += appendStr;
 		
 		for(int i = 0; i < containers.length; i ++) {
@@ -73,5 +73,9 @@ public class Container {
 		}
 		
 		return target;
+	}
+	
+	public String getContainerKey() {
+		return containerKey;
 	}
 }
