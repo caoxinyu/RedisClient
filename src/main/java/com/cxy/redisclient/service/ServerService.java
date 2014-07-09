@@ -12,7 +12,7 @@ import com.cxy.redisclient.integration.server.QueryServerProperties;
 
 public class ServerService {
 
-	public int add(String name, String host, String port) {
+	public int add(String name, String host, String port, String password) {
 		try {
 			int id = Integer.parseInt(ConfigFile
 					.readMaxId(ConfigFile.SERVER_MAXID)) + 1;
@@ -20,6 +20,7 @@ public class ServerService {
 			ConfigFile.write(ConfigFile.NAME + id, name);
 			ConfigFile.write(ConfigFile.HOST + id, host);
 			ConfigFile.write(ConfigFile.PORT + id, port);
+			ConfigFile.write(ConfigFile.PASSWORD + id, password);
 
 			ConfigFile.write(ConfigFile.SERVER_MAXID, String.valueOf(id));
 
@@ -34,6 +35,7 @@ public class ServerService {
 			ConfigFile.delete(ConfigFile.NAME + id);
 			ConfigFile.delete(ConfigFile.HOST + id);
 			ConfigFile.delete(ConfigFile.PORT + id);
+			ConfigFile.delete(ConfigFile.PASSWORD + id);
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}
@@ -47,18 +49,19 @@ public class ServerService {
 		}
 	}
 
-	public void update(int id, String host, String port) {
+	public void update(int id, String host, String port, String password) {
 		try {
 			ConfigFile.write(ConfigFile.HOST + id, host);
 			ConfigFile.write(ConfigFile.PORT + id, port);
+			ConfigFile.write(ConfigFile.PASSWORD + id, password);
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}
 	}
 
-	public void update(int id, String name, String host, String port) {
+	public void update(int id, String name, String host, String port, String password) {
 		update(id, name);
-		update(id, host, port);
+		update(id, host, port, password);
 	}
 
 	public Server listById(int id) {
@@ -67,7 +70,8 @@ public class ServerService {
 			if (ConfigFile.read(ConfigFile.NAME + id) != null)
 				server = new Server(id, ConfigFile.read(ConfigFile.NAME + id),
 						ConfigFile.read(ConfigFile.HOST + id),
-						ConfigFile.read(ConfigFile.PORT + id));
+						ConfigFile.read(ConfigFile.PORT + id),
+						ConfigFile.read(ConfigFile.PASSWORD + id));
 
 			return server;
 		} catch (IOException e) {

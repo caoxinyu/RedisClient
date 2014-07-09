@@ -1871,7 +1871,7 @@ public class RedisClient {
 
 		if (server != null) {
 			server.setId(service1.add(server.getName(), server.getHost(),
-					server.getPort()));
+					server.getPort(), server.getPassword()));
 			TreeItem item = addServerTreeItem(server);
 			serverTreeItemSelected(item, false);
 			history.add(item); 
@@ -1890,7 +1890,7 @@ public class RedisClient {
 		server = (Server) dialog.open();
 		if (server != null) {
 			service1.update(id, server.getName(), server.getHost(),
-					server.getPort());
+					server.getPort(), server.getPassword());
 			TreeItem treeItem = null;
 			if(itemsSelected[0] instanceof TableItem){
 				treeItem = getTreeItemByTableItem((TableItem) itemsSelected[0]);

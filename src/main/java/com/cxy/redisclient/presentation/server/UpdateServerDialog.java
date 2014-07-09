@@ -23,6 +23,8 @@ public class UpdateServerDialog extends AddServerDialog {
 		text_4.selectAll();
 		text_5.setText(server.getPort());
 		text_5.selectAll();
+		text_6.setText(server.getPassword());
+		text_6.selectAll();
 	}
 
 	@Override

@@ -14,9 +14,9 @@ public class ServerTest extends TestCase {
 
 	public void testAdd() throws IOException {
 		ServerService server = new ServerService();
-		server.add("test3", "localhost", "80");
+		server.add("test3", "localhost", "80", "");
 		
-		int id = server.add("test3", "localhost", "80");
+		int id = server.add("test3", "localhost", "80", "");
 		
 		String name = server.listById(id).getName();
 		String addr = server.listById(id).getHost();
@@ -26,7 +26,7 @@ public class ServerTest extends TestCase {
 		assertEquals(addr, "localhost");
 		assertEquals(port, "80");
 		
-		server.add("test4", "127.0.0.1", "8800");
+		server.add("test4", "127.0.0.1", "8800", "");
 		
 		id = Integer.parseInt(ConfigFile.readMaxId(ConfigFile.SERVER_MAXID));
 		name = ConfigFile.read(ConfigFile.NAME + id);
@@ -47,7 +47,7 @@ public class ServerTest extends TestCase {
 
 	public void testList() throws IOException {
 		ServerService service = new ServerService();
-		service.add("testtest", "localhost", "88888");
+		service.add("testtest", "localhost", "88888", "");
 		int id = Integer.parseInt(ConfigFile.readMaxId(ConfigFile.SERVER_MAXID));
 		
 		Server server = service.listById(id);
@@ -64,11 +64,11 @@ public class ServerTest extends TestCase {
 		int id = Integer.parseInt(ConfigFile.readMaxId(ConfigFile.SERVER_MAXID));
 		
 		ServerService service = new ServerService();
-		service.add("test update", "test addr", "test port");
+		service.add("test update", "test addr", "test port", "");
 		
 		id++;
 		service.update(id, "update server");
-		service.update(id, "new", "8090");
+		service.update(id, "new", "8090", "");
 		
 		String name = ConfigFile.read(ConfigFile.NAME + id);
 		String addr = ConfigFile.read(ConfigFile.HOST + id);

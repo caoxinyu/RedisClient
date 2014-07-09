@@ -24,6 +24,7 @@ public class AddServerDialog extends RedisClientDialog {
 	protected Text text_3;
 	protected Text text_4;
 	protected Text text_5;
+	protected Text text_6;
 	/**
 	 * Create the dialog.
 	 * 
@@ -74,6 +75,13 @@ public class AddServerDialog extends RedisClientDialog {
 		text_5.setText("6379");
 		text_5.selectAll();
 		
+		Label lblPassword = new Label(composite, SWT.NONE);
+		lblPassword.setText("Password");
+		
+		text_6 = new Text(composite, SWT.BORDER | SWT.PASSWORD);
+		text_6.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		text_6.selectAll();
+		
 		Composite composite_1 = new Composite(shell, SWT.NONE);
 		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
 		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
@@ -85,10 +93,11 @@ public class AddServerDialog extends RedisClientDialog {
 				String name = text_3.getText();
 				String host = text_4.getText();
 				String port = text_5.getText();
+				String password= text_6.getText();
 				if(name.length() == 0 || host.length() == 0 || port.length() == 0)
 					MessageDialog.openError(shell, "error","please input server information!");
 				else {
-					result = new Server(0, name, host, port);
+					result = new Server(0, name, host, port, password);
 					shell.dispose();
 				}
 					
