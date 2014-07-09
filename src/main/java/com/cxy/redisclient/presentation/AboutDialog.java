@@ -15,6 +15,8 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import com.cxy.redisclient.presentation.component.RedisClientDialog;
+
 public class AboutDialog extends RedisClientDialog {
 
 	private final class OpenUrl extends SelectionAdapter {

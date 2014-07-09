@@ -1,4 +1,4 @@
-package com.cxy.redisclient.presentation;
+package com.cxy.redisclient.presentation.component;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;

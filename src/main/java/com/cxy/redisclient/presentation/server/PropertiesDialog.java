@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 import com.cxy.redisclient.domain.Server;
-import com.cxy.redisclient.presentation.RedisClientDialog;
+import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class PropertiesDialog extends RedisClientDialog {
 

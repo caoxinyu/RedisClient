@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.integration.JedisCommand;
+import com.cxy.redisclient.integration.key.DeleteKey;
 
 public abstract class AddSet extends JedisCommand {
 	protected int db;
@@ -31,6 +32,10 @@ public abstract class AddSet extends JedisCommand {
 		jedis.select(db);
 		if(jedis.exists(key) && getValueType(key) != NodeType.SET)
 			throw new RuntimeException("Key: " + key + " alreay exist, and type is not set.");
+		if(jedis.exists(key) && getValueType(key) == NodeType.SET){
+			DeleteKey command = new DeleteKey(id, db, key);
+			command.execute(jedis);
+		}
 	}
 
 }

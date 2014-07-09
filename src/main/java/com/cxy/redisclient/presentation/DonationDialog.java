@@ -12,6 +12,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import com.cxy.redisclient.presentation.component.RedisClientDialog;
+
 public class DonationDialog extends RedisClientDialog {
 	private Image code;
 	/**

@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.dto.RenameInfo;
-import com.cxy.redisclient.presentation.RedisClientDialog;
+import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class RenameKeysDialog extends RedisClientDialog {
 	private Text text_2;

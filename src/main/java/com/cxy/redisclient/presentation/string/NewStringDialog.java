@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.dto.StringInfo;
-import com.cxy.redisclient.presentation.RedisClientDialog;
+import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class NewStringDialog extends RedisClientDialog {
 

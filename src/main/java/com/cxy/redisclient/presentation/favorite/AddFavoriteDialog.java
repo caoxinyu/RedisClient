@@ -16,7 +16,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
-import com.cxy.redisclient.presentation.RedisClientDialog;
+import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class AddFavoriteDialog extends RedisClientDialog {
 

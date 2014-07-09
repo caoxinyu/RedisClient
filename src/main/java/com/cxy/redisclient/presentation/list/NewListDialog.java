@@ -27,7 +27,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.dto.ListInfo;
-import com.cxy.redisclient.presentation.RedisClientDialog;
+import com.cxy.redisclient.presentation.component.EditTable;
+import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class NewListDialog extends RedisClientDialog {
 
@@ -117,7 +118,7 @@ public class NewListDialog extends RedisClientDialog {
 		grpValues.setText("Values");
 		grpValues.setLayout(new GridLayout(4, false));
 
-		table = new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION
+		table = new EditTable(grpValues, SWT.BORDER | SWT.FULL_SELECTION
 				| SWT.MULTI);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 4));
 		table.addSelectionListener(new SelectionAdapter() {
@@ -292,7 +293,8 @@ public class NewListDialog extends RedisClientDialog {
 							"please input list information!");
 				else {
 					for (TableItem item : items) {
-						values.add(item.getText());
+						if(item.getText().length() > 0)
+							values.add(item.getText());
 					}
 					result = new ListInfo(key, values, headTail, exist);
 					shell.dispose();

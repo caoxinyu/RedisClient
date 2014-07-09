@@ -27,7 +27,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.dto.HashInfo;
-import com.cxy.redisclient.presentation.RedisClientDialog;
+import com.cxy.redisclient.presentation.component.EditTable;
+import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class NewHashDialog extends RedisClientDialog {
 
@@ -112,7 +113,7 @@ public class NewHashDialog extends RedisClientDialog {
 		grpValues.setText("Values");
 		grpValues.setLayout(new GridLayout(4, false));
 
-		table = new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION
+		table = new EditTable(grpValues, SWT.BORDER | SWT.FULL_SELECTION
 				| SWT.MULTI);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 3));
 		table.setHeaderVisible(true);
@@ -191,7 +192,10 @@ public class NewHashDialog extends RedisClientDialog {
 							"please input hash information!");
 				else {
 					for (TableItem item : items) {
-						values.put(item.getText(0), item.getText(1));
+						if((item.getText(0).length() == 0 && item.getText(1).length() > 0) || (item.getText(0).length() > 0 && item.getText(1).length() == 0))
+							throw new RuntimeException("please input whole information: " + item.getText(0) + " " + item.getText(1));
+						if((item.getText(0).length() > 0 && item.getText(1).length() > 0))
+							values.put(item.getText(0), item.getText(1));
 					}
 					result = new HashInfo(key, values);
 					shell.dispose();

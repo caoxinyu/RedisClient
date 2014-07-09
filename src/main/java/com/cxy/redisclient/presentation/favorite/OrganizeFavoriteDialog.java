@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 import com.cxy.redisclient.domain.Favorite;
-import com.cxy.redisclient.presentation.RedisClientDialog;
+import com.cxy.redisclient.presentation.component.RedisClientDialog;
 import com.cxy.redisclient.service.FavoriteService;
 
 public class OrganizeFavoriteDialog extends RedisClientDialog {

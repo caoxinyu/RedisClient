@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.dto.FindInfo;
-import com.cxy.redisclient.presentation.RedisClientDialog;
+import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class FindKeyDialog extends RedisClientDialog {
 

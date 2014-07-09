@@ -27,7 +27,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.dto.ZSetInfo;
-import com.cxy.redisclient.presentation.RedisClientDialog;
+import com.cxy.redisclient.presentation.component.EditTable;
+import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class NewZSetDialog extends RedisClientDialog {
 
@@ -112,7 +113,7 @@ public class NewZSetDialog extends RedisClientDialog {
 		grpValues.setText("Values");
 		grpValues.setLayout(new GridLayout(4, false));
 
-		table = new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION
+		table = new EditTable(grpValues, SWT.BORDER | SWT.FULL_SELECTION
 				| SWT.MULTI);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 3));
 		table.setHeaderVisible(true);
@@ -192,8 +193,10 @@ public class NewZSetDialog extends RedisClientDialog {
 							"please input sorted set information!");
 				else {
 					for (TableItem item : items) {
-						values.put(item.getText(1),
-								Double.valueOf(item.getText(0)));
+						if((item.getText(0).length() == 0 && item.getText(1).length() > 0) || (item.getText(0).length() > 0 && item.getText(1).length() == 0))
+							throw new RuntimeException("please input whole information: " + item.getText(0) + " " + item.getText(1));
+						if((item.getText(0).length() > 0 && item.getText(1).length() > 0))
+							values.put(item.getText(1),	Double.valueOf(item.getText(0)));
 					}
 					result = new ZSetInfo(key, values);
 					shell.dispose();
