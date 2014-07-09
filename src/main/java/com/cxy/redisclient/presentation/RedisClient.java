@@ -401,6 +401,12 @@ public class RedisClient {
 		new MenuItem(menu_Multi, SWT.SEPARATOR);
 		
 		MenuItem mntmExport_2 = new MenuItem(menu_Multi, SWT.NONE);
+		mntmExport_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				export();
+			}
+		});
 		mntmExport_2.setText("export");
 	}
 
@@ -465,6 +471,18 @@ public class RedisClient {
 			}
 		});
 		mntmCopy_2.setText("copy");
+		
+		new MenuItem(menu_key, SWT.SEPARATOR);
+		
+		MenuItem mntmExport_3 = new MenuItem(menu_key, SWT.NONE);
+		mntmExport_3.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				export();
+			}
+			
+		});
+		mntmExport_3.setText("export");
 	}
 
 	private void initTree(SashForm sashForm) {
@@ -1705,17 +1723,6 @@ public class RedisClient {
 	}
 
 	private void export() {
-		TreeItem treeItem;
-		
-		ContainerKeyInfo cinfo = new ContainerKeyInfo();
-		if (itemsSelected[0] instanceof TreeItem) {
-			treeItem = (TreeItem) itemsSelected[0];
-		} else {
-			treeItem = getTreeItemByTableItem((TableItem) itemsSelected[0]);
-		}
-
-		parseContainer(treeItem, cinfo);
-		
 		FileDialog dialog = new FileDialog(shell,SWT.SAVE);
 		dialog.setText("Export redis data file");
 		String[] filterExt = { "*.*" };
@@ -1730,13 +1737,40 @@ public class RedisClient {
 				ok = MessageDialog.openConfirm(shell, "file exists",
 						"File exists, are you sure replace this file?");
 			if(!exist || ok) {
-				ExportService service = new ExportService(file, cinfo.getId(), cinfo.getDb(), cinfo.getContainerStr());
-				try {
-					service.export();
-				} catch (IOException e) {
-					throw new RuntimeException(e.getMessage());
+				for(Item item: itemsSelected){
+					TreeItem treeItem;
+					
+					ContainerKeyInfo cinfo = new ContainerKeyInfo();
+					if (item instanceof TreeItem) {
+						treeItem = (TreeItem) item;
+					} else {
+						treeItem = getTreeItemByTableItem((TableItem) item);
+					}
+	
+					parseContainer(treeItem, cinfo);
+				
+					exportOne(cinfo, file, item);
 				}
 			}
+		}
+	}
+
+	private void exportOne(ContainerKeyInfo cinfo, String file, Item item) {
+		ContainerKey containerKey = cinfo.getContainer();
+		
+		if(item instanceof TableItem){
+			NodeType type = (NodeType) item.getData(NODE_TYPE);
+			if(type != NodeType.CONTAINER){
+				String con = containerKey == null?"":containerKey.getContainerKey();
+				containerKey = new ContainerKey(con + item.getText());
+			}
+		}
+			
+		ExportService service = new ExportService(file, cinfo.getId(), cinfo.getDb(), containerKey);
+		try {
+			service.export();
+		} catch (IOException e) {
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 	private void importFile() {
@@ -1857,8 +1891,15 @@ public class RedisClient {
 		if (server != null) {
 			service1.update(id, server.getName(), server.getHost(),
 					server.getPort());
-			itemsSelected[0].setText(server.getName());
-			rootTreeItemSelected(true);
+			TreeItem treeItem = null;
+			if(itemsSelected[0] instanceof TableItem){
+				treeItem = getTreeItemByTableItem((TableItem) itemsSelected[0]);
+				itemsSelected[0].setText(server.getName());
+			}else
+				treeItem = (TreeItem) itemsSelected[0];
+			
+			treeItem.setText(server.getName());
+			serverTreeItemSelected(treeItem, true);
 		}
 	}
 
