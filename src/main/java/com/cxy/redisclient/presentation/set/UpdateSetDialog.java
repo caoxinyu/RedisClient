@@ -1,19 +1,18 @@
 package com.cxy.redisclient.presentation.set;
 
-import java.util.Set;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Table;
+
+import com.cxy.redisclient.presentation.component.PagingListener;
 
 public class UpdateSetDialog extends NewSetDialog {
-	private Set<String> values;
-	
-	public UpdateSetDialog(Shell parent, Image image, String server, int db,
-			String key, Set<String> values) {
+	private int id;
+	public UpdateSetDialog(Shell parent, Image image, int id, String server, int db,
+			String key) {
 		super(parent, image, server, db, key);
-		this.values = values;
+		this.id = id;
 	}
 
 	@Override
@@ -24,10 +23,11 @@ public class UpdateSetDialog extends NewSetDialog {
 		text.removeModifyListener(new ModifyKey());
 		btnOk.setEnabled(true);
 		
-		for (String value : values) {
-			TableItem item = new TableItem(table, SWT.NONE);
-			item.setText(value);
-		}
+		table.addListener(SWT.SetData, new PagingListener(table, new SetPage(id, db, key)));
 	}
 
+	protected Table getTable() {
+		return new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION
+				| SWT.MULTI | SWT.VIRTUAL);
+	}
 }

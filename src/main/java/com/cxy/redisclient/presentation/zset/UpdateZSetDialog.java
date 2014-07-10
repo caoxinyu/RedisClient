@@ -1,22 +1,19 @@
 package com.cxy.redisclient.presentation.zset;
 
-import java.util.Iterator;
-import java.util.Set;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Table;
 
-import redis.clients.jedis.Tuple;
+import com.cxy.redisclient.presentation.component.PagingListener;
 
 public class UpdateZSetDialog extends NewZSetDialog {
-	private Set<Tuple> values;
+	private int id;
 	
-	public UpdateZSetDialog(Shell parent, Image image, String server, int db,
-			String key, Set<Tuple> values) {
+	public UpdateZSetDialog(Shell parent, Image image, int id, String server, int db,
+			String key) {
 		super(parent, image, server, db, key);
-		this.values = values;
+		this.id = id;
 	}
 	
 	@Override
@@ -27,16 +24,11 @@ public class UpdateZSetDialog extends NewZSetDialog {
 		text.removeModifyListener(new ModifyKey());
 		btnOk.setEnabled(true);
 		
-		Iterator<Tuple> i = values.iterator();
-		
-		while(i.hasNext()) {
-			Tuple entry = i.next();
-			TableItem item = new TableItem(table, SWT.NONE);
-			String[] zvalues = new String[]{Double.toString(entry.getScore()), entry.getElement()};
-			
-			item.setText(zvalues);
-		}
+		table.addListener(SWT.SetData, new PagingListener(table, new ZSetPage(id, db, key)));
 	}
 
-	
+	protected Table getTable() {
+		return new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION
+				| SWT.MULTI | SWT.VIRTUAL);
+	}
 }

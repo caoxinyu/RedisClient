@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.dto.SetInfo;
-import com.cxy.redisclient.presentation.component.EditTable;
+import com.cxy.redisclient.presentation.component.EditListener;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class NewSetDialog extends RedisClientDialog {
@@ -43,12 +43,13 @@ public class NewSetDialog extends RedisClientDialog {
 	}
 
 	private String server;
-	private int db;
-	private String key;
+	protected int db;
+	protected String key;
 	protected Text text;
 	protected Table table;
 	private Button btnDelete;
 	protected Button btnOk;
+	protected Group grpValues;
 
 	/**
 	 * Create the dialog.
@@ -107,14 +108,13 @@ public class NewSetDialog extends RedisClientDialog {
 		text.setFocus();
 		text.addModifyListener(new ModifyKey());
 
-		Group grpValues = new Group(composite, SWT.NONE);
+		grpValues = new Group(composite, SWT.NONE);
 		grpValues.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4,
 				1));
 		grpValues.setText("Values");
 		grpValues.setLayout(new GridLayout(4, false));
 
-		table = new EditTable(grpValues, SWT.BORDER | SWT.FULL_SELECTION
-				| SWT.MULTI);
+		table = getTable();
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 2));
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -123,6 +123,7 @@ public class NewSetDialog extends RedisClientDialog {
 			}
 		});
 		table.setLinesVisible(true);
+		table.addListener(SWT.MouseDown, new EditListener(table));
 
 		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
 		tblclmnNewColumn.setWidth(200);
@@ -204,6 +205,11 @@ public class NewSetDialog extends RedisClientDialog {
 		btnCancel.setText("Cancel");
 
 		super.createContents();
+	}
+
+	protected Table getTable() {
+		return new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION
+				| SWT.MULTI);
 	}
 
 	protected void tableItemSelected() {

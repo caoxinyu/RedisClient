@@ -16,6 +16,7 @@ import com.cxy.redisclient.integration.key.DeleteKey;
 import com.cxy.redisclient.integration.key.DumpKey;
 import com.cxy.redisclient.integration.key.FindContainerKeys;
 import com.cxy.redisclient.integration.key.FindContainerKeysFactory;
+import com.cxy.redisclient.integration.key.GetSize;
 import com.cxy.redisclient.integration.key.IsKeyExist;
 import com.cxy.redisclient.integration.key.ListContainerKeys;
 import com.cxy.redisclient.integration.key.ListContainers;
@@ -261,5 +262,12 @@ public class NodeService {
 		FindContainerKeys command = new FindContainerKeysFactory(id, db, container, searchNodeType, keyPattern, forward).getListContainerAllKeys();
 		command.execute();
 		return command.getKeys();
+	}
+	
+	public long getSize(int id, int db, String key) {
+		GetSize command = new GetSize(id, db, key);
+		command.execute();
+		return command.getSize();
+		
 	}
 }

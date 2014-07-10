@@ -1,18 +1,16 @@
 package com.cxy.redisclient.presentation.list;
 
-import java.util.List;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Table;
+
+import com.cxy.redisclient.presentation.component.PagingListener;
 
 public class UpdateListDialog extends NewListDialog {
-	private List<String> values;
-	public UpdateListDialog(Shell parent, Image image, String server, int db,
-			String key, List<String> values) {
-		super(parent, image, server, db, key);
-		this.values = values;
+	public UpdateListDialog(Shell parent, Image image, int id, String server, int db,
+			String key) {
+		super(parent, image, id, server, db, key);
 	}
 	@Override
 	protected void createContents() {
@@ -22,11 +20,11 @@ public class UpdateListDialog extends NewListDialog {
 		text.setEditable(false);
 		text.removeModifyListener(new ModifyKey());
 		btnOk.setEnabled(true);
-		
-		for (String value : values) {
-			TableItem item = new TableItem(table, SWT.NONE);
-			item.setText(value);
-		}
+		table.addListener(SWT.SetData, new PagingListener(table, new ListPage(id, db, key)));
 	}
 
+	protected Table getTable() {
+		return new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION
+				| SWT.MULTI | SWT.VIRTUAL);
+	}
 }

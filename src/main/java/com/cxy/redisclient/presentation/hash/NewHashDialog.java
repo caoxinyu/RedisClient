@@ -27,7 +27,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.dto.HashInfo;
-import com.cxy.redisclient.presentation.component.EditTable;
+import com.cxy.redisclient.presentation.component.EditListener;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class NewHashDialog extends RedisClientDialog {
@@ -113,7 +113,7 @@ public class NewHashDialog extends RedisClientDialog {
 		grpValues.setText("Values");
 		grpValues.setLayout(new GridLayout(4, false));
 
-		table = new EditTable(grpValues, SWT.BORDER | SWT.FULL_SELECTION
+		table = new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION
 				| SWT.MULTI);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 3));
 		table.setHeaderVisible(true);
@@ -124,6 +124,7 @@ public class NewHashDialog extends RedisClientDialog {
 			}
 		});
 		table.setLinesVisible(true);
+		table.addListener(SWT.MouseDown, new EditListener(table));
 
 		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
 		tblclmnNewColumn.setWidth(132);

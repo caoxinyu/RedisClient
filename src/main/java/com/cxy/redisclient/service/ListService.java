@@ -5,6 +5,7 @@ import java.util.List;
 import com.cxy.redisclient.integration.list.AddList;
 import com.cxy.redisclient.integration.list.InsertList;
 import com.cxy.redisclient.integration.list.ListList;
+import com.cxy.redisclient.integration.list.ListListPage;
 import com.cxy.redisclient.integration.list.RemoveValue;
 import com.cxy.redisclient.integration.list.SetValue;
 import com.cxy.redisclient.integration.list.UpdateList;
@@ -46,4 +47,10 @@ public class ListService {
 		command.execute();
 	}
 	
+	public List<String> getPage(int id, int db, String key, int start, int end) {
+		ListListPage command = new ListListPage(id, db, key, start, end);
+		command.execute();
+		return command.getPage(); 
+		
+	}
 }

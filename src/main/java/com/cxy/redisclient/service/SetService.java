@@ -1,10 +1,12 @@
 package com.cxy.redisclient.service;
 
+import java.util.List;
 import java.util.Set;
 
 import com.cxy.redisclient.integration.set.AddSet;
 import com.cxy.redisclient.integration.set.AddSetFactory;
 import com.cxy.redisclient.integration.set.ListSet;
+import com.cxy.redisclient.integration.set.ListSetPage;
 import com.cxy.redisclient.integration.set.RemoveSet;
 import com.cxy.redisclient.integration.set.RemoveSetFactory;
 
@@ -22,5 +24,11 @@ public class SetService {
 	public void remove(int id, int db, String key, Set<String> values) {
 		RemoveSet command = (RemoveSet) new RemoveSetFactory(id, db, key, values).getCommand();
 		command.execute();
+	}
+	
+	public List<String> getPage(int id, int db, String key, int start, int end) {
+		ListSetPage command = new ListSetPage(id, db, key, start, end);
+		command.execute();
+		return command.getPage();
 	}
 }

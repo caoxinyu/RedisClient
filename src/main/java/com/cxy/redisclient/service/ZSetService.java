@@ -8,6 +8,7 @@ import redis.clients.jedis.Tuple;
 import com.cxy.redisclient.integration.zset.AddZSet;
 import com.cxy.redisclient.integration.zset.AddZSetFactory;
 import com.cxy.redisclient.integration.zset.ListZSet;
+import com.cxy.redisclient.integration.zset.ListZSetPage;
 
 public class ZSetService {
 	public void add(int id, int db, String key, Map<String, Double> values) {
@@ -18,5 +19,10 @@ public class ZSetService {
 		ListZSet command = new ListZSet(id, db, key);
 		command.execute();
 		return command.getValues();
+	}
+	public Set<Tuple> getPage(int id, int db, String key, int start, int end){
+		ListZSetPage command = new ListZSetPage(id, db, key, start, end);
+		command.execute();
+		return command.getPage();
 	}
 }

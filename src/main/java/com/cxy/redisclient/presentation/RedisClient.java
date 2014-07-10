@@ -34,8 +34,6 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import redis.clients.jedis.Tuple;
-
 import com.cxy.redisclient.domain.ContainerKey;
 import com.cxy.redisclient.domain.DataNode;
 import com.cxy.redisclient.domain.Favorite;
@@ -1072,11 +1070,9 @@ public class RedisClient {
 				dbContainerTreeItemSelected(treeItem, false);
 			}
 		} else if(type == NodeType.LIST) {
-			List<String> values = service4.list(cinfo.getId(), cinfo.getDb(), key);
-			
 			UpdateListDialog dialog = new UpdateListDialog(shell,
-					iconImage, cinfo.getServerName(),
-					cinfo.getDb(), key, values);
+					iconImage, cinfo.getId(), cinfo.getServerName(),
+					cinfo.getDb(), key);
 			
 			ListInfo info = (ListInfo)dialog.open();
 			
@@ -1087,11 +1083,9 @@ public class RedisClient {
 				dbContainerTreeItemSelected(treeItem, false);
 			}
 		} else if(type == NodeType.SET) {
-			Set<String> values = service5.list(cinfo.getId(), cinfo.getDb(), key);
-			
 			UpdateSetDialog dialog = new UpdateSetDialog(shell,
-					iconImage, cinfo.getServerName(),
-					cinfo.getDb(), key, values);
+					iconImage, cinfo.getId(), cinfo.getServerName(),
+					cinfo.getDb(), key);
 			
 			SetInfo info = (SetInfo) dialog.open();
 			if (info != null) {
@@ -1101,11 +1095,9 @@ public class RedisClient {
 				dbContainerTreeItemSelected(treeItem, false);
 			}
 		} else if(type == NodeType.SORTEDSET) {
-			Set<Tuple> values = service6.list(cinfo.getId(), cinfo.getDb(), key);
-			
 			UpdateZSetDialog dialog = new UpdateZSetDialog(shell,
-					iconImage, cinfo.getServerName(),
-					cinfo.getDb(), key, values);
+					iconImage, cinfo.getId(), cinfo.getServerName(),
+					cinfo.getDb(), key);
 			
 			ZSetInfo info = (ZSetInfo) dialog.open();
 			if (info != null) {
@@ -2355,7 +2347,7 @@ public class RedisClient {
 		parseContainer(treeItem, cinfo);
 
 		NewListDialog dialog = new NewListDialog(shell,
-				iconImage, cinfo.getServerName(),
+				iconImage, cinfo.getId(), cinfo.getServerName(),
 				cinfo.getDb(), cinfo.getContainerStr());
 		ListInfo info = (ListInfo) dialog.open();
 		if (info != null) {
