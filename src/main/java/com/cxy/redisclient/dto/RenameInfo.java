@@ -3,11 +3,24 @@ package com.cxy.redisclient.dto;
 public class RenameInfo {
 	private String newContainer;
 	private boolean overwritten;
-	public RenameInfo(String newContainer, boolean overwritten) {
+	private boolean renameSub;
+	
+	public RenameInfo(String newContainer, boolean overwritten,
+			boolean renameSub) {
 		super();
 		this.newContainer = newContainer;
 		this.overwritten = overwritten;
+		this.renameSub = renameSub;
 	}
+	
+	public boolean isRenameSub() {
+		return renameSub;
+	}
+
+	public void setRenameSub(boolean renameSub) {
+		this.renameSub = renameSub;
+	}
+
 	public String getNewContainer() {
 		return newContainer;
 	}

@@ -192,7 +192,11 @@ public class NewZSetDialog extends RedisClientDialog {
 				if (key.length() == 0 || items.length == 0)
 					MessageDialog.openError(shell, "error",
 							"please input sorted set information!");
-				else {
+				else if(key.endsWith(":")){
+					MessageDialog.openError(shell, "error",
+							"key name can't end with :");
+					
+				}else {
 					for (TableItem item : items) {
 						if((item.getText(0).length() == 0 && item.getText(1).length() > 0) || (item.getText(0).length() > 0 && item.getText(1).length() == 0))
 							throw new RuntimeException("please input whole information: " + item.getText(0) + " " + item.getText(1));

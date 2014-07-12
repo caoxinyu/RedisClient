@@ -62,4 +62,9 @@ public class NavHistory {
 	public boolean canForward() {
 		return pos < history.size() - 1;
 	}
+	
+	public void clear(){
+		this.history = new LinkedList<TreeItem>();
+		pos = -1;
+	}
 }

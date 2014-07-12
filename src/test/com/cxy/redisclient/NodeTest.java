@@ -38,22 +38,22 @@ public class NodeTest extends TestCase {
 	
 	public void testListContainers() throws IOException {
 		NodeService service2 = new NodeService();
-		Set<Node> nodes = service2.listContainers(1, 0, null);
+		Set<Node> nodes = service2.listContainers(1, 0, null, true);
 		assertEquals(nodes.size(), 8);
 	}
 	
 	public void testListContainerKeys() throws IOException {
 		NodeService service2 = new NodeService();
-		Set<DataNode> nodes = service2.listContainerKeys(1, 0, "sns:post:1:");
+		Set<DataNode> nodes = service2.listContainerKeys(1, 0, "sns:post:1:", false);
 		assertEquals(nodes.size(), 2);
 		
-		nodes = service2.listContainerKeys(1, 0, null);
+		nodes = service2.listContainerKeys(1, 0, null, false);
 		assertEquals(nodes.size(), 7);
 	}
 	
 	public void testRenameContainer() throws IOException {
 		NodeService service2 = new NodeService();
-		service2.renameContainer(1, 0, "com:", "COM:", true);
+		service2.renameContainer(1, 0, "com:", "COM:", true, true);
 		
 	}
 	

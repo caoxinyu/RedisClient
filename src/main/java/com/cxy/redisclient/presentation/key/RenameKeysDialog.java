@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
+import com.cxy.redisclient.domain.ContainerKey;
 import com.cxy.redisclient.dto.RenameInfo;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
@@ -44,7 +45,7 @@ public class RenameKeysDialog extends RedisClientDialog {
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shell.setSize(430, 258);
+		shell.setSize(600, 258);
 		shell.setText("Rename");
 		
 		shell.setLayout(new GridLayout(1, false));
@@ -91,9 +92,19 @@ public class RenameKeysDialog extends RedisClientDialog {
 		});
 		
 		final Button btnCheckButton = new Button(composite, SWT.CHECK);
-		btnCheckButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 4, 1));
+		btnCheckButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		btnCheckButton.setSelection(true);
 		btnCheckButton.setText("Overwritten if exists");
+		
+		final Button btnCheckButton1 = new Button(composite, SWT.CHECK);
+		btnCheckButton1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		btnCheckButton1.setSelection(true);
+		btnCheckButton1.setText("Rename subcontainer under this container");
+		final boolean isKey = new ContainerKey(oldContainer).isKey();
+		if(isKey)
+			btnCheckButton1.setVisible(false);
+		else
+			btnCheckButton1.setVisible(true);
 		
 		Composite composite_1 = new Composite(shell, SWT.NONE);
 		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
@@ -106,11 +117,16 @@ public class RenameKeysDialog extends RedisClientDialog {
 			public void mouseUp(MouseEvent e) {
 				String newContainer = text_2.getText();
 				boolean overwritten = btnCheckButton.getSelection(); 
+				boolean renameSub = btnCheckButton1.getSelection(); 
 				
 				if( newContainer.length() == 0){
 					MessageDialog.openError(shell, "error","please input new key name!");
-				} else {
-					result = new RenameInfo(newContainer, overwritten);
+				} else if(isKey && newContainer.endsWith(":")){
+					MessageDialog.openError(shell, "error",
+							"key name can't end with :");
+					
+				}else {
+					result = new RenameInfo(newContainer, overwritten, renameSub);
 					shell.dispose();
 				}
 			}

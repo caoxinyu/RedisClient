@@ -294,7 +294,11 @@ public class NewListDialog extends RedisClientDialog {
 				if (key.length() == 0 || items.length == 0)
 					MessageDialog.openError(shell, "error",
 							"please input list information!");
-				else {
+				else if(key.endsWith(":")){
+					MessageDialog.openError(shell, "error",
+							"key name can't end with :");
+					
+				}else {
 					for (TableItem item : items) {
 						if(item.getText().length() > 0)
 							values.add(item.getText());

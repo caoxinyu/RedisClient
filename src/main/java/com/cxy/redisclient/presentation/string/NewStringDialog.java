@@ -114,7 +114,11 @@ public class NewStringDialog extends RedisClientDialog {
 				
 				if( key.length() == 0 || value.length() == 0){
 					MessageDialog.openError(shell, "error","please input string information!");
-				} else {
+				} else if(key.endsWith(":")){
+					MessageDialog.openError(shell, "error",
+							"key name can't end with :");
+					
+				}else {
 					result = new StringInfo(key, value);
 					shell.dispose();
 				}

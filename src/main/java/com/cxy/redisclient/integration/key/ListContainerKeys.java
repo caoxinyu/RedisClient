@@ -17,31 +17,35 @@ public class ListContainerKeys extends JedisCommand {
 	private Set<DataNode> keys = new TreeSet<DataNode>();
 	private Order order;
 	private OrderBy orderBy;
+	private boolean flat;
 	
 	public Set<DataNode> getKeys() {
 		return keys;
 	}
 
-	public ListContainerKeys(int id, int db, String key, Order order, OrderBy orderBy) {
+	public ListContainerKeys(int id, int db, String key, boolean flat, Order order, OrderBy orderBy) {
 		super(id);
 		this.db = db;
 		this.key = key;
 		this.order = order;
+		this.flat = flat;
 		this.orderBy = orderBy;
 	}
 	
-	public ListContainerKeys(int id, int db, String key, Order order) {
+	public ListContainerKeys(int id, int db, String key, boolean flat, Order order) {
 		super(id);
 		this.db = db;
 		this.key = key;
 		this.order = order;
+		this.flat = flat;
 		this.orderBy = OrderBy.NAME;
 	}
 	
-	public ListContainerKeys(int id, int db, String key) {
+	public ListContainerKeys(int id, int db, String key, boolean flat) {
 		super(id);
 		this.db = db;
 		this.key = key;
+		this.flat = flat;
 		this.order = Order.Ascend;
 		this.orderBy = OrderBy.NAME;
 	}
@@ -67,7 +71,11 @@ public class ListContainerKeys extends JedisCommand {
 				NodeType nodeType = getValueType(nextKey);
 				long size = getSize(nextKey);
 				
-				DataNode node = new DataNode(id, db, ckey[0], nodeType, size, order, orderBy);
+				DataNode node;
+				if(!flat)
+					node = new DataNode(id, db, ckey[0], nodeType, size, order, orderBy);
+				else
+					node = new DataNode(id, db, nextKey, nodeType, size, order, orderBy);
 				keys.add(node);
 			}
 		}

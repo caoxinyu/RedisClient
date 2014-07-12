@@ -54,6 +54,7 @@ import com.cxy.redisclient.presentation.favorite.AddFavoriteDialog;
 import com.cxy.redisclient.presentation.favorite.OrganizeFavoriteDialog;
 import com.cxy.redisclient.presentation.hash.NewHashDialog;
 import com.cxy.redisclient.presentation.hash.UpdateHashDialog;
+import com.cxy.redisclient.presentation.key.DeleteContainerDialog;
 import com.cxy.redisclient.presentation.key.FindKeyDialog;
 import com.cxy.redisclient.presentation.key.RenameKeysDialog;
 import com.cxy.redisclient.presentation.list.NewListDialog;
@@ -84,6 +85,7 @@ public class RedisClient {
 	private PasteBuffer pBuffer = new PasteBuffer();;
 	private FindBuffer fBuffer = null;
 	private NavHistory history = new NavHistory();
+	private boolean flatView = false;
 	
 	private TreeItem rootRedisServers;
 
@@ -136,6 +138,7 @@ public class RedisClient {
 	private Image refreshImage;
 	private Image iconImage;
 	private Image codeImage;
+	private Image questionImage;
 
 	private TableColumn tblclmnName;
 	private TableColumn tblclmnType;
@@ -224,6 +227,9 @@ public class RedisClient {
 		
 		codeImage = new Image(shell.getDisplay(), getClass()
 				.getResourceAsStream("/code.png"));
+		
+		questionImage = new Image(shell.getDisplay(), getClass()
+				.getResourceAsStream("/question.png"));
 	}
 
 	private void initShell() {
@@ -537,11 +543,17 @@ public class RedisClient {
 		TreeItem parent = item.getParentItem();
 		if (item.getData(NODE_TYPE) == NodeType.CONTAINER) {
 			String container = item.getText();
-			if (info.getContainerStr() != null)
-				info.setContainer(new ContainerKey(container + ":" + info.getContainerStr()));
-			else
-				info.setContainer(new ContainerKey(container + ":"));
-
+			if (info.getContainerStr() != null){
+				if(!flatView)
+					info.setContainer(new ContainerKey(container + ":" + info.getContainerStr()));
+				else
+					info.setContainer(new ContainerKey(container + info.getContainerStr()));
+			}else{
+				if(!flatView)
+					info.setContainer(new ContainerKey(container + ":"));
+				else
+					info.setContainer(new ContainerKey(container));
+			}
 			parseContainer(parent, info);
 		} else if (item.getData(NODE_TYPE) == NodeType.DATABASE) {
 			int db = (Integer) item.getData(NODE_ID);
@@ -766,7 +778,7 @@ public class RedisClient {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
-				logger.info("table double clicked");
+				logger.debug("table double clicked");
 				TreeItem[] treeItems = tree.getSelection();
 				Point point = new Point(e.x, e.y);
 				TableItem selectedItem = table.getItem(point);
@@ -928,7 +940,7 @@ public class RedisClient {
 	}
 
 	private void tableItemSelected() {
-		logger.info("table selected");
+		logger.debug("table selected");
 		
 		TableItem[] items = table.getSelection();
 		if(items.length == 1){	
@@ -1268,7 +1280,7 @@ public class RedisClient {
 		shell.setMenuBar(menu);
 
 		MenuItem mntmServer = new MenuItem(menu, SWT.CASCADE);
-		mntmServer.setText("&Server");
+		mntmServer.setText("Server");
 
 		menuServer = new Menu(mntmServer);
 		mntmServer.setMenu(menuServer);
@@ -1535,17 +1547,57 @@ public class RedisClient {
 		mntmFindBackward_1.setText("Find backward\tCtrl+F3");
 		mntmFindBackward_1.setAccelerator(SWT.CTRL+SWT.F3);
 		
-		new MenuItem(menuData, SWT.SEPARATOR);
-
-		MenuItem mntmRefresh_1 = new MenuItem(menuData, SWT.NONE);
-		mntmRefresh_1.addSelectionListener(new SelectionAdapter() {
+		MenuItem mntmView = new MenuItem(menu, SWT.CASCADE);
+		mntmView.setText("View");
+		
+		Menu menu_1 = new Menu(mntmView);
+		mntmView.setMenu(menu_1);
+		
+		MenuItem mntmHierarchy = new MenuItem(menu_1, SWT.RADIO);
+		mntmHierarchy.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(flatView == true){
+					flatView = false;
+					refreshDB();
+				}
+			}
+		});
+		mntmHierarchy.setSelection(true);
+		mntmHierarchy.setText("Hierarchy");
+		
+		MenuItem mntmFlat = new MenuItem(menu_1, SWT.RADIO);
+		mntmFlat.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(flatView == false){
+					flatView = true;
+					refreshDB();
+				}
+			}
+		});
+		mntmFlat.setText("Flat");
+		
+		new MenuItem(menu_1, SWT.SEPARATOR);
+		
+		MenuItem mntmEnglish = new MenuItem(menu_1, SWT.RADIO);
+		mntmEnglish.setSelection(true);
+		mntmEnglish.setText("English");
+		
+		MenuItem menuItem = new MenuItem(menu_1, SWT.RADIO);
+		menuItem.setText("中文");
+		
+		new MenuItem(menu_1, SWT.SEPARATOR);
+		
+		MenuItem menuItem_1 = new MenuItem(menu_1, SWT.NONE);
+		menuItem_1.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				treeItemSelected(true);
 			}
 		});
-		mntmRefresh_1.setText("Refresh\tF5");
-		mntmRefresh_1.setAccelerator(SWT.F5);
+		menuItem_1.setText("Refresh\tF5");
+		menuItem_1.setAccelerator(SWT.F5);
 
 		MenuItem mntmFavorites = new MenuItem(menu, SWT.CASCADE);
 		mntmFavorites.setText("Favorites");
@@ -1965,7 +2017,7 @@ public class RedisClient {
 		if (rinfo != null) {
 			Set<String> result = service2.renameContainer(cinfo.getId(),
 					cinfo.getDb(), cinfo.getContainerStr(),
-					rinfo.getNewContainer(), rinfo.isOverwritten());
+					rinfo.getNewContainer(), rinfo.isOverwritten(), rinfo.isRenameSub());
 			treeItem.getParentItem().setData(ITEM_OPENED, false);
 			dbContainerTreeItemSelected(treeItem.getParentItem(), false);
 			if (!rinfo.isOverwritten() && result.size() > 0) {
@@ -1978,7 +2030,7 @@ public class RedisClient {
 		}
 	}
 
-	private void deleteCotainer(Item item) {
+	private void deleteCotainer(Item item, boolean deleteSub) {
 			TreeItem treeItem;
 
 			ContainerKeyInfo cinfo = new ContainerKeyInfo();
@@ -1990,7 +2042,8 @@ public class RedisClient {
 			parseContainer(treeItem, cinfo);
 
 			service2.deleteContainer(cinfo.getId(), cinfo.getDb(),
-					cinfo.getContainerStr());
+					cinfo.getContainerStr(), deleteSub);
+			
 			if (item instanceof TableItem) {
 				treeItem.dispose();
 			}
@@ -2059,40 +2112,42 @@ public class RedisClient {
 
 		dbContainerItemSelected(itemSelected);
 
-		Set<Node> cnodes = service2.listContainers(info.getId(), info.getDb(),
-				info.getContainerStr());
-
-		if (itemSelected.getData(ITEM_OPENED) == null
-				|| ((Boolean) (itemSelected.getData(ITEM_OPENED)) == false)) {
-			itemSelected.removeAll();
-
-			for (Node node : cnodes) {
-				TreeItem item = new TreeItem(itemSelected, SWT.NONE);
-				item.setText(node.getKey());
-				item.setData(NODE_TYPE, node.getType());
-				item.setImage(containerImage);
-
-			}
-			itemSelected.setExpanded(true);
-			itemSelected.setData(ITEM_OPENED, true);
-		} else if (refresh) {
-			for(Node node: cnodes){
-				if(!findItemByNode(itemSelected, node)){
+		NodeType type = (NodeType) itemSelected.getData(NODE_TYPE);
+		if(!(type == NodeType.CONTAINER && flatView)){
+			Set<Node> cnodes = service2.listContainers(info.getId(), info.getDb(),
+					info.getContainerStr(), flatView);
+	
+			if (itemSelected.getData(ITEM_OPENED) == null
+					|| ((Boolean) (itemSelected.getData(ITEM_OPENED)) == false)) {
+				itemSelected.removeAll();
+	
+				for (Node node : cnodes) {
 					TreeItem item = new TreeItem(itemSelected, SWT.NONE);
 					item.setText(node.getKey());
 					item.setData(NODE_TYPE, node.getType());
 					item.setImage(containerImage);
+	
 				}
-			}
-			
-			TreeItem[] items = itemSelected.getItems();
-			for(TreeItem item: items){
-				if(!findNodeByItem(cnodes, item)){
-					item.dispose();
+				itemSelected.setExpanded(true);
+				itemSelected.setData(ITEM_OPENED, true);
+			} else if (refresh) {
+				for(Node node: cnodes){
+					if(!findItemByNode(itemSelected, node)){
+						TreeItem item = new TreeItem(itemSelected, SWT.NONE);
+						item.setText(node.getKey());
+						item.setData(NODE_TYPE, node.getType());
+						item.setImage(containerImage);
+					}
+				}
+				
+				TreeItem[] items = itemSelected.getItems();
+				for(TreeItem item: items){
+					if(!findNodeByItem(cnodes, item)){
+						item.dispose();
+					}
 				}
 			}
 		}
-		
 
 		tableItemOrderSelected(info, Order.Ascend, OrderBy.NAME);
 		table.setSortColumn(null);
@@ -2163,20 +2218,23 @@ public class RedisClient {
 
 	private void tableItemOrderSelected(ContainerKeyInfo info, Order order,
 			OrderBy orderBy) {
-		Set<Node> cnodes = service2.listContainers(info.getId(), info.getDb(),
-				info.getContainerStr(), order);
-
 		table.removeAll();
-		for (Node node : cnodes) {
-			TableItem item = new TableItem(table, SWT.NONE);
-			item.setText(new String[] { node.getKey(),
-					node.getType().toString() });
-			item.setImage(containerImage);
-			item.setData(NODE_TYPE, node.getType());
+		
+		if(!flatView){
+			Set<Node> cnodes = service2.listContainers(info.getId(), info.getDb(),
+					info.getContainerStr(), flatView, order);
+	
+			for (Node node : cnodes) {
+				TableItem item = new TableItem(table, SWT.NONE);
+				item.setText(new String[] { node.getKey(),
+						node.getType().toString() });
+				item.setImage(containerImage);
+				item.setData(NODE_TYPE, node.getType());
+			}
 		}
-
+		
 		Set<DataNode> knodes = service2.listContainerKeys(info.getId(),
-				info.getDb(), info.getContainerStr(), order, orderBy);
+				info.getDb(), info.getContainerStr(), false, order, orderBy);
 
 		for (DataNode node1 : knodes) {
 			TableItem item = new TableItem(table, SWT.NONE);
@@ -2616,15 +2674,15 @@ public class RedisClient {
 		}
 	}
 
-	private TreeItem gotoDBContainer(int id, int db, String container, boolean isKey, boolean refresh) {
+	private TreeItem gotoDBContainer(int id, int db, String container, boolean isKey, boolean refresh)  {
 		rootTreeItemSelected(false);
 		TreeItem dbItem = findDBTreeItem(id, db);
 		TreeItem dataItemSelected = dbItem;
 		
-		if(dbItem != null) {
-			dbContainerTreeItemSelected(dbItem,	refresh);
-			TreeItem[] dataItems = dbItem.getItems();
-						
+		dbContainerTreeItemSelected(dbItem,	refresh);
+		TreeItem[] dataItems = dbItem.getItems();
+			
+		if(!flatView){
 			String[] containers = container.split(":");
 			if(!isKey){
 				for (int i = 0; i < containers.length; i++) {
@@ -2662,39 +2720,75 @@ public class RedisClient {
 					}
 						
 				}
+	
+			}
+		}else{
+			if(!isKey){
+				for (TreeItem dataItem : dataItems) {
+					if (dataItem.getText().equals(container)) {
+						tree.setSelection(dataItem);
+						tree.setFocus();
+						dbContainerTreeItemSelected(dataItem, refresh);
+						dataItems = dataItem.getItems();
+						dataItemSelected = dataItem;
+						break;
+					}
+				}
+			} else {
+				for (TreeItem dataItem : dataItems) {
+					String containerOnly = new ContainerKey(container).getContainerOnly();
+					if (dataItem.getText().equals(containerOnly)) {
+						tree.setSelection(dataItem);
+						dbContainerTreeItemSelected(dataItem, false);
+						dataItems = dataItem.getItems();
+						dataItemSelected = dataItem;
+						break;
+					}
+				}
+
+				TableItem[] tableItems = table.getItems();
+				for(TableItem tableItem : tableItems) {
+					NodeType type = (NodeType) tableItem.getData(NODE_TYPE);
+					String keyOnly = new ContainerKey(container).getKeyOnly();
+					if(type != NodeType.SERVER && type != NodeType.DATABASE && type != NodeType.CONTAINER && tableItem.getText().equals(keyOnly)){
+						table.setSelection(tableItem);
+						table.setFocus();
+						tableItemSelected();
+						break;
+					}
+						
+				}
+	
 			}
 		}
 
 		return dataItemSelected;
 	}
 	
-	private TreeItem findServerTreeItem(int id){
+	private TreeItem findServerTreeItem(int id) {
 		TreeItem[] treeItems = rootRedisServers.getItems();
 		for (TreeItem treeItem : treeItems) {
 			int serverId = (Integer) treeItem.getData(NODE_ID);
 			if (serverId == id) 
 				return treeItem;
 		}
-		return null;
+		throw new RuntimeException("Can't find the server, please check if the server is removed");
 	}
 	
-	private TreeItem findDBTreeItem(int id, int db) {
+	private TreeItem findDBTreeItem(int id, int db)  {
 		TreeItem server = findServerTreeItem(id);
-		if(server == null)
-			return null;
-		else {
-			serverTreeItemSelected(server, false);
-			TreeItem[] dbItems = server.getItems();
-			for (TreeItem dbItem : dbItems) {
-				if (dbItem.getText().equals(DB_PREFIX+db)) 
-					return dbItem;
-			}
-			return null;
+		
+		serverTreeItemSelected(server, false);
+		TreeItem[] dbItems = server.getItems();
+		for (TreeItem dbItem : dbItems) {
+			if (dbItem.getText().equals(DB_PREFIX+db)) 
+				return dbItem;
 		}
+		throw new RuntimeException("Can't find the database");
 	}
 
 	private void selectTreeItem() {
-		logger.info("tree selected");
+		logger.debug("tree selected");
 		TreeItem[] items = tree.getSelection();
 
 		if((itemsSelected[0] instanceof TreeItem && items[0] != itemsSelected[0]) ) {
@@ -2721,10 +2815,20 @@ public class RedisClient {
 	}
 
 	private void deleteOneContainer() {
-		boolean ok = MessageDialog.openConfirm(shell, "delete keys",
-				"Are you sure delete all keys under it?");
-		if (ok) 
-			deleteCotainer(itemsSelected[0]);
+		DeleteContainerDialog dialog = new DeleteContainerDialog(shell, iconImage, questionImage, 1);
+		Boolean deleteSub = (Boolean) dialog.open();
+		if (deleteSub != null) {
+			TreeItem treeItem;
+			if(itemsSelected[0] instanceof TableItem)
+				treeItem = getTreeItemByTableItem((TableItem) itemsSelected[0]).getParentItem();
+			else
+				treeItem = ((TreeItem) itemsSelected[0]).getParentItem();
+			
+			deleteCotainer(itemsSelected[0], deleteSub);
+		
+			treeItem.setData(ITEM_OPENED, false);
+			dbContainerTreeItemSelected(treeItem, true);
+		}
 	}
 
 	private void deleteOneKey() {
@@ -2735,17 +2839,58 @@ public class RedisClient {
 	}
 
 	private void deleteKeys() {
-		boolean ok = MessageDialog.openConfirm(shell, "delete keys",
-				"Are you sure delete these keys?");
-		if (ok) {
+		TableItem containerItem = findContainerTableItem();
+		
+		DeleteContainerDialog dialog = new DeleteContainerDialog(shell, iconImage, questionImage, containerItem == null? 0: -1);
+		Boolean deleteSub = (Boolean) dialog.open();
+		if (deleteSub != null) {
+			TreeItem treeItem = null;
+			if(containerItem != null)
+				treeItem = getTreeItemByTableItem(containerItem).getParentItem();
+			
 			for(Item item: itemsSelected){
 				NodeType type = (NodeType) item.getData(NODE_TYPE);
 				if(type == NodeType.CONTAINER){
-					deleteCotainer(item);
+					deleteCotainer(item, deleteSub);
 				}else{
 					deleteKey(item);
 				}
 			}
+			if(containerItem != null){
+				treeItem.setData(ITEM_OPENED, false);
+				dbContainerTreeItemSelected(treeItem, true);
+			}
+			
 		}
+	}
+	
+	private TableItem findContainerTableItem() {
+		for(Item item: itemsSelected){
+			NodeType type = (NodeType) item.getData(NODE_TYPE);
+			if(type == NodeType.CONTAINER)
+				return (TableItem) item;
+		}
+		return null;
+	}
+
+	private void refreshDB() {
+		TreeItem[] serverItems = rootRedisServers.getItems();
+		for(TreeItem item: serverItems){
+			if(item.getData(ITEM_OPENED) != null && ((Boolean) (item.getData(ITEM_OPENED)) == true)){
+				TreeItem[] dbItems = item.getItems();
+				for(TreeItem dbItem: dbItems){
+					if(dbItem.getData(ITEM_OPENED) != null && ((Boolean) (dbItem.getData(ITEM_OPENED)) == true))
+						dbItem.setData(ITEM_OPENED, false);;
+						dbItem.removeAll();
+						dbItem.setExpanded(false);
+				}
+				
+			}
+		}
+		rootTreeItemSelected(true);
+		history.clear();
+		history.add(rootRedisServers);
+		btnBackward.setEnabled(false);
+		btnForward.setEnabled(false);
 	}
 }

@@ -64,28 +64,28 @@ public class NodeService {
 		return command.getNodes();
 	}
 	
-	public Set<Node> listContainers(int id, int db, String key, Order order) {
-		ListContainers command = new ListContainers(id, db, key, order);
+	public Set<Node> listContainers(int id, int db, String key, boolean flat, Order order) {
+		ListContainers command = new ListContainers(id, db, key, flat, order);
 		command.execute();
 		return command.getContainers();
 		
 	}
 	
-	public Set<Node> listContainers(int id, int db, String key) {
-		ListContainers command = new ListContainers(id, db, key);
+	public Set<Node> listContainers(int id, int db, String key, boolean flat) {
+		ListContainers command = new ListContainers(id, db, key, flat);
 		command.execute();
 		return command.getContainers();
 		
 	}
 	
-	public Set<DataNode> listContainerKeys(int id, int db, String key, Order order, OrderBy orderBy) {
-		ListContainerKeys command = new ListContainerKeys(id, db, key, order, orderBy);
+	public Set<DataNode> listContainerKeys(int id, int db, String key, boolean flat, Order order, OrderBy orderBy) {
+		ListContainerKeys command = new ListContainerKeys(id, db, key, flat, order, orderBy);
 		command.execute();
 		return command.getKeys();
 	}
 	
-	public Set<DataNode> listContainerKeys(int id, int db, String key) {
-		ListContainerKeys command = new ListContainerKeys(id, db, key);
+	public Set<DataNode> listContainerKeys(int id, int db, String key, boolean flat) {
+		ListContainerKeys command = new ListContainerKeys(id, db, key, flat);
 		command.execute();
 		return command.getKeys();
 	}
@@ -96,32 +96,56 @@ public class NodeService {
 		return command.getKeys();
 	}
 	
-	public Set<String> renameContainer(int id, int db, String oldContainer, String newContainer, boolean overwritten) {
+	public Set<String> renameContainer(int id, int db, String oldContainer, String newContainer, boolean overwritten, boolean renameSub) {
 		Set<String> failContainer = new HashSet<String>();
 		
-		FindContainerKeys command = new FindContainerKeysFactory(id, db, oldContainer, "*").getListContainerAllKeys();
-		command.execute();
-		Set<Node> nodes = command.getKeys();
-		
-		for(Node node: nodes) {
-			String newKey = node.getKey().replaceFirst(oldContainer, newContainer);
-			RenameKey command1 = new RenameKey(id, db, node.getKey(), newKey, overwritten);
-			command1.execute();
-			if(!overwritten && command1.getResult() == 0)
-				failContainer.add(newKey);
+		if(renameSub){
+			FindContainerKeys command = new FindContainerKeysFactory(id, db, oldContainer, "*").getListContainerAllKeys();
+			command.execute();
+			Set<Node> nodes = command.getKeys();
+			
+			for(Node node: nodes) {
+				renameKey(id, db, oldContainer, newContainer, overwritten,
+						failContainer, node);
+			}
+		}else{
+			Set<DataNode> nodes = listContainerKeys(id, db, oldContainer, true);
+			
+			for(Node node: nodes) {
+				renameKey(id, db, oldContainer, newContainer, overwritten,
+						failContainer, node);
+			}
 		}
+		
 		
 		return failContainer;
 	}
+
+	private void renameKey(int id, int db, String oldContainer,
+			String newContainer, boolean overwritten,
+			Set<String> failContainer, Node node) {
+		String newKey = node.getKey().replaceFirst(oldContainer, newContainer);
+		RenameKey command1 = new RenameKey(id, db, node.getKey(), newKey, overwritten);
+		command1.execute();
+		if(!overwritten && command1.getResult() == 0)
+			failContainer.add(newKey);
+	}
 	
-	public void deleteContainer(int id, int db, String container) {
-		FindContainerKeys command = new FindContainerKeysFactory(id, db, container, "*").getListContainerAllKeys();
-		command.execute();
-		Set<Node> nodes = command.getKeys();
-		
-		for(Node node: nodes) {
-			DeleteKey command1 = new DeleteKey(id, db, node.getKey());
-			command1.execute();
+	public void deleteContainer(int id, int db, String container, boolean deleteSub) {
+		if(deleteSub){
+			FindContainerKeys command = new FindContainerKeysFactory(id, db, container, "*").getListContainerAllKeys();
+			command.execute();
+			Set<Node> nodes = command.getKeys();
+			
+			for(Node node: nodes) {
+				deleteKey(id, db, node.getKey());
+			}
+		}else{
+			Set<DataNode> nodes = listContainerKeys(id, db, container, true);
+			
+			for(Node node: nodes) {
+				deleteKey(id, db, node.getKey());
+			}
 		}
 	}
 	
