@@ -76,7 +76,7 @@ public class NewListDialog extends RedisClientDialog {
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shell.setSize(805, 638);
+		shell.setSize(966, 638);
 		shell.setText("New List");
 
 		shell.setLayout(new GridLayout(1, false));

@@ -124,6 +124,7 @@ public class OrganizeFavoriteDialog extends RedisClientDialog {
 		
 		Button btnOk = new Button(composite, SWT.NONE);
 		btnOk.addSelectionListener(new SelectionAdapter() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				TableItem[] items = table.getItems();

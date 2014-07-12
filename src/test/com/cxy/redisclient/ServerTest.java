@@ -58,6 +58,7 @@ public class ServerTest extends TestCase {
 	public void testListAll() throws IOException {
 		ServerService service = new ServerService();
 		List<Server> servers = service.listAll();
+		servers.size();
 	}
 	
 	public void testUpdate() throws IOException {

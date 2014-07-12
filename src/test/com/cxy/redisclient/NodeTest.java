@@ -11,9 +11,7 @@ import junit.framework.TestCase;
 import com.cxy.redisclient.domain.DataNode;
 import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
-import com.cxy.redisclient.domain.Server;
 import com.cxy.redisclient.service.NodeService;
-import com.cxy.redisclient.service.ServerService;
 
 public class NodeTest extends TestCase {
 

@@ -35,7 +35,7 @@ public class DeleteContainerDialog extends RedisClientDialog {
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shell.setSize(380, 150);
+		shell.setSize(500, 200);
 		shell.setText("Delete");
 		shell.setLayout(new GridLayout(2, false));
 		

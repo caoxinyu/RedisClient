@@ -1558,8 +1558,15 @@ public class RedisClient {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(flatView == true){
+					TreeItem treeItem = (TreeItem) itemsSelected[0];
+
+					ContainerKeyInfo cinfo = new ContainerKeyInfo();
+					parseContainer(treeItem, cinfo);
+					
 					flatView = false;
 					refreshDB();
+					
+					gotoDBContainer(cinfo.getId(), cinfo.getDb(), cinfo.getContainerStr(), false, false);
 				}
 			}
 		});
@@ -1571,8 +1578,15 @@ public class RedisClient {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(flatView == false){
+					TreeItem treeItem = (TreeItem) itemsSelected[0];
+
+					ContainerKeyInfo cinfo = new ContainerKeyInfo();
+					parseContainer(treeItem, cinfo);
+					
 					flatView = true;
 					refreshDB();
+					
+					gotoDBContainer(cinfo.getId(), cinfo.getDb(), cinfo.getContainerStr(), false, false);
 				}
 			}
 		});
@@ -1622,6 +1636,7 @@ public class RedisClient {
 				OrganizeFavoriteDialog dialog = new OrganizeFavoriteDialog(
 						shell, iconImage);
 
+				@SuppressWarnings("unchecked")
 				List<Favorite> favorites = (List<Favorite>) dialog.open();
 				if (favorites != null) {
 					service3.updateList(favorites);
