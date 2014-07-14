@@ -5,6 +5,8 @@ This is a redis client GUI tool written by Java SWT and Jedis. It's my objective
 
 ![My image](https://github.com/caoxinyu/RedisClient/raw/master/src/main/resources/screen.png)
 
+<a href='http://sj.zol.com.cn/'><img src='http://icon.zol-img.com.cn/xiazai/image/logos.png'></a>
+
 --------
 
 ## Features
