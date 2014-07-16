@@ -35,6 +35,11 @@ public class NodeService {
 	}
 	
 	public String readString(int id, int db, String key) {
+		IsKeyExist command1 = new IsKeyExist(id, db, key);
+		command1.execute();
+		if(!command1.isExist())
+			throw new KeyNotExistException(id, db, key);
+		
 		ReadString command = new ReadString(id, db, key);
 		command.execute();
 		return command.getValue();

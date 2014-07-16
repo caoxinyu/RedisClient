@@ -16,6 +16,8 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
+import com.cxy.redisclient.integration.I18nFile;
+import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class AddFavoriteDialog extends RedisClientDialog {
@@ -36,7 +38,7 @@ public class AddFavoriteDialog extends RedisClientDialog {
 	 */
 	protected void createContents() {
 		shell.setSize(373, 221);
-		shell.setText("Add favorite");
+		shell.setText(RedisClient.i18nFile.getText(I18nFile.ADDFAVORITE));
 		shell.setLayout(new GridLayout(1, false));
 		
 		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
@@ -44,14 +46,14 @@ public class AddFavoriteDialog extends RedisClientDialog {
 		tabFolder.setSize(290, 90);
 		
 		TabItem tbtmString = new TabItem(tabFolder, SWT.NONE);
-		tbtmString.setText("Favorite");
+		tbtmString.setText(RedisClient.i18nFile.getText(I18nFile.FAVORITE));
 		
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tbtmString.setControl(composite);
 		composite.setLayout(new GridLayout(2, false));
 		
 		Label lblNewKey = new Label(composite, SWT.NONE);
-		lblNewKey.setText("Name");
+		lblNewKey.setText(RedisClient.i18nFile.getText(I18nFile.NAME));
 		
 		final Text text_2 = new Text(composite, SWT.BORDER);
 		text_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
@@ -70,14 +72,14 @@ public class AddFavoriteDialog extends RedisClientDialog {
 				String name = text_2.getText();
 				
 				if( name.length() == 0){
-					MessageDialog.openError(shell, "error","please input favorite name!");
+					MessageDialog.openError(shell, RedisClient.i18nFile.getText(I18nFile.ERROR),RedisClient.i18nFile.getText(I18nFile.INPUTFAVORITE));
 				} else {
 					result = name;
 					shell.dispose();
 				}
 			}
 		});
-		button.setText("OK");
+		button.setText(RedisClient.i18nFile.getText(I18nFile.OK));
 		
 		Button button_1 = new Button(composite_1, SWT.NONE);
 		button_1.addMouseListener(new MouseAdapter() {
@@ -86,7 +88,7 @@ public class AddFavoriteDialog extends RedisClientDialog {
 				shell.dispose();
 			}
 		});
-		button_1.setText("Cancel");
+		button_1.setText(RedisClient.i18nFile.getText(I18nFile.CANCEL));
 		
 		super.createContents();
 	}

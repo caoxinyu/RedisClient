@@ -20,6 +20,8 @@ import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.domain.ContainerKey;
 import com.cxy.redisclient.dto.RenameInfo;
+import com.cxy.redisclient.integration.I18nFile;
+import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class RenameKeysDialog extends RedisClientDialog {
@@ -46,7 +48,7 @@ public class RenameKeysDialog extends RedisClientDialog {
 	 */
 	protected void createContents() {
 		shell.setSize(600, 258);
-		shell.setText("Rename");
+		shell.setText(RedisClient.i18nFile.getText(I18nFile.RENAME));
 		
 		shell.setLayout(new GridLayout(1, false));
 		
@@ -55,26 +57,26 @@ public class RenameKeysDialog extends RedisClientDialog {
 		tabFolder.setSize(290, 122);
 		
 		TabItem tbtmString = new TabItem(tabFolder, SWT.NONE);
-		tbtmString.setText("Key");
+		tbtmString.setText(RedisClient.i18nFile.getText(I18nFile.KEY));
 		
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tbtmString.setControl(composite);
 		composite.setLayout(new GridLayout(4, true));
 		
 		Label lblKey = new Label(composite, SWT.NONE);
-		lblKey.setText("Server");
+		lblKey.setText(RedisClient.i18nFile.getText(I18nFile.SERVER));
 		
 		Label label_1 = new Label(composite, SWT.NONE);
 		label_1.setText(server);
 		
 		Label lblDatabase = new Label(composite, SWT.NONE);
-		lblDatabase.setText("Database");
+		lblDatabase.setText(RedisClient.i18nFile.getText(I18nFile.DATABASE));
 		
 		Label label_3 = new Label(composite, SWT.NONE);
 		label_3.setText(String.valueOf(db));
 		
 		Label lblNewKey = new Label(composite, SWT.NONE);
-		lblNewKey.setText("New key");
+		lblNewKey.setText(RedisClient.i18nFile.getText(I18nFile.NEWKEY));
 		
 		text_2 = new Text(composite, SWT.BORDER);
 		text_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
@@ -94,12 +96,12 @@ public class RenameKeysDialog extends RedisClientDialog {
 		final Button btnCheckButton = new Button(composite, SWT.CHECK);
 		btnCheckButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		btnCheckButton.setSelection(true);
-		btnCheckButton.setText("Overwritten if exists");
+		btnCheckButton.setText(RedisClient.i18nFile.getText(I18nFile.OVERWRITTEN));
 		
 		final Button btnCheckButton1 = new Button(composite, SWT.CHECK);
 		btnCheckButton1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		btnCheckButton1.setSelection(true);
-		btnCheckButton1.setText("Rename subcontainer under this container");
+		btnCheckButton1.setText(RedisClient.i18nFile.getText(I18nFile.RENAMESUB));
 		final boolean isKey = new ContainerKey(oldContainer).isKey();
 		if(isKey)
 			btnCheckButton1.setVisible(false);
@@ -120,10 +122,10 @@ public class RenameKeysDialog extends RedisClientDialog {
 				boolean renameSub = btnCheckButton1.getSelection(); 
 				
 				if( newContainer.length() == 0){
-					MessageDialog.openError(shell, "error","please input new key name!");
+					MessageDialog.openError(shell, RedisClient.i18nFile.getText(I18nFile.ERROR),RedisClient.i18nFile.getText(I18nFile.INPUTNEWKEY));
 				} else if(isKey && newContainer.endsWith(":")){
-					MessageDialog.openError(shell, "error",
-							"key name can't end with :");
+					MessageDialog.openError(shell, RedisClient.i18nFile.getText(I18nFile.ERROR),
+							RedisClient.i18nFile.getText(I18nFile.KEYENDERROR)+ ":");
 					
 				}else {
 					result = new RenameInfo(newContainer, overwritten, renameSub);
@@ -131,7 +133,7 @@ public class RenameKeysDialog extends RedisClientDialog {
 				}
 			}
 		});
-		button.setText("OK");
+		button.setText(RedisClient.i18nFile.getText(I18nFile.OK));
 		
 		Button button_1 = new Button(composite_1, SWT.NONE);
 		button_1.addMouseListener(new MouseAdapter() {
@@ -140,7 +142,7 @@ public class RenameKeysDialog extends RedisClientDialog {
 				shell.dispose();
 			}
 		});
-		button_1.setText("Cancel");
+		button_1.setText(RedisClient.i18nFile.getText(I18nFile.CANCEL));
 
 		super.createContents();
 	}

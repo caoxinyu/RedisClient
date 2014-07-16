@@ -27,6 +27,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.dto.SetInfo;
+import com.cxy.redisclient.integration.I18nFile;
+import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.presentation.component.EditListener;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
@@ -70,7 +72,7 @@ public class NewSetDialog extends RedisClientDialog {
 	 */
 	protected void createContents() {
 		shell.setSize(691, 540);
-		shell.setText("New Set");
+		shell.setText(RedisClient.i18nFile.getText(I18nFile.NEWSET));
 
 		shell.setLayout(new GridLayout(1, false));
 
@@ -80,26 +82,26 @@ public class NewSetDialog extends RedisClientDialog {
 		tabFolder.setSize(414, 239);
 
 		TabItem tbtmList = new TabItem(tabFolder, SWT.NONE);
-		tbtmList.setText("Set");
+		tbtmList.setText(RedisClient.i18nFile.getText(I18nFile.SET));
 
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tbtmList.setControl(composite);
 		composite.setLayout(new GridLayout(4, true));
 
 		Label label = new Label(composite, SWT.NONE);
-		label.setText("Server");
+		label.setText(RedisClient.i18nFile.getText(I18nFile.SERVER));
 
 		Label label_1 = new Label(composite, SWT.NONE);
 		label_1.setText(server);
 
 		Label label_2 = new Label(composite, SWT.NONE);
-		label_2.setText("Database");
+		label_2.setText(RedisClient.i18nFile.getText(I18nFile.DATABASE));
 
 		Label label_3 = new Label(composite, SWT.NONE);
 		label_3.setText(String.valueOf(db));
 
 		Label lblKey = new Label(composite, SWT.NONE);
-		lblKey.setText("Key");
+		lblKey.setText(RedisClient.i18nFile.getText(I18nFile.KEY));
 
 		text = new Text(composite, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
@@ -111,7 +113,7 @@ public class NewSetDialog extends RedisClientDialog {
 		grpValues = new Group(composite, SWT.NONE);
 		grpValues.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4,
 				1));
-		grpValues.setText("Values");
+		grpValues.setText(RedisClient.i18nFile.getText(I18nFile.VALUES));
 		grpValues.setLayout(new GridLayout(4, false));
 
 		table = getTable();
@@ -127,7 +129,6 @@ public class NewSetDialog extends RedisClientDialog {
 
 		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
 		tblclmnNewColumn.setWidth(200);
-		tblclmnNewColumn.setText("New Column");
 
 		Button btnAdd = new Button(grpValues, SWT.NONE);
 		btnAdd.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
@@ -135,19 +136,23 @@ public class NewSetDialog extends RedisClientDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				InputDialog inputDialog = new InputDialog(shell,
-						"Input values",
-						"Values(multiple values are separated by ;)", "", null);
+						RedisClient.i18nFile.getText(I18nFile.INPUTVALUES),
+						RedisClient.i18nFile.getText(I18nFile.LISTINPUTFORMAT), "", null);
 				if (inputDialog.open() == InputDialog.OK) {
 					String values = inputDialog.getValue();
 					String[] listValues = values.split(";");
+					TableItem item = null;
 					for (String value : listValues) {
-						TableItem item = new TableItem(table, SWT.NONE);
+						item = new TableItem(table, SWT.NONE);
 						item.setText(value);
 					}
+					
+					if(item != null)
+						table.setSelection(item);
 				}
 			}
 		});
-		btnAdd.setText("Add");
+		btnAdd.setText(RedisClient.i18nFile.getText(I18nFile.ADD));
 
 		btnDelete = new Button(grpValues, SWT.NONE);
 		btnDelete.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false,
@@ -163,7 +168,7 @@ public class NewSetDialog extends RedisClientDialog {
 			}
 		});
 		btnDelete.setEnabled(false);
-		btnDelete.setText("Delete");
+		btnDelete.setText(RedisClient.i18nFile.getText(I18nFile.DELETE));
 
 		Composite composite_1 = new Composite(shell, SWT.NONE);
 		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -180,11 +185,11 @@ public class NewSetDialog extends RedisClientDialog {
 				Set<String> values = new HashSet<String>();
 
 				if (key.length() == 0 || items.length == 0)
-					MessageDialog.openError(shell, "error",
-							"please input set information!");
+					MessageDialog.openError(shell, RedisClient.i18nFile.getText(I18nFile.ERROR),
+							RedisClient.i18nFile.getText(I18nFile.INPUTSET));
 				else if(key.endsWith(":")){
-					MessageDialog.openError(shell, "error",
-							"key name can't end with :");
+					MessageDialog.openError(shell, RedisClient.i18nFile.getText(I18nFile.ERROR),
+							RedisClient.i18nFile.getText(I18nFile.KEYENDERROR) + ":");
 					
 				}else {
 					for (TableItem item : items) {
@@ -197,7 +202,7 @@ public class NewSetDialog extends RedisClientDialog {
 
 			}
 		});
-		btnOk.setText("OK");
+		btnOk.setText(RedisClient.i18nFile.getText(I18nFile.OK));
 
 		Button btnCancel = new Button(composite_1, SWT.NONE);
 		btnCancel.addSelectionListener(new SelectionAdapter() {
@@ -206,7 +211,7 @@ public class NewSetDialog extends RedisClientDialog {
 				shell.dispose();
 			}
 		});
-		btnCancel.setText("Cancel");
+		btnCancel.setText(RedisClient.i18nFile.getText(I18nFile.CANCEL));
 
 		super.createContents();
 	}

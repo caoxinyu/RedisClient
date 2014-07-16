@@ -5,6 +5,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
+import com.cxy.redisclient.integration.I18nFile;
+import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.presentation.component.PagingListener;
 
 public class UpdateListDialog extends NewListDialog {
@@ -15,7 +17,7 @@ public class UpdateListDialog extends NewListDialog {
 	@Override
 	protected void createContents() {
 		super.createContents();
-		shell.setText("List Properties");
+		shell.setText(RedisClient.i18nFile.getText(I18nFile.LISTPROPERTY));
 		grpWhenListNot.setVisible(false);
 		text.setEditable(false);
 		text.removeModifyListener(new ModifyKey());

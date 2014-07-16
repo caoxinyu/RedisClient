@@ -2,6 +2,7 @@ package com.cxy.redisclient.service;
 
 import java.util.List;
 
+import com.cxy.redisclient.integration.key.IsKeyExist;
 import com.cxy.redisclient.integration.list.AddList;
 import com.cxy.redisclient.integration.list.InsertList;
 import com.cxy.redisclient.integration.list.ListList;
@@ -22,6 +23,11 @@ public class ListService {
 	}
 	
 	public List<String> list(int id, int db, String key){
+		IsKeyExist command1 = new IsKeyExist(id, db, key);
+		command1.execute();
+		if(!command1.isExist())
+			throw new KeyNotExistException(id, db, key);
+		
 		ListList command = new ListList(id, db, key);
 		command.execute();
 		return command.getValues();

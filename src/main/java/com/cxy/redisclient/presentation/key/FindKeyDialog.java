@@ -24,6 +24,8 @@ import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.dto.FindInfo;
+import com.cxy.redisclient.integration.I18nFile;
+import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class FindKeyDialog extends RedisClientDialog {
@@ -45,7 +47,7 @@ public class FindKeyDialog extends RedisClientDialog {
 	 */
 	protected void createContents() {
 		shell.setSize(612, 369);
-		shell.setText("Find");
+		shell.setText(RedisClient.i18nFile.getText(I18nFile.FIND));
 
 		shell.setLayout(new GridLayout(1, false));
 		
@@ -53,14 +55,14 @@ public class FindKeyDialog extends RedisClientDialog {
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		TabItem tbtmFind = new TabItem(tabFolder, SWT.NONE);
-		tbtmFind.setText("Find");
+		tbtmFind.setText(RedisClient.i18nFile.getText(I18nFile.FIND));
 		
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tbtmFind.setControl(composite);
 		composite.setLayout(new GridLayout(6, true));
 		
 		Label lblFind = new Label(composite, SWT.NONE);
-		lblFind.setText("Find key");
+		lblFind.setText(RedisClient.i18nFile.getText(I18nFile.FINDDATA));
 		
 		pattern = new Text(composite, SWT.BORDER);
 		pattern.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 5, 1));
@@ -78,7 +80,7 @@ public class FindKeyDialog extends RedisClientDialog {
 		Group grpFindDirection = new Group(composite, SWT.NONE);
 		grpFindDirection.setLayout(new GridLayout(1, false));
 		grpFindDirection.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
-		grpFindDirection.setText("Find direction");
+		grpFindDirection.setText(RedisClient.i18nFile.getText(I18nFile.FINDDIRECTION));
 		
 		final Button btnForward = new Button(grpFindDirection, SWT.RADIO);
 		btnForward.setSelection(true);
@@ -87,35 +89,35 @@ public class FindKeyDialog extends RedisClientDialog {
 			public void widgetSelected(SelectionEvent e) {
 			}
 		});
-		btnForward.setText("Forward");
+		btnForward.setText(RedisClient.i18nFile.getText(I18nFile.FORWARD));
 		
 		Button btnBackward = new Button(grpFindDirection, SWT.RADIO);
-		btnBackward.setText("Backward");
+		btnBackward.setText(RedisClient.i18nFile.getText(I18nFile.BACKWARD));
 		
 		Group grpKeyType = new Group(composite, SWT.NONE);
 		grpKeyType.setLayout(new GridLayout(1, false));
 		grpKeyType.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 3, 1));
-		grpKeyType.setText("Key type");
+		grpKeyType.setText(RedisClient.i18nFile.getText(I18nFile.KEYTYPE));
 		
 		final Button btnString = new Button(grpKeyType, SWT.CHECK);
 		btnString.setSelection(true);
-		btnString.setText("String");
+		btnString.setText(RedisClient.i18nFile.getText(I18nFile.STRING));
 		
 		final Button btnHash = new Button(grpKeyType, SWT.CHECK);
 		btnHash.setSelection(true);
-		btnHash.setText("Hash");
+		btnHash.setText(RedisClient.i18nFile.getText(I18nFile.HASH));
 		
 		final Button btnList = new Button(grpKeyType, SWT.CHECK);
 		btnList.setSelection(true);
-		btnList.setText("List");
+		btnList.setText(RedisClient.i18nFile.getText(I18nFile.LIST));
 		
 		final Button btnSet = new Button(grpKeyType, SWT.CHECK);
 		btnSet.setSelection(true);
-		btnSet.setText("Set");
+		btnSet.setText(RedisClient.i18nFile.getText(I18nFile.SET));
 		
 		final Button btnSortedSet = new Button(grpKeyType, SWT.CHECK);
 		btnSortedSet.setSelection(true);
-		btnSortedSet.setText("Sorted Set");
+		btnSortedSet.setText(RedisClient.i18nFile.getText(I18nFile.ZSET));
 		
 		
 		Composite composite1 = new Composite(shell, SWT.NONE);
@@ -139,7 +141,7 @@ public class FindKeyDialog extends RedisClientDialog {
 					types.add(NodeType.SORTEDSET);
 				
 				if(types.size() == 0)
-					MessageDialog.openError(shell, "error","please select a key type at least!");
+					MessageDialog.openError(shell, RedisClient.i18nFile.getText(I18nFile.ERROR),RedisClient.i18nFile.getText(I18nFile.SELECTTYPE));
 				else{
 					if(btnForward.getSelection())
 						result = new FindInfo(pattern.getText(), types, true);
@@ -151,7 +153,7 @@ public class FindKeyDialog extends RedisClientDialog {
 			}
 		});
 		btnFind.setEnabled(false);
-		btnFind.setText("Find");
+		btnFind.setText(RedisClient.i18nFile.getText(I18nFile.FIND));
 		
 		Button btnCancel = new Button(composite1, SWT.NONE);
 		btnCancel.addSelectionListener(new SelectionAdapter() {
@@ -161,7 +163,7 @@ public class FindKeyDialog extends RedisClientDialog {
 				shell.dispose();
 			}
 		});
-		btnCancel.setText("Cancel");
+		btnCancel.setText(RedisClient.i18nFile.getText(I18nFile.CANCEL));
 		
 		super.createContents();
 	}

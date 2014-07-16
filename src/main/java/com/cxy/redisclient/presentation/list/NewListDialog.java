@@ -27,6 +27,8 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.dto.ListInfo;
+import com.cxy.redisclient.integration.I18nFile;
+import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.presentation.component.EditListener;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
@@ -77,7 +79,7 @@ public class NewListDialog extends RedisClientDialog {
 	 */
 	protected void createContents() {
 		shell.setSize(966, 638);
-		shell.setText("New List");
+		shell.setText(RedisClient.i18nFile.getText(I18nFile.NEWLIST));
 
 		shell.setLayout(new GridLayout(1, false));
 
@@ -87,26 +89,26 @@ public class NewListDialog extends RedisClientDialog {
 		tabFolder.setSize(414, 360);
 
 		TabItem tbtmList = new TabItem(tabFolder, SWT.NONE);
-		tbtmList.setText("List");
+		tbtmList.setText(RedisClient.i18nFile.getText(I18nFile.LIST));
 
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tbtmList.setControl(composite);
 		composite.setLayout(new GridLayout(4, true));
 
 		Label label = new Label(composite, SWT.NONE);
-		label.setText("Server");
+		label.setText(RedisClient.i18nFile.getText(I18nFile.SERVER));
 
 		Label label_1 = new Label(composite, SWT.NONE);
 		label_1.setText(server);
 
 		Label label_2 = new Label(composite, SWT.NONE);
-		label_2.setText("Database");
+		label_2.setText(RedisClient.i18nFile.getText(I18nFile.DATABASE));
 
 		Label label_3 = new Label(composite, SWT.NONE);
 		label_3.setText(String.valueOf(db));
 
 		Label lblKey = new Label(composite, SWT.NONE);
-		lblKey.setText("Key");
+		lblKey.setText(RedisClient.i18nFile.getText(I18nFile.KEY));
 
 		text = new Text(composite, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
@@ -118,7 +120,7 @@ public class NewListDialog extends RedisClientDialog {
 		grpValues = new Group(composite, SWT.NONE);
 		grpValues.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4,
 				1));
-		grpValues.setText("Values");
+		grpValues.setText(RedisClient.i18nFile.getText(I18nFile.VALUES));
 		grpValues.setLayout(new GridLayout(4, false));
 
 		table = getTable();
@@ -134,7 +136,6 @@ public class NewListDialog extends RedisClientDialog {
 
 		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
 		tblclmnNewColumn.setWidth(200);
-		tblclmnNewColumn.setText("New Column");
 
 		Button btnAdd = new Button(grpValues, SWT.NONE);
 		btnAdd.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
@@ -142,19 +143,24 @@ public class NewListDialog extends RedisClientDialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				InputDialog inputDialog = new InputDialog(shell,
-						"Input values",
-						"Values(multiple values are separated by ;)", "", null);
+						RedisClient.i18nFile.getText(I18nFile.INPUTVALUES),
+						RedisClient.i18nFile.getText(I18nFile.LISTINPUTFORMAT), "", null);
 				if (inputDialog.open() == InputDialog.OK) {
 					String values = inputDialog.getValue();
 					String[] listValues = values.split(";");
+					TableItem item = null;
+					
 					for (String value : listValues) {
-						TableItem item = new TableItem(table, SWT.NONE);
+						item = new TableItem(table, SWT.NONE);
 						item.setText(value);
 					}
+					
+					if(item != null)
+						table.setSelection(item);
 				}
 			}
 		});
-		btnAdd.setText("Add");
+		btnAdd.setText(RedisClient.i18nFile.getText(I18nFile.ADD));
 
 		btnDelete = new Button(grpValues, SWT.NONE);
 		btnDelete.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false,
@@ -170,7 +176,7 @@ public class NewListDialog extends RedisClientDialog {
 			}
 		});
 		btnDelete.setEnabled(false);
-		btnDelete.setText("Delete");
+		btnDelete.setText(RedisClient.i18nFile.getText(I18nFile.DELETE));
 
 		btnUp = new Button(grpValues, SWT.NONE);
 		btnUp.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
@@ -193,7 +199,7 @@ public class NewListDialog extends RedisClientDialog {
 			}
 		});
 		btnUp.setEnabled(false);
-		btnUp.setText("UP");
+		btnUp.setText(RedisClient.i18nFile.getText(I18nFile.UP));
 
 		btnDown = new Button(grpValues, SWT.NONE);
 		btnDown.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1,
@@ -217,13 +223,13 @@ public class NewListDialog extends RedisClientDialog {
 			}
 		});
 		btnDown.setEnabled(false);
-		btnDown.setText("Down");
+		btnDown.setText(RedisClient.i18nFile.getText(I18nFile.DOWN));
 
 		Group grpOrderToAdd = new Group(composite, SWT.NONE);
 		grpOrderToAdd.setLayout(new GridLayout(2, false));
 		grpOrderToAdd.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
 				false, 4, 1));
-		grpOrderToAdd.setText("Order to add into list");
+		grpOrderToAdd.setText(RedisClient.i18nFile.getText(I18nFile.LISTORDER));
 
 		Button button_1 = new Button(grpOrderToAdd, SWT.RADIO);
 		button_1.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false,
@@ -235,7 +241,7 @@ public class NewListDialog extends RedisClientDialog {
 			}
 		});
 		button_1.setSelection(true);
-		button_1.setText("From head to tail");
+		button_1.setText(RedisClient.i18nFile.getText(I18nFile.HEADTAIL));
 
 		Button btnFromTailTo = new Button(grpOrderToAdd, SWT.RADIO);
 		btnFromTailTo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
@@ -246,13 +252,13 @@ public class NewListDialog extends RedisClientDialog {
 				headTail = false;
 			}
 		});
-		btnFromTailTo.setText("From tail to head");
+		btnFromTailTo.setText(RedisClient.i18nFile.getText(I18nFile.TAILHEAD));
 
 		grpWhenListNot = new Group(composite, SWT.NONE);
 		grpWhenListNot.setLayout(new GridLayout(2, true));
 		grpWhenListNot.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 4, 1));
-		grpWhenListNot.setText("If list does not exist");
+		grpWhenListNot.setText(RedisClient.i18nFile.getText(I18nFile.LISTNOTEXIST));
 
 		Button btnCreateList = new Button(grpWhenListNot, SWT.RADIO);
 		btnCreateList.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
@@ -264,7 +270,7 @@ public class NewListDialog extends RedisClientDialog {
 			}
 		});
 		btnCreateList.setSelection(true);
-		btnCreateList.setText("Create a list");
+		btnCreateList.setText(RedisClient.i18nFile.getText(I18nFile.CREATELIST));
 
 		Button btnNothingToDo = new Button(grpWhenListNot, SWT.RADIO);
 		btnNothingToDo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
@@ -275,7 +281,7 @@ public class NewListDialog extends RedisClientDialog {
 				exist = false;
 			}
 		});
-		btnNothingToDo.setText("Do nothing");
+		btnNothingToDo.setText(RedisClient.i18nFile.getText(I18nFile.DONOTHING));
 		
 		Composite composite_1 = new Composite(shell, SWT.NONE);
 		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -292,11 +298,11 @@ public class NewListDialog extends RedisClientDialog {
 				List<String> values = new ArrayList<String>();
 
 				if (key.length() == 0 || items.length == 0)
-					MessageDialog.openError(shell, "error",
-							"please input list information!");
+					MessageDialog.openError(shell, RedisClient.i18nFile.getText(I18nFile.ERROR),
+							RedisClient.i18nFile.getText(I18nFile.INPUTLIST));
 				else if(key.endsWith(":")){
-					MessageDialog.openError(shell, "error",
-							"key name can't end with :");
+					MessageDialog.openError(shell, RedisClient.i18nFile.getText(I18nFile.ERROR),
+							RedisClient.i18nFile.getText(I18nFile.KEYENDERROR) +":");
 					
 				}else {
 					for (TableItem item : items) {
@@ -309,7 +315,7 @@ public class NewListDialog extends RedisClientDialog {
 
 			}
 		});
-		btnOk.setText("OK");
+		btnOk.setText(RedisClient.i18nFile.getText(I18nFile.OK));
 
 		Button btnCancel = new Button(composite_1, SWT.NONE);
 		btnCancel.addSelectionListener(new SelectionAdapter() {
@@ -318,7 +324,7 @@ public class NewListDialog extends RedisClientDialog {
 				shell.dispose();
 			}
 		});
-		btnCancel.setText("Cancel");
+		btnCancel.setText(RedisClient.i18nFile.getText(I18nFile.CANCEL));
 		
 		super.createContents();
 	}

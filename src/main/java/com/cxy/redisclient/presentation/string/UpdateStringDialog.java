@@ -5,6 +5,9 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
+import com.cxy.redisclient.integration.I18nFile;
+import com.cxy.redisclient.presentation.RedisClient;
+
 public class UpdateStringDialog extends NewStringDialog {
 	private String value;
 	
@@ -17,7 +20,7 @@ public class UpdateStringDialog extends NewStringDialog {
 	@Override
 	protected void createContents() {
 		super.createContents();
-		shell.setText("String Properties");
+		shell.setText(RedisClient.i18nFile.getText(I18nFile.STRINGPROPERTY));
 		
 		text_key.setEditable(false);
 		text_key.removeModifyListener(new ModifyKey());

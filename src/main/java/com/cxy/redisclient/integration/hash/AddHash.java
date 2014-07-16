@@ -4,8 +4,10 @@ import java.util.Map;
 
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.domain.RedisVersion;
+import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.integration.JedisCommand;
 import com.cxy.redisclient.integration.key.DeleteKey;
+import com.cxy.redisclient.presentation.RedisClient;
 
 public class AddHash extends JedisCommand {
 	protected int db;
@@ -23,7 +25,7 @@ public class AddHash extends JedisCommand {
 	protected void command() {
 		jedis.select(db);
 		if(jedis.exists(key) && getValueType(key) != NodeType.HASH)
-			throw new RuntimeException("Key: " + key + " alreay exist, and type is not hash.");
+			throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.HASHEXIST)+ key);
 		else if(jedis.exists(key) && getValueType(key) == NodeType.HASH){
 			DeleteKey command = new DeleteKey(id, db, key);
 			command.execute(jedis);

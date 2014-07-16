@@ -22,7 +22,7 @@ public class FavoriteService {
 
 			return fid;
 		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
+			throw new RuntimeException(e.getLocalizedMessage());
 		}
 	}
 
@@ -31,7 +31,7 @@ public class FavoriteService {
 			ConfigFile.delete(ConfigFile.FAVORITE + fid);
 			ConfigFile.delete(ConfigFile.FAVORITE_SERVER + fid);
 		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
+			throw new RuntimeException(e.getLocalizedMessage());
 		}
 	}
 
@@ -46,7 +46,7 @@ public class FavoriteService {
 
 			return favorite;
 		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
+			throw new RuntimeException(e.getLocalizedMessage());
 		}
 	}
 
@@ -63,7 +63,7 @@ public class FavoriteService {
 
 			return favorites;
 		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
+			throw new RuntimeException(e.getLocalizedMessage());
 		}
 	}
 
@@ -92,7 +92,7 @@ public class FavoriteService {
 		try {
 			ConfigFile.write(ConfigFile.FAVORITE_NAME + fid, name);
 		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage());
+			throw new RuntimeException(e.getLocalizedMessage());
 		}
 	}
 }

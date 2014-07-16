@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class AboutDialog extends RedisClientDialog {
@@ -42,7 +43,7 @@ public class AboutDialog extends RedisClientDialog {
 	 */
 	protected void createContents() {
 		shell.setSize(450, 300);
-		shell.setText("About RedisClient");
+		shell.setText(RedisClient.i18nFile.getText(I18nFile.ABOUTREDISCLIENT));
 		shell.setLayout(new GridLayout(1, false));
 		
 		Composite composite = new Composite(shell, SWT.NONE);
@@ -72,26 +73,26 @@ public class AboutDialog extends RedisClientDialog {
 		new Label(composite, SWT.NONE);
 		
 		Label lblNewLabel_1 = new Label(composite, SWT.NONE);
-		lblNewLabel_1.setText("Version:");
+		lblNewLabel_1.setText(RedisClient.i18nFile.getText(I18nFile.VERSION));
 		
 		Label lblNewLabel_2 = new Label(composite, SWT.NONE);
 		lblNewLabel_2.setText("1.0.0");
 		new Label(composite, SWT.NONE);
 		
 		Label lblNewLabel_3 = new Label(composite, SWT.NONE);
-		lblNewLabel_3.setText("Developed by:");
+		lblNewLabel_3.setText(RedisClient.i18nFile.getText(I18nFile.DEVELOPER));
 		
 		Link link = new Link(composite, SWT.NONE);
 		link.addSelectionListener(openUrl);
-		link.setText("<a href=\"mailto:caoxinyu@gmail.com\">cao xinyu</a>");
+		link.setText("<a href=\"mailto:caoxinyu@gmail.com\">" + RedisClient.i18nFile.getText(I18nFile.CAOXINYU) + "</a>");
 		new Label(composite, SWT.NONE);
 		
 		Label lblReportIssue = new Label(composite, SWT.NONE);
-		lblReportIssue.setText("Report issue:");
+		lblReportIssue.setText(RedisClient.i18nFile.getText(I18nFile.ISSUE));
 		
 		Link link_1 = new Link(composite, SWT.NONE);
 		link_1.addSelectionListener(openUrl);
-		link_1.setText("<a href=\"https://github.com/caoxinyu/redisclient/issues?state=open\">Please click here</a>");
+		link_1.setText("<a href=\"https://github.com/caoxinyu/redisclient/issues?state=open\">" + RedisClient.i18nFile.getText(I18nFile.CLICK) + "</a>");
 		
 		Composite composite_1 = new Composite(shell, SWT.NONE);
 		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -104,7 +105,7 @@ public class AboutDialog extends RedisClientDialog {
 				shell.dispose();
 			}
 		});
-		btnNewButton.setText("OK");
+		btnNewButton.setText(RedisClient.i18nFile.getText(I18nFile.OK));
 
 		super.createContents();
 	}

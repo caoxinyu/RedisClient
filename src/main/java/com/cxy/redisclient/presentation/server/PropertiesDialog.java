@@ -22,6 +22,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 import com.cxy.redisclient.domain.Server;
+import com.cxy.redisclient.integration.I18nFile;
+import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class PropertiesDialog extends RedisClientDialog {
@@ -46,14 +48,14 @@ public class PropertiesDialog extends RedisClientDialog {
 	 */
 	protected void createContents() {
 		shell.setSize(940, 569);
-		shell.setText("Server Properties");
+		shell.setText(RedisClient.i18nFile.getText(I18nFile.SERVERPROPERTY));
 		shell.setLayout(new GridLayout(1, false));
 		
 		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		TabItem tbtmServer = new TabItem(tabFolder, SWT.NONE);
-		tbtmServer.setText("General");
+		tbtmServer.setText(RedisClient.i18nFile.getText(I18nFile.GENERAL));
 		
 		Table tableServer = new Table(tabFolder, SWT.BORDER | SWT.FULL_SELECTION);
 		tbtmServer.setControl(tableServer);
@@ -61,23 +63,23 @@ public class PropertiesDialog extends RedisClientDialog {
 		tableServer.setLinesVisible(true);
 		
 		TableColumn tblclmnKey = new TableColumn(tableServer, SWT.LEFT);
-		tblclmnKey.setText("Key");
+		tblclmnKey.setText(RedisClient.i18nFile.getText(I18nFile.KEY));
 		tblclmnKey.setWidth(250);
 		
 		TableColumn tblclmnValue = new TableColumn(tableServer, SWT.LEFT);
 		tblclmnValue.setWidth(442);
-		tblclmnValue.setText("Value");
+		tblclmnValue.setText(RedisClient.i18nFile.getText(I18nFile.VALUE));
 		
 		TableItem nameItem = new TableItem(tableServer, SWT.NONE);
-		String[] nameKey = new String[]{"Name", info.getName()};
+		String[] nameKey = new String[]{RedisClient.i18nFile.getText(I18nFile.NAME), info.getName()};
 		nameItem.setText(nameKey);
 		
 		TableItem hostItem = new TableItem(tableServer, SWT.NONE);
-		String[] hostKey = new String[]{"Host", info.getHost()};
+		String[] hostKey = new String[]{RedisClient.i18nFile.getText(I18nFile.HOST), info.getHost()};
 		hostItem.setText(hostKey);
 		
 		TableItem portItem = new TableItem(tableServer, SWT.NONE);
-		String[] portKey = new String[]{"Port", info.getPort()};
+		String[] portKey = new String[]{RedisClient.i18nFile.getText(I18nFile.PORT), info.getPort()};
 		portItem.setText(portKey);
 		
 		Set<Entry<String, String[]>> set = values.entrySet();
@@ -93,12 +95,12 @@ public class PropertiesDialog extends RedisClientDialog {
 			table.setLinesVisible(true);
 			
 			TableColumn clmnKey = new TableColumn(table, SWT.LEFT);
-			clmnKey.setText("Key");
+			clmnKey.setText(RedisClient.i18nFile.getText(I18nFile.KEY));
 			clmnKey.setWidth(250);
 			
 			TableColumn clmnValue = new TableColumn(table, SWT.LEFT);
 			clmnValue.setWidth(442);
-			clmnValue.setText("Value");
+			clmnValue.setText(RedisClient.i18nFile.getText(I18nFile.VALUE));
 			
 			String[] keys = entry.getValue();
 			for(String key: keys){
@@ -120,7 +122,7 @@ public class PropertiesDialog extends RedisClientDialog {
 				shell.dispose();
 			}
 		});
-		btnNewButton.setText("OK");
+		btnNewButton.setText(RedisClient.i18nFile.getText(I18nFile.OK));
 
 		super.createContents();
 	}

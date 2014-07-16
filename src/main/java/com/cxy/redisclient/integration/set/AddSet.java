@@ -4,8 +4,10 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.cxy.redisclient.domain.NodeType;
+import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.integration.JedisCommand;
 import com.cxy.redisclient.integration.key.DeleteKey;
+import com.cxy.redisclient.presentation.RedisClient;
 
 public abstract class AddSet extends JedisCommand {
 	protected int db;
@@ -31,7 +33,7 @@ public abstract class AddSet extends JedisCommand {
 	protected void command() {
 		jedis.select(db);
 		if(jedis.exists(key) && getValueType(key) != NodeType.SET)
-			throw new RuntimeException("Key: " + key + " alreay exist, and type is not set.");
+			throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.SETEXIST)+key);
 		if(jedis.exists(key) && getValueType(key) == NodeType.SET){
 			DeleteKey command = new DeleteKey(id, db, key);
 			command.execute(jedis);

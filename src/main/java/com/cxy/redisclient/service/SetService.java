@@ -3,6 +3,7 @@ package com.cxy.redisclient.service;
 import java.util.List;
 import java.util.Set;
 
+import com.cxy.redisclient.integration.key.IsKeyExist;
 import com.cxy.redisclient.integration.set.AddSet;
 import com.cxy.redisclient.integration.set.AddSetFactory;
 import com.cxy.redisclient.integration.set.ListSet;
@@ -17,6 +18,11 @@ public class SetService {
 	}
 	
 	public Set<String> list(int id, int db, String key) {
+		IsKeyExist command1 = new IsKeyExist(id, db, key);
+		command1.execute();
+		if(!command1.isExist())
+			throw new KeyNotExistException(id, db, key);
+		
 		ListSet command = new ListSet(id, db, key);
 		command.execute();
 		return command.getValues();

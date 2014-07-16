@@ -19,6 +19,8 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.dto.StringInfo;
+import com.cxy.redisclient.integration.I18nFile;
+import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class NewStringDialog extends RedisClientDialog {
@@ -57,7 +59,7 @@ public class NewStringDialog extends RedisClientDialog {
 	 */
 	protected void createContents() {
 		shell.setSize(622, 284);
-		shell.setText("New String");
+		shell.setText(RedisClient.i18nFile.getText(I18nFile.NEWSTRING));
 		
 		shell.setLayout(new GridLayout(1, false));
 		
@@ -66,26 +68,26 @@ public class NewStringDialog extends RedisClientDialog {
 		tabFolder.setSize(290, 124);
 		
 		TabItem tbtmString = new TabItem(tabFolder, SWT.NONE);
-		tbtmString.setText("String");
+		tbtmString.setText(RedisClient.i18nFile.getText(I18nFile.STRING));
 		
 		Composite composite = new Composite(tabFolder, SWT.NONE);
 		tbtmString.setControl(composite);
 		composite.setLayout(new GridLayout(4, true));
 		
 		Label lblKey = new Label(composite, SWT.NONE);
-		lblKey.setText("Server");
+		lblKey.setText(RedisClient.i18nFile.getText(I18nFile.SERVER));
 		
 		Label label_1 = new Label(composite, SWT.NONE);
 		label_1.setText(server);
 		
 		Label lblDatabase = new Label(composite, SWT.NONE);
-		lblDatabase.setText("Database");
+		lblDatabase.setText(RedisClient.i18nFile.getText(I18nFile.DATABASE));
 		
 		Label label_3 = new Label(composite, SWT.NONE);
 		label_3.setText(String.valueOf(db));
 		
 		Label lblValue = new Label(composite, SWT.NONE);
-		lblValue.setText("key");
+		lblValue.setText(RedisClient.i18nFile.getText(I18nFile.KEY));
 		
 		text_key = new Text(composite, SWT.BORDER);
 		text_key.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
@@ -95,7 +97,7 @@ public class NewStringDialog extends RedisClientDialog {
 		text_key.addModifyListener(new ModifyKey());
 		
 		Label label = new Label(composite, SWT.NONE);
-		label.setText("Value");
+		label.setText(RedisClient.i18nFile.getText(I18nFile.VALUE));
 		
 		text_value = new Text(composite, SWT.BORDER);
 		text_value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
@@ -113,10 +115,10 @@ public class NewStringDialog extends RedisClientDialog {
 				String value = text_value.getText();
 				
 				if( key.length() == 0 || value.length() == 0){
-					MessageDialog.openError(shell, "error","please input string information!");
+					MessageDialog.openError(shell, RedisClient.i18nFile.getText(I18nFile.ERROR),RedisClient.i18nFile.getText(I18nFile.INPUTSTRING));
 				} else if(key.endsWith(":")){
-					MessageDialog.openError(shell, "error",
-							"key name can't end with :");
+					MessageDialog.openError(shell, RedisClient.i18nFile.getText(I18nFile.ERROR),
+							RedisClient.i18nFile.getText(I18nFile.KEYENDERROR)+":");
 					
 				}else {
 					result = new StringInfo(key, value);
@@ -124,7 +126,7 @@ public class NewStringDialog extends RedisClientDialog {
 				}
 			}
 		});
-		btnOk.setText("OK");
+		btnOk.setText(RedisClient.i18nFile.getText(I18nFile.OK));
 		
 		Button button_1 = new Button(composite_1, SWT.NONE);
 		button_1.addMouseListener(new MouseAdapter() {
@@ -133,7 +135,7 @@ public class NewStringDialog extends RedisClientDialog {
 				shell.dispose();
 			}
 		});
-		button_1.setText("Cancel");
+		button_1.setText(RedisClient.i18nFile.getText(I18nFile.CANCEL));
 
 		super.createContents();
 	}

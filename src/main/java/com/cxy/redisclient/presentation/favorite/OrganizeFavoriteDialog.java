@@ -21,6 +21,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 import com.cxy.redisclient.domain.Favorite;
+import com.cxy.redisclient.integration.I18nFile;
+import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
 import com.cxy.redisclient.service.FavoriteService;
 
@@ -52,7 +54,7 @@ public class OrganizeFavoriteDialog extends RedisClientDialog {
 			}
 		});
 		shell.setSize(546, 423);
-		shell.setText("Organize Favorites");
+		shell.setText(RedisClient.i18nFile.getText(I18nFile.ORGANIZEFAVORITE));
 		
 		
 		shell.setLayout(new GridLayout(1, false));
@@ -60,7 +62,7 @@ public class OrganizeFavoriteDialog extends RedisClientDialog {
 		Group grpFavorites = new Group(shell, SWT.NONE);
 		grpFavorites.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		grpFavorites.setSize(417, 231);
-		grpFavorites.setText("Favorites");
+		grpFavorites.setText(RedisClient.i18nFile.getText(I18nFile.FAVORITES));
 		grpFavorites.setLayout(new GridLayout(4, false));
 		
 		table = new Table(grpFavorites, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
@@ -77,11 +79,11 @@ public class OrganizeFavoriteDialog extends RedisClientDialog {
 		
 		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
 		tblclmnNewColumn.setWidth(100);
-		tblclmnNewColumn.setText("Name");
+		tblclmnNewColumn.setText(RedisClient.i18nFile.getText(I18nFile.NAME));
 		
 		TableColumn tblclmnNewColumn_1 = new TableColumn(table, SWT.NONE);
 		tblclmnNewColumn_1.setWidth(187);
-		tblclmnNewColumn_1.setText("Favorite");
+		tblclmnNewColumn_1.setText(RedisClient.i18nFile.getText(I18nFile.FAVORITE));
 		
 		btnRenameButton = new Button(grpFavorites, SWT.NONE);
 		btnRenameButton.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
@@ -100,7 +102,7 @@ public class OrganizeFavoriteDialog extends RedisClientDialog {
 			}
 		});
 		btnRenameButton.setEnabled(false);
-		btnRenameButton.setText("Rename");
+		btnRenameButton.setText(RedisClient.i18nFile.getText(I18nFile.RENAME));
 		
 		
 		btnRemoveButton = new Button(grpFavorites, SWT.NONE);
@@ -116,7 +118,7 @@ public class OrganizeFavoriteDialog extends RedisClientDialog {
 			}
 		});
 		btnRemoveButton.setEnabled(false);
-		btnRemoveButton.setText("Remove");
+		btnRemoveButton.setText(RedisClient.i18nFile.getText(I18nFile.REMOVE));
 				
 		Composite composite = new Composite(shell, SWT.NONE);
 		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
@@ -136,7 +138,7 @@ public class OrganizeFavoriteDialog extends RedisClientDialog {
 				shell.dispose();
 			}
 		});
-		btnOk.setText("OK");
+		btnOk.setText(RedisClient.i18nFile.getText(I18nFile.OK));
 		
 		Button btnCancel = new Button(composite, SWT.NONE);
 		btnCancel.addSelectionListener(new SelectionAdapter() {
@@ -146,7 +148,7 @@ public class OrganizeFavoriteDialog extends RedisClientDialog {
 				shell.dispose();
 			}
 		});
-		btnCancel.setText("Cancel");
+		btnCancel.setText(RedisClient.i18nFile.getText(I18nFile.CANCEL));
 		
 		
 		List<Favorite> favorites = service.listAll();

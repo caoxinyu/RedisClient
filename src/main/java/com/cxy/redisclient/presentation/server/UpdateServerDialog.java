@@ -4,6 +4,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 
 import com.cxy.redisclient.domain.Server;
+import com.cxy.redisclient.integration.I18nFile;
+import com.cxy.redisclient.presentation.RedisClient;
 
 public class UpdateServerDialog extends AddServerDialog {
 	private Server server;
@@ -29,7 +31,7 @@ public class UpdateServerDialog extends AddServerDialog {
 
 	@Override
 	protected String getTitle() {
-		return "Update Server";
+		return RedisClient.i18nFile.getText(I18nFile.UPDATESERVER);
 	}
 
 	

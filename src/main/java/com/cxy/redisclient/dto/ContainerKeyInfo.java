@@ -8,6 +8,11 @@ public class ContainerKeyInfo {
 	private int db;
 	private ContainerKey container;
 	
+	public ContainerKeyInfo() {
+		super();
+		this.id = -1;
+		this.db = -1;
+	}
 	public int getId() {
 		return id;
 	}

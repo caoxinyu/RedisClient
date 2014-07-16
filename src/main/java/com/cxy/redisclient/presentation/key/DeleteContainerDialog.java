@@ -12,6 +12,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import com.cxy.redisclient.integration.I18nFile;
+import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class DeleteContainerDialog extends RedisClientDialog {
@@ -36,7 +38,7 @@ public class DeleteContainerDialog extends RedisClientDialog {
 	 */
 	protected void createContents() {
 		shell.setSize(500, 200);
-		shell.setText("Delete");
+		shell.setText(RedisClient.i18nFile.getText(I18nFile.DELETE));
 		shell.setLayout(new GridLayout(2, false));
 		
 		Label lblNewLabel_1 = new Label(shell, SWT.NONE);
@@ -47,18 +49,18 @@ public class DeleteContainerDialog extends RedisClientDialog {
 		lblNewLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		lblNewLabel.setBounds(0, 0, 61, 17);
 		if(containerNo == -1)
-			lblNewLabel.setText("Are you sure delete these containers and keys?");
+			lblNewLabel.setText(RedisClient.i18nFile.getText(I18nFile.DELETECONTAINERS));
 		else if(containerNo == 1)
-			lblNewLabel.setText("Are you sure delete this container?");
+			lblNewLabel.setText(RedisClient.i18nFile.getText(I18nFile.DELETECONTAINER));
 		else
-			lblNewLabel.setText("Are you sure delete these keys?");
+			lblNewLabel.setText(RedisClient.i18nFile.getText(I18nFile.DELETEKEYS));
 		
 		if(containerNo != 0){
 			btnDeleteSubcontainerUnder = new Button(shell, SWT.CHECK);
 			btnDeleteSubcontainerUnder.setSelection(true);
 			btnDeleteSubcontainerUnder.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 2, 1));
 			btnDeleteSubcontainerUnder.setBounds(0, 0, 98, 17);
-			btnDeleteSubcontainerUnder.setText("Delete subcontainer under the container");
+			btnDeleteSubcontainerUnder.setText(RedisClient.i18nFile.getText(I18nFile.DELETESUBCONTAINER));
 		}else
 			btnDeleteSubcontainerUnder = null;
 		
@@ -78,7 +80,7 @@ public class DeleteContainerDialog extends RedisClientDialog {
 				shell.dispose();
 			}
 		});
-		button.setText("OK");
+		button.setText(RedisClient.i18nFile.getText(I18nFile.OK));
 		
 		Button button_1 = new Button(composite_1, SWT.NONE);
 		button_1.addMouseListener(new MouseAdapter() {
@@ -87,7 +89,7 @@ public class DeleteContainerDialog extends RedisClientDialog {
 				shell.dispose();
 			}
 		});
-		button_1.setText("Cancel");
+		button_1.setText(RedisClient.i18nFile.getText(I18nFile.CANCEL));
 
 		super.createContents();
 	}

@@ -10,6 +10,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 
+import com.cxy.redisclient.integration.I18nFile;
+import com.cxy.redisclient.presentation.RedisClient;
+
 public class UpdateHashDialog extends NewHashDialog {
 	private Map<String, String> value;
 	
@@ -22,7 +25,7 @@ public class UpdateHashDialog extends NewHashDialog {
 	@Override
 	protected void createContents() {
 		super.createContents();
-		shell.setText("Hash Properties");
+		shell.setText(RedisClient.i18nFile.getText(I18nFile.HASHPROPERTY));
 		text.setEditable(false);
 		text.removeModifyListener(new ModifyKey());
 		

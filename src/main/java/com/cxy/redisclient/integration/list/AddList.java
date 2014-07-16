@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.domain.RedisVersion;
+import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.integration.JedisCommand;
+import com.cxy.redisclient.presentation.RedisClient;
 
 public class AddList extends JedisCommand {
 	protected int db;
@@ -27,8 +29,7 @@ public class AddList extends JedisCommand {
 	protected void command() {
 		jedis.select(db);
 		if (jedis.exists(key) && getValueType(key) != NodeType.LIST)
-			throw new RuntimeException("Key: " + key
-					+ " alreay exist, and type is not list.");
+			throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.LISTEXIST) + key);
 
 		beforeAdd();
 		

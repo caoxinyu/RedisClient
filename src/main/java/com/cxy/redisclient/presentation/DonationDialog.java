@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class DonationDialog extends RedisClientDialog {
@@ -31,7 +32,7 @@ public class DonationDialog extends RedisClientDialog {
 	 */
 	protected void createContents() {
 		shell.setSize(480, 500);
-		shell.setText("Donation");
+		shell.setText(RedisClient.i18nFile.getText(I18nFile.DONATION));
 		shell.setLayout(new GridLayout(1, false));
 		
 		Composite composite = new Composite(shell, SWT.NONE);
@@ -40,7 +41,7 @@ public class DonationDialog extends RedisClientDialog {
 		
 		Label lblNewLabel = new Label(composite, SWT.WRAP);
 		lblNewLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		lblNewLabel.setText("If you find this software useful and would like to support it, you can do so simply by scanning my Alipay two-dimension code and donating whatever you like.");
+		lblNewLabel.setText(RedisClient.i18nFile.getText(I18nFile.DONATIONMESSAGE));
 		
 		Label label = new Label(composite, SWT.NONE);
 		label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
@@ -59,7 +60,7 @@ public class DonationDialog extends RedisClientDialog {
 				shell.dispose();
 			}
 		});
-		btnOk.setText("OK");
+		btnOk.setText(RedisClient.i18nFile.getText(I18nFile.OK));
 
 		super.createContents();
 	}

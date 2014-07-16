@@ -5,6 +5,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 
+import com.cxy.redisclient.integration.I18nFile;
+import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.presentation.component.PagingListener;
 
 public class UpdateSetDialog extends NewSetDialog {
@@ -18,7 +20,7 @@ public class UpdateSetDialog extends NewSetDialog {
 	@Override
 	protected void createContents() {
 		super.createContents();
-		shell.setText("Set Properties");
+		shell.setText(RedisClient.i18nFile.getText(I18nFile.SETPROPERTY));
 		text.setEditable(false);
 		text.removeModifyListener(new ModifyKey());
 		btnOk.setEnabled(true);

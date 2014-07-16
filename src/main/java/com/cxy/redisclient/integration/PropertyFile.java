@@ -27,7 +27,7 @@ public class PropertyFile {
 
 	}
 	
-	private static Properties getProperty(String propertyFile) throws IOException {
+	protected static Properties getProperty(String propertyFile) throws IOException {
 		Properties props = new Properties();
 
 		File file = new File(propertyFile);

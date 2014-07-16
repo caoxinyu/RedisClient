@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import com.cxy.redisclient.domain.ContainerKey;
 import com.cxy.redisclient.domain.DataNode;
 import com.cxy.redisclient.domain.Favorite;
+import com.cxy.redisclient.domain.Language;
 import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.domain.Server;
@@ -50,6 +51,8 @@ import com.cxy.redisclient.dto.RenameInfo;
 import com.cxy.redisclient.dto.SetInfo;
 import com.cxy.redisclient.dto.StringInfo;
 import com.cxy.redisclient.dto.ZSetInfo;
+import com.cxy.redisclient.integration.ConfigFile;
+import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.favorite.AddFavoriteDialog;
 import com.cxy.redisclient.presentation.favorite.OrganizeFavoriteDialog;
 import com.cxy.redisclient.presentation.hash.NewHashDialog;
@@ -79,13 +82,16 @@ import com.cxy.redisclient.service.SetService;
 import com.cxy.redisclient.service.ZSetService;
 
 public class RedisClient {
+	
 	private static final Logger logger = LoggerFactory.getLogger(RedisClient.class);
 	
 	private Shell shell;
 	private PasteBuffer pBuffer = new PasteBuffer();;
 	private FindBuffer fBuffer = null;
 	private NavHistory history = new NavHistory();
-	private boolean flatView = false;
+	private boolean flatView = ConfigFile.getFlatView();
+	public static Language language = ConfigFile.getLanguage();
+	public static final I18nFile i18nFile = new I18nFile();
 	
 	private TreeItem rootRedisServers;
 
@@ -175,7 +181,7 @@ public class RedisClient {
 					display.sleep();
 				}
 			} catch (Exception e) {
-				MessageDialog.openError(shell, "Error", e.getMessage());
+				MessageDialog.openError(shell, i18nFile.getText(I18nFile.ERROR), e.getLocalizedMessage());
 			}
 		}
 		display.dispose();
@@ -275,7 +281,7 @@ public class RedisClient {
 					btnForward.setEnabled(true);
 					
 				}else {
-					MessageDialog.openInformation(shell, "error", "object is deleted!");
+					MessageDialog.openInformation(shell, i18nFile.getText(I18nFile.ERROR), i18nFile.getText(I18nFile.OBJECTDELETE));
 				}
 			}
 		});
@@ -295,7 +301,7 @@ public class RedisClient {
 						btnForward.setEnabled(false);
 					
 				}else {
-					MessageDialog.openInformation(shell, "error", "object is deleted!");
+					MessageDialog.openInformation(shell, i18nFile.getText(I18nFile.ERROR), i18nFile.getText(I18nFile.OBJECTDELETE));
 				}
 			}
 		});
@@ -380,7 +386,7 @@ public class RedisClient {
 				deleteKeys();
 			}
 		});
-		mntmDelete_5.setText("delete");
+		mntmDelete_5.setText(i18nFile.getText(I18nFile.DELETE));
 		
 		new MenuItem(menu_Multi, SWT.SEPARATOR);
 		
@@ -391,7 +397,7 @@ public class RedisClient {
 				cut();
 			}
 		});
-		mntmCut_2.setText("cut");
+		mntmCut_2.setText(i18nFile.getText(I18nFile.CUT));
 		
 		MenuItem mntmCopy_3 = new MenuItem(menu_Multi, SWT.NONE);
 		mntmCopy_3.addSelectionListener(new SelectionAdapter() {
@@ -400,7 +406,7 @@ public class RedisClient {
 				copy();
 			}
 		});
-		mntmCopy_3.setText("copy");
+		mntmCopy_3.setText(i18nFile.getText(I18nFile.COPY));
 		
 		new MenuItem(menu_Multi, SWT.SEPARATOR);
 		
@@ -411,7 +417,7 @@ public class RedisClient {
 				export();
 			}
 		});
-		mntmExport_2.setText("export");
+		mntmExport_2.setText(i18nFile.getText(I18nFile.EXPORT));
 	}
 
 	private void initMenuData() {
@@ -424,7 +430,7 @@ public class RedisClient {
 				renameKey();
 			}
 		});
-		mntmRename.setText("rename");
+		mntmRename.setText(i18nFile.getText(I18nFile.RENAME));
 
 		MenuItem mntmDelete_4 = new MenuItem(menu_key, SWT.NONE);
 		mntmDelete_4.addSelectionListener(new SelectionAdapter() {
@@ -433,7 +439,7 @@ public class RedisClient {
 				deleteOneKey();
 			}
 		});
-		mntmDelete_4.setText("delete");
+		mntmDelete_4.setText(i18nFile.getText(I18nFile.DELETE));
 		
 		MenuItem mntmProperties_1 = new MenuItem(menu_key, SWT.NONE);
 		mntmProperties_1.addSelectionListener(new SelectionAdapter() {
@@ -443,7 +449,7 @@ public class RedisClient {
 				
 			}
 		});
-		mntmProperties_1.setText("properties");
+		mntmProperties_1.setText(i18nFile.getText(I18nFile.PROPERTIES));
 
 		new MenuItem(menu_key, SWT.SEPARATOR);
 
@@ -454,7 +460,7 @@ public class RedisClient {
 				addFavorite();
 			}
 		});
-		menuItem.setText("add to favorites");
+		menuItem.setText(i18nFile.getText(I18nFile.ADDFAVORITES));
 
 		new MenuItem(menu_key, SWT.SEPARATOR);
 
@@ -465,7 +471,7 @@ public class RedisClient {
 				cut();
 			}
 		});
-		mntmCut_1.setText("cut");
+		mntmCut_1.setText(i18nFile.getText(I18nFile.CUT));
 
 		MenuItem mntmCopy_2 = new MenuItem(menu_key, SWT.NONE);
 		mntmCopy_2.addSelectionListener(new SelectionAdapter() {
@@ -474,7 +480,7 @@ public class RedisClient {
 				copy();
 			}
 		});
-		mntmCopy_2.setText("copy");
+		mntmCopy_2.setText(i18nFile.getText(I18nFile.COPY));
 		
 		new MenuItem(menu_key, SWT.SEPARATOR);
 		
@@ -486,7 +492,7 @@ public class RedisClient {
 			}
 			
 		});
-		mntmExport_3.setText("export");
+		mntmExport_3.setText(i18nFile.getText(I18nFile.EXPORT));
 	}
 
 	private void initTree(SashForm sashForm) {
@@ -533,7 +539,7 @@ public class RedisClient {
 	private void initRootItem() {
 		rootRedisServers = new TreeItem(tree, SWT.NONE);
 		rootRedisServers.setImage(redisImage);
-		rootRedisServers.setText("Redis Servers");
+		rootRedisServers.setText(i18nFile.getText(I18nFile.REDISSERVERS));
 		rootRedisServers.setData(NODE_TYPE, NodeType.ROOT);
 		rootRedisServers.setExpanded(true);
 		rootRedisServers.setData(ITEM_OPENED, true);
@@ -580,7 +586,7 @@ public class RedisClient {
 				dbContainerTreeItemSelected(items[0], true);
 			}
 		});
-		mntmRefresh_2.setText("refresh");
+		mntmRefresh_2.setText(i18nFile.getText(I18nFile.REFRESH));
 
 		return menu;
 	}
@@ -589,7 +595,7 @@ public class RedisClient {
 		Menu menu_dbContainer = new Menu(shell);
 
 		MenuItem mntmNew_1 = new MenuItem(menu_dbContainer, SWT.CASCADE);
-		mntmNew_1.setText("new");
+		mntmNew_1.setText(i18nFile.getText(I18nFile.NEW));
 
 		Menu menu_1 = new Menu(mntmNew_1);
 		mntmNew_1.setMenu(menu_1);
@@ -601,7 +607,7 @@ public class RedisClient {
 				newString();
 			}
 		});
-		menuItem_1.setText("String");
+		menuItem_1.setText(i18nFile.getText(I18nFile.STRING));
 		menuItem_1.setImage(strImage);
 
 		MenuItem menuItem_2 = new MenuItem(menu_1, SWT.NONE);
@@ -611,7 +617,7 @@ public class RedisClient {
 				newList();
 			}
 		});
-		menuItem_2.setText("List");
+		menuItem_2.setText(i18nFile.getText(I18nFile.LIST));
 		menuItem_2.setImage(listImage);
 
 		MenuItem menuItem_3 = new MenuItem(menu_1, SWT.NONE);
@@ -621,7 +627,7 @@ public class RedisClient {
 				newSet();
 			}
 		});
-		menuItem_3.setText("Set");
+		menuItem_3.setText(i18nFile.getText(I18nFile.SET));
 		menuItem_3.setImage(setImage);
 
 		MenuItem mntmSortedSet = new MenuItem(menu_1, SWT.NONE);
@@ -631,7 +637,7 @@ public class RedisClient {
 				newZSet();
 			}
 		});
-		mntmSortedSet.setText("Sorted Set");
+		mntmSortedSet.setText(i18nFile.getText(I18nFile.ZSET));
 		mntmSortedSet.setImage(zsetImage);
 
 		MenuItem mntmHash_1 = new MenuItem(menu_1, SWT.NONE);
@@ -641,7 +647,7 @@ public class RedisClient {
 				newHash();
 			}
 		});
-		mntmHash_1.setText("Hash");
+		mntmHash_1.setText(i18nFile.getText(I18nFile.HASH));
 		mntmHash_1.setImage(hashImage);
 
 		MenuItem mntmRename_1 = new MenuItem(menu_dbContainer, SWT.NONE);
@@ -651,7 +657,7 @@ public class RedisClient {
 				renameContainer();
 			}
 		});
-		mntmRename_1.setText("rename");
+		mntmRename_1.setText(i18nFile.getText(I18nFile.RENAME));
 
 		MenuItem mntmDelete_2 = new MenuItem(menu_dbContainer, SWT.NONE);
 		mntmDelete_2.addSelectionListener(new SelectionAdapter() {
@@ -660,7 +666,7 @@ public class RedisClient {
 				deleteOneContainer();
 			}
 		});
-		mntmDelete_2.setText("delete");
+		mntmDelete_2.setText(i18nFile.getText(I18nFile.DELETE));
 		
 		MenuItem mntmProperties_3 = new MenuItem(menu_dbContainer, SWT.NONE);
 		mntmProperties_3.addSelectionListener(new SelectionAdapter() {
@@ -669,7 +675,7 @@ public class RedisClient {
 				dbContainerProperties();
 			}
 		});
-		mntmProperties_3.setText("properties");
+		mntmProperties_3.setText(i18nFile.getText(I18nFile.PROPERTIES));
 
 		new MenuItem(menu_dbContainer, SWT.SEPARATOR);
 
@@ -680,7 +686,7 @@ public class RedisClient {
 				addFavorite();
 			}
 		});
-		mntmAddToFavorites.setText("add to favorites");
+		mntmAddToFavorites.setText(i18nFile.getText(I18nFile.ADDFAVORITES));
 
 		new MenuItem(menu_dbContainer, SWT.SEPARATOR);
 
@@ -691,7 +697,7 @@ public class RedisClient {
 				cut();
 			}
 		});
-		mntmCut.setText("cut");
+		mntmCut.setText(i18nFile.getText(I18nFile.CUT));
 
 		MenuItem mntmCopy_1 = new MenuItem(menu_dbContainer, SWT.NONE);
 		mntmCopy_1.addSelectionListener(new SelectionAdapter() {
@@ -700,7 +706,7 @@ public class RedisClient {
 				copy();
 			}
 		});
-		mntmCopy_1.setText("copy");
+		mntmCopy_1.setText(i18nFile.getText(I18nFile.COPY));
 
 		MenuItem mntmPaste_1 = new MenuItem(menu_dbContainer, SWT.NONE);
 		mntmPaste_1.addSelectionListener(new SelectionAdapter() {
@@ -710,7 +716,7 @@ public class RedisClient {
 			}
 		});
 		mntmPaste_1.setEnabled(false);
-		mntmPaste_1.setText("paste");
+		mntmPaste_1.setText(i18nFile.getText(I18nFile.PASTE));
 
 		new MenuItem(menu_dbContainer, SWT.SEPARATOR);
 		
@@ -722,7 +728,7 @@ public class RedisClient {
 			}
 		});
 		mntmImport_1.setEnabled(false);
-		mntmImport_1.setText("import");
+		mntmImport_1.setText(i18nFile.getText(I18nFile.IMPORT));
 		
 		MenuItem mntmExport_1 = new MenuItem(menu_dbContainer, SWT.NONE);
 		mntmExport_1.addSelectionListener(new SelectionAdapter() {
@@ -731,7 +737,7 @@ public class RedisClient {
 				export();
 			}
 		});
-		mntmExport_1.setText("export");
+		mntmExport_1.setText(i18nFile.getText(I18nFile.EXPORT));
 		
 		new MenuItem(menu_dbContainer, SWT.SEPARATOR);
 		
@@ -742,7 +748,7 @@ public class RedisClient {
 				find();
 			}
 		});
-		mntmFind_1.setText("find");
+		mntmFind_1.setText(i18nFile.getText(I18nFile.FIND));
 		
 		MenuItem mntmFindNext_1 = new MenuItem(menu_dbContainer, SWT.NONE);
 		mntmFindNext_1.addSelectionListener(new SelectionAdapter() {
@@ -751,7 +757,7 @@ public class RedisClient {
 				findForward();
 			}
 		});
-		mntmFindNext_1.setText("find forward");
+		mntmFindNext_1.setText(i18nFile.getText(I18nFile.FINDFORWARD));
 		
 		MenuItem mntmFindBackward_3 = new MenuItem(menu_dbContainer, SWT.NONE);
 		mntmFindBackward_3.addSelectionListener(new SelectionAdapter() {
@@ -760,7 +766,7 @@ public class RedisClient {
 				findBackward();
 			}
 		});
-		mntmFindBackward_3.setText("find backward");
+		mntmFindBackward_3.setText(i18nFile.getText(I18nFile.FINDBACKWARD));
 		
 		return menu_dbContainer;
 	}
@@ -807,7 +813,7 @@ public class RedisClient {
 							}
 						}
 						if(!find)
-							MessageDialog.openInformation(shell, "information", "New key found, please refresh container: "+text.getText());
+							MessageDialog.openInformation(shell, i18nFile.getText(I18nFile.INFORMATION), i18nFile.getText(I18nFile.NEWKEYFOUND)+text.getText());
 					}else {
 						
 						dataProperties();
@@ -858,7 +864,7 @@ public class RedisClient {
 
 		tblclmnName = new TableColumn(table, SWT.NONE);
 		tblclmnName.setWidth(150);
-		tblclmnName.setText("name");
+		tblclmnName.setText(i18nFile.getText(I18nFile.NAME));
 		tblclmnName.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -868,7 +874,7 @@ public class RedisClient {
 
 		tblclmnType = new TableColumn(table, SWT.NONE);
 		tblclmnType.setWidth(150);
-		tblclmnType.setText("type");
+		tblclmnType.setText(i18nFile.getText(I18nFile.TYPE));
 		tblclmnType.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -878,7 +884,7 @@ public class RedisClient {
 
 		tblclmnSize = new TableColumn(table, SWT.NONE);
 		tblclmnSize.setWidth(100);
-		tblclmnSize.setText("size");
+		tblclmnSize.setText(i18nFile.getText(I18nFile.SIZE));
 		tblclmnSize.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -924,18 +930,24 @@ public class RedisClient {
 		String container;
 		
 		if(type == NodeType.DATABASE){
-			str = "Type:\t" + type.toString() + "\nLocation:\t" + getLocation(cinfo) + "\nKey:\t";
+			str = i18nFile.getText(I18nFile.TYPE)+":\t" + i18nFile.getText(I18nFile.DATABASE) + "\n" + i18nFile.getText(I18nFile.LOCATION)+":\t"+ getLocation(cinfo)  + "\n" + i18nFile.getText(I18nFile.KEY) + ":\t";
 			container = "";
 		}
 		else{
-			str = "Type:\t" + type.toString() + "\nLocation:\t" + getLocation(cinfo) + "\nKey:\t";
+			str = i18nFile.getText(I18nFile.TYPE)+":\t" + i18nFile.getText(I18nFile.CONTAINER) + "\n" + i18nFile.getText(I18nFile.LOCATION)+":\t"+ getLocation(cinfo)  + "\n" + i18nFile.getText(I18nFile.KEY) + ":\t";
 			container = cinfo.getContainerStr();
 		}
 		
 		Set<Node> nodes = service2.listContainerAllKeys(cinfo.getId(), cinfo.getDb(), container);
 		str += nodes.size();
 		
-		MessageDialog.openInformation(shell, type.toString() + " Properties", str);
+		String properties;
+		
+		if(type == NodeType.DATABASE)
+			properties = i18nFile.getText(I18nFile.DBPROPERTIES);
+		else
+			properties = i18nFile.getText(I18nFile.CONTAINERPROPERTIES);
+		MessageDialog.openInformation(shell, properties, str);
 		
 	}
 
@@ -1155,7 +1167,7 @@ public class RedisClient {
 				serverTreeItemSelected(items[0], true);
 			}
 		});
-		mntmRefresh_3.setText("refresh");
+		mntmRefresh_3.setText(i18nFile.getText(I18nFile.REFRESH));
 
 		return menu_server;
 	}
@@ -1170,7 +1182,7 @@ public class RedisClient {
 				updateServer();
 			}
 		});
-		mntmUpdate.setText("update");
+		mntmUpdate.setText(i18nFile.getText(I18nFile.UPDATE));
 
 		MenuItem mntmDelete = new MenuItem(menu_server_1, SWT.NONE);
 		mntmDelete.addSelectionListener(new SelectionAdapter() {
@@ -1179,7 +1191,7 @@ public class RedisClient {
 				removeServer();
 			}
 		});
-		mntmDelete.setText("remove");
+		mntmDelete.setText(i18nFile.getText(I18nFile.REMOVE));
 
 		MenuItem mntmProperties_4 = new MenuItem(menu_server_1, SWT.NONE);
 		mntmProperties_4.addSelectionListener(new SelectionAdapter() {
@@ -1188,7 +1200,7 @@ public class RedisClient {
 				serverProperties();
 			}
 		});
-		mntmProperties_4.setText("properties");
+		mntmProperties_4.setText(i18nFile.getText(I18nFile.PROPERTIES));
 		
 		new MenuItem(menu_server_1, SWT.SEPARATOR);
 		
@@ -1199,7 +1211,7 @@ public class RedisClient {
 				find();
 			}
 		});
-		menuItem_2.setText("find");
+		menuItem_2.setText(i18nFile.getText(I18nFile.FIND));
 		
 		MenuItem mntmFindForward = new MenuItem(menu_server_1, SWT.NONE);
 		mntmFindForward.addSelectionListener(new SelectionAdapter() {
@@ -1208,7 +1220,7 @@ public class RedisClient {
 				findForward();
 			}
 		});
-		mntmFindForward.setText("find forward");
+		mntmFindForward.setText(i18nFile.getText(I18nFile.FINDFORWARD));
 		
 		MenuItem mntmFindBackward = new MenuItem(menu_server_1, SWT.NONE);
 		mntmFindBackward.addSelectionListener(new SelectionAdapter() {
@@ -1217,7 +1229,7 @@ public class RedisClient {
 				findBackward();
 			}
 		});
-		mntmFindBackward.setText("find backward");
+		mntmFindBackward.setText(i18nFile.getText(I18nFile.FINDBACKWARD));
 		
 		return menu_server_1;
 	}
@@ -1232,7 +1244,7 @@ public class RedisClient {
 				addServer();
 			}
 		});
-		mntmNewConnection.setText("add server");
+		mntmNewConnection.setText(i18nFile.getText(I18nFile.ADDSERVER));
 		
 		new MenuItem(menu_null, SWT.SEPARATOR);
 		
@@ -1243,7 +1255,7 @@ public class RedisClient {
 				find();
 			}
 		});
-		mntmFind.setText("find");
+		mntmFind.setText(i18nFile.getText(I18nFile.FIND));
 		
 		MenuItem mntmFindNext = new MenuItem(menu_null, SWT.NONE);
 		mntmFindNext.addSelectionListener(new SelectionAdapter() {
@@ -1252,7 +1264,7 @@ public class RedisClient {
 				findForward();
 			}
 		});
-		mntmFindNext.setText("find forward");
+		mntmFindNext.setText(i18nFile.getText(I18nFile.FINDFORWARD));
 		
 		MenuItem mntmFindBackward_2 = new MenuItem(menu_null, SWT.NONE);
 		mntmFindBackward_2.addSelectionListener(new SelectionAdapter() {
@@ -1261,7 +1273,7 @@ public class RedisClient {
 				findBackward();
 			}
 		});
-		mntmFindBackward_2.setText("find  backward");
+		mntmFindBackward_2.setText(i18nFile.getText(I18nFile.FINDBACKWARD));
 		
 		new MenuItem(menu_null, SWT.SEPARATOR);
 
@@ -1272,7 +1284,7 @@ public class RedisClient {
 				rootTreeItemSelected(true);
 			}
 		});
-		mntmRefresh.setText("refresh");
+		mntmRefresh.setText(i18nFile.getText(I18nFile.REFRESH));
 	}
 
 	private void initMenu() {
@@ -1280,7 +1292,7 @@ public class RedisClient {
 		shell.setMenuBar(menu);
 
 		MenuItem mntmServer = new MenuItem(menu, SWT.CASCADE);
-		mntmServer.setText("Server");
+		mntmServer.setText(i18nFile.getText(I18nFile.SERVER));
 
 		menuServer = new Menu(mntmServer);
 		mntmServer.setMenu(menuServer);
@@ -1292,7 +1304,7 @@ public class RedisClient {
 				addServer();
 			}
 		});
-		mntmNew.setText("Add");
+		mntmNew.setText(i18nFile.getText(I18nFile.ADD));
 
 		MenuItem mntmEdit = new MenuItem(menuServer, SWT.NONE);
 		mntmEdit.setEnabled(false);
@@ -1302,7 +1314,7 @@ public class RedisClient {
 				updateServer();
 			}
 		});
-		mntmEdit.setText("Update");
+		mntmEdit.setText(i18nFile.getText(I18nFile.UPDATE));
 
 		MenuItem mntmDelete_1 = new MenuItem(menuServer, SWT.NONE);
 		mntmDelete_1.setEnabled(false);
@@ -1312,7 +1324,7 @@ public class RedisClient {
 				removeServer();
 			}
 		});
-		mntmDelete_1.setText("Remove");
+		mntmDelete_1.setText(i18nFile.getText(I18nFile.REMOVE));
 		
 		MenuItem mntmProperties = new MenuItem(menuServer, SWT.NONE);
 		mntmProperties.addSelectionListener(new SelectionAdapter() {
@@ -1322,7 +1334,7 @@ public class RedisClient {
 			}
 		});
 		mntmProperties.setEnabled(false);
-		mntmProperties.setText("Properties");
+		mntmProperties.setText(i18nFile.getText(I18nFile.PROPERTIES));
 
 		new MenuItem(menuServer, SWT.SEPARATOR);
 
@@ -1333,17 +1345,17 @@ public class RedisClient {
 				shell.close();
 			}
 		});
-		mntmExit.setText("Exit");
+		mntmExit.setText(i18nFile.getText(I18nFile.EXIT));
 
 		MenuItem mntmData = new MenuItem(menu, SWT.CASCADE);
-		mntmData.setText("Data");
+		mntmData.setText(i18nFile.getText(I18nFile.DATA));
 
 		menuData = new Menu(mntmData);
 		mntmData.setMenu(menuData);
 
 		MenuItem mntmAdd = new MenuItem(menuData, SWT.CASCADE);
 		mntmAdd.setEnabled(false);
-		mntmAdd.setText("New");
+		mntmAdd.setText(i18nFile.getText(I18nFile.NEW));
 
 		Menu menu_5 = new Menu(mntmAdd);
 		mntmAdd.setMenu(menu_5);
@@ -1355,7 +1367,7 @@ public class RedisClient {
 				newString();
 			}
 		});
-		mntmString.setText("String\tAlt+1");
+		mntmString.setText(i18nFile.getText(I18nFile.STRING)+"\tAlt+1");
 		mntmString.setAccelerator(SWT.ALT+'1');
 		mntmString.setImage(strImage);
 		
@@ -1367,7 +1379,7 @@ public class RedisClient {
 				newList();
 			}
 		});
-		mntmList.setText("List\tAlt+2");
+		mntmList.setText(i18nFile.getText(I18nFile.LIST)+"\tAlt+2");
 		mntmList.setAccelerator(SWT.ALT+'2');
 		mntmList.setImage(listImage);
 
@@ -1378,7 +1390,7 @@ public class RedisClient {
 				newSet();
 			}
 		});
-		mntmSet.setText("Set\tAlt+3");
+		mntmSet.setText(i18nFile.getText(I18nFile.SET)+"\tAlt+3");
 		mntmSet.setAccelerator(SWT.ALT+'3');
 		mntmSet.setImage(setImage);
 
@@ -1389,7 +1401,7 @@ public class RedisClient {
 				newZSet();
 			}
 		});
-		mntmSortset.setText("Sorted Set\tAlt+4");
+		mntmSortset.setText(i18nFile.getText(I18nFile.ZSET)+"\tAlt+4");
 		mntmSortset.setAccelerator(SWT.ALT+'4');
 		mntmSortset.setImage(zsetImage);
 		
@@ -1400,7 +1412,7 @@ public class RedisClient {
 				newHash();
 			}
 		});
-		mntmHash.setText("Hash\tAlt+5");
+		mntmHash.setText(i18nFile.getText(I18nFile.HASH) + "\tAlt+5");
 		mntmHash.setAccelerator(SWT.ALT+'5');
 		mntmHash.setImage(hashImage);
 		
@@ -1415,7 +1427,7 @@ public class RedisClient {
 					renameKey();
 			}
 		});
-		mntmRename_2.setText("Rename");
+		mntmRename_2.setText(i18nFile.getText(I18nFile.RENAME));
 
 		MenuItem mntmDelete_3 = new MenuItem(menuData, SWT.NONE);
 		mntmDelete_3.setEnabled(false);
@@ -1439,7 +1451,7 @@ public class RedisClient {
 					
 			}
 		});
-		mntmDelete_3.setText("Delete\tDel");
+		mntmDelete_3.setText(i18nFile.getText(I18nFile.DELETE)+"\tDel");
 		mntmDelete_3.setAccelerator(SWT.DEL);
 		
 		MenuItem mntmProperties_2 = new MenuItem(menuData, SWT.NONE);
@@ -1456,7 +1468,7 @@ public class RedisClient {
 			}
 		});
 		mntmProperties_2.setEnabled(false);
-		mntmProperties_2.setText("Properties");
+		mntmProperties_2.setText(i18nFile.getText(I18nFile.PROPERTIES));
 
 		new MenuItem(menuData, SWT.SEPARATOR);
 
@@ -1468,7 +1480,7 @@ public class RedisClient {
 			}
 		});
 		mntmcut.setEnabled(false);
-		mntmcut.setText("Cut\tCtrl+X");
+		mntmcut.setText(i18nFile.getText(I18nFile.CUT)+"\tCtrl+X");
 		mntmcut.setAccelerator(SWT.CTRL + 'X');
 
 		MenuItem mntmCopy = new MenuItem(menuData, SWT.NONE);
@@ -1479,7 +1491,7 @@ public class RedisClient {
 			}
 		});
 		mntmCopy.setEnabled(false);
-		mntmCopy.setText("Copy\tCtrl+C");
+		mntmCopy.setText(i18nFile.getText(I18nFile.COPY)+"\tCtrl+C");
 		mntmCopy.setAccelerator(SWT.CTRL + 'C');
 
 		MenuItem mntmPaste = new MenuItem(menuData, SWT.NONE);
@@ -1490,7 +1502,7 @@ public class RedisClient {
 			}
 		});
 		mntmPaste.setEnabled(false);
-		mntmPaste.setText("Paste\tCtrl+V");
+		mntmPaste.setText(i18nFile.getText(I18nFile.PASTE)+"\tCtrl+V");
 		mntmPaste.setAccelerator(SWT.CTRL + 'V');
 
 		new MenuItem(menuData, SWT.SEPARATOR);
@@ -1503,7 +1515,7 @@ public class RedisClient {
 			}
 		});
 		mntmImport.setEnabled(false);
-		mntmImport.setText("Import");
+		mntmImport.setText(i18nFile.getText(I18nFile.IMPORT));
 
 		MenuItem mntmExport = new MenuItem(menuData, SWT.NONE);
 		mntmExport.addSelectionListener(new SelectionAdapter() {
@@ -1513,7 +1525,7 @@ public class RedisClient {
 			}
 		});
 		mntmExport.setEnabled(false);
-		mntmExport.setText("Export");
+		mntmExport.setText(i18nFile.getText(I18nFile.EXPORT));
 
 		new MenuItem(menuData, SWT.SEPARATOR);
 		
@@ -1524,7 +1536,7 @@ public class RedisClient {
 				find();
 			}
 		});
-		mntmFind_2.setText("Find\tCtrl+F");
+		mntmFind_2.setText(i18nFile.getText(I18nFile.FIND)+"\tCtrl+F");
 		mntmFind_2.setAccelerator(SWT.CTRL + 'F');
 		
 		MenuItem mntmFindNext_2 = new MenuItem(menuData, SWT.NONE);
@@ -1534,7 +1546,7 @@ public class RedisClient {
 				findForward();
 			}
 		});
-		mntmFindNext_2.setText("Find forward\tF3");
+		mntmFindNext_2.setText(i18nFile.getText(I18nFile.FINDFORWARD)+"\tF3");
 		mntmFindNext_2.setAccelerator(SWT.F3);
 		
 		MenuItem mntmFindBackward_1 = new MenuItem(menuData, SWT.NONE);
@@ -1544,11 +1556,11 @@ public class RedisClient {
 				findBackward();
 			}
 		});
-		mntmFindBackward_1.setText("Find backward\tCtrl+F3");
+		mntmFindBackward_1.setText(i18nFile.getText(I18nFile.FINDBACKWARD)+"\tCtrl+F3");
 		mntmFindBackward_1.setAccelerator(SWT.CTRL+SWT.F3);
 		
 		MenuItem mntmView = new MenuItem(menu, SWT.CASCADE);
-		mntmView.setText("View");
+		mntmView.setText(i18nFile.getText(I18nFile.VIEW));
 		
 		Menu menu_1 = new Menu(mntmView);
 		mntmView.setMenu(menu_1);
@@ -1558,47 +1570,67 @@ public class RedisClient {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(flatView == true){
-					TreeItem treeItem = (TreeItem) itemsSelected[0];
+					TreeItem[] treeItems = tree.getSelection();
 
 					ContainerKeyInfo cinfo = new ContainerKeyInfo();
-					parseContainer(treeItem, cinfo);
+					parseContainer(treeItems[0], cinfo);
 					
 					flatView = false;
-					refreshDB();
-					
-					gotoDBContainer(cinfo.getId(), cinfo.getDb(), cinfo.getContainerStr(), false, false);
+					updateView(cinfo);
 				}
 			}
 		});
-		mntmHierarchy.setSelection(true);
-		mntmHierarchy.setText("Hierarchy");
+		if(!flatView)
+			mntmHierarchy.setSelection(true);
+		mntmHierarchy.setText(i18nFile.getText(I18nFile.HIERARCHY));
 		
 		MenuItem mntmFlat = new MenuItem(menu_1, SWT.RADIO);
 		mntmFlat.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if(flatView == false){
-					TreeItem treeItem = (TreeItem) itemsSelected[0];
+					TreeItem[] treeItems = tree.getSelection();
 
 					ContainerKeyInfo cinfo = new ContainerKeyInfo();
-					parseContainer(treeItem, cinfo);
+					parseContainer(treeItems[0], cinfo);
 					
 					flatView = true;
-					refreshDB();
-					
-					gotoDBContainer(cinfo.getId(), cinfo.getDb(), cinfo.getContainerStr(), false, false);
+					updateView(cinfo);
 				}
 			}
 		});
-		mntmFlat.setText("Flat");
+		if(flatView)
+			mntmFlat.setSelection(true);
+		mntmFlat.setText(i18nFile.getText(I18nFile.FLAT));
 		
 		new MenuItem(menu_1, SWT.SEPARATOR);
 		
 		MenuItem mntmEnglish = new MenuItem(menu_1, SWT.RADIO);
-		mntmEnglish.setSelection(true);
+		mntmEnglish.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(language == Language.Chinese){
+					language = Language.English;
+					refreshLangUI();
+				}
+			}
+		});
+		if(language == Language.English)
+			mntmEnglish.setSelection(true);
 		mntmEnglish.setText("English");
 		
 		MenuItem menuItem = new MenuItem(menu_1, SWT.RADIO);
+		menuItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(language == Language.English){
+					language = Language.Chinese;
+					refreshLangUI();
+				}
+			}
+		});
+		if(language == Language.Chinese)
+			menuItem.setSelection(true);
 		menuItem.setText("中文");
 		
 		new MenuItem(menu_1, SWT.SEPARATOR);
@@ -1610,11 +1642,11 @@ public class RedisClient {
 				treeItemSelected(true);
 			}
 		});
-		menuItem_1.setText("Refresh\tF5");
+		menuItem_1.setText(i18nFile.getText(I18nFile.REFRESH)+"\tF5");
 		menuItem_1.setAccelerator(SWT.F5);
 
 		MenuItem mntmFavorites = new MenuItem(menu, SWT.CASCADE);
-		mntmFavorites.setText("Favorites");
+		mntmFavorites.setText(i18nFile.getText(I18nFile.FAVORITES));
 
 		menuFavorite = new Menu(mntmFavorites);
 		mntmFavorites.setMenu(menuFavorite);
@@ -1627,7 +1659,7 @@ public class RedisClient {
 				addFavorite();
 			}
 		});
-		mntmAdd_Favorite.setText("Add");
+		mntmAdd_Favorite.setText(i18nFile.getText(I18nFile.ADD));
 
 		MenuItem mntmOrganize = new MenuItem(menuFavorite, SWT.NONE);
 		mntmOrganize.addSelectionListener(new SelectionAdapter() {
@@ -1647,12 +1679,12 @@ public class RedisClient {
 
 			}
 		});
-		mntmOrganize.setText("Organize");
+		mntmOrganize.setText(i18nFile.getText(I18nFile.ORGANIZE));
 
 		addFavoriteMenuItem();
 
 		MenuItem mntmHelp = new MenuItem(menu, SWT.CASCADE);
-		mntmHelp.setText("Help");
+		mntmHelp.setText(i18nFile.getText(I18nFile.HELP));
 
 		Menu menu_2 = new Menu(mntmHelp);
 		mntmHelp.setMenu(menu_2);
@@ -1665,7 +1697,7 @@ public class RedisClient {
 				dialog.open();
 			}
 		});
-		mntmDonation.setText("Donation");
+		mntmDonation.setText(i18nFile.getText(I18nFile.DONATION));
 		
 		new MenuItem(menu_2, SWT.SEPARATOR);
 
@@ -1677,7 +1709,7 @@ public class RedisClient {
 				dialog.open();
 			}
 		});
-		mntmAbout.setText("About");
+		mntmAbout.setText(i18nFile.getText(I18nFile.ABOUT));
 	}
 
 	protected void findForward() {
@@ -1693,7 +1725,7 @@ public class RedisClient {
 				
 				fBuffer.setFindNode(node);
 			} else {
-				boolean ok = MessageDialog.openConfirm(shell, "find forward", "All result found, find again?");
+				boolean ok = MessageDialog.openConfirm(shell, i18nFile.getText(I18nFile.FINDFORWARD), i18nFile.getText(I18nFile.FINDAGAIN));
 				if(ok){
 					Set<Node> nodes = service2.find(fBuffer.getSearchFrom(), fBuffer.getId(), fBuffer.getDb(), fBuffer.getContainer(), fBuffer.getSearchNodeType(), fBuffer.getPattern(), true);
 					if(!nodes.isEmpty()) {
@@ -1705,8 +1737,8 @@ public class RedisClient {
 						
 						fBuffer.setFindNode(node1);
 					}else{
-						MessageDialog.openInformation(shell, "find results",
-								"No match result found!");
+						MessageDialog.openInformation(shell, i18nFile.getText(I18nFile.FINDRESULTS),
+								i18nFile.getText(I18nFile.NOFOUND));
 					}
 				}
 			}
@@ -1727,7 +1759,7 @@ public class RedisClient {
 				
 				fBuffer.setFindNode(node);
 			} else {
-				boolean ok = MessageDialog.openConfirm(shell, "find backward", "All result found, find again?");
+				boolean ok = MessageDialog.openConfirm(shell, i18nFile.getText(I18nFile.FINDBACKWARD), i18nFile.getText(I18nFile.FINDAGAIN));
 				if(ok){
 					Set<Node> nodes = service2.find(fBuffer.getSearchFrom(), fBuffer.getId(), fBuffer.getDb(), fBuffer.getContainer(), fBuffer.getSearchNodeType(), fBuffer.getPattern(), false);
 					if(!nodes.isEmpty()) {
@@ -1740,8 +1772,8 @@ public class RedisClient {
 						
 						fBuffer.setFindNode(node1);
 					}else{
-						MessageDialog.openInformation(shell, "find results",
-								"No match result found!");
+						MessageDialog.openInformation(shell, i18nFile.getText(I18nFile.FINDRESULTS),
+								i18nFile.getText(I18nFile.NOFOUND));
 					}
 				}
 			}
@@ -1775,15 +1807,15 @@ public class RedisClient {
 				
 				fBuffer = new FindBuffer(node, searchFrom, cinfo.getId(), cinfo.getDb(), cinfo.getContainerStr(), info.getSearchNodeType(), info.getPattern());
 			}else{
-				MessageDialog.openInformation(shell, "find results",
-						"No match result found!");
+				MessageDialog.openInformation(shell, i18nFile.getText(I18nFile.FINDRESULTS),
+						i18nFile.getText(I18nFile.NOFOUND));
 			}
 		}
 	}
 
 	private void export() {
 		FileDialog dialog = new FileDialog(shell,SWT.SAVE);
-		dialog.setText("Export redis data file");
+		dialog.setText(i18nFile.getText(I18nFile.EXPORTREDIS));
 		String[] filterExt = { "*.*" };
 		dialog.setFilterExtensions(filterExt);
 		String file = dialog.open();
@@ -1793,8 +1825,8 @@ public class RedisClient {
 			boolean ok = false;
 			boolean exist = exportFile.exists();
 			if(exist)
-				ok = MessageDialog.openConfirm(shell, "file exists",
-						"File exists, are you sure replace this file?");
+				ok = MessageDialog.openConfirm(shell, i18nFile.getText(I18nFile.FILEEXIST),
+						i18nFile.getText(I18nFile.FILEREPLACE));
 			if(!exist || ok) {
 				for(Item item: itemsSelected){
 					TreeItem treeItem;
@@ -1845,7 +1877,7 @@ public class RedisClient {
 		parseContainer(treeItem, cinfo);
 		
 		FileDialog dialog = new FileDialog(shell, SWT.OPEN);
-		dialog.setText("Import redis data file");
+		dialog.setText(i18nFile.getText(I18nFile.IMPORTREDIS));
 		String[] filterExt = { "*.*" };
 		dialog.setFilterExtensions(filterExt);
 		String file = dialog.open();
@@ -1964,14 +1996,14 @@ public class RedisClient {
 
 	private void removeServer() {
 		if(itemsSelected.length == 1){
-			boolean ok = MessageDialog.openConfirm(shell, "remove server",
-					"Are you sure remove this server?");
+			boolean ok = MessageDialog.openConfirm(shell, i18nFile.getText(I18nFile.REMOVESERVER),
+					i18nFile.getText(I18nFile.CONFIRMREMOVESERVER));
 			if (ok) {
 				removeOneServer(itemsSelected[0]);
 			}
 		} else if(itemsSelected.length > 1){
-			boolean ok = MessageDialog.openConfirm(shell, "remove servers",
-					"Are you sure remove these servers?");
+			boolean ok = MessageDialog.openConfirm(shell, i18nFile.getText(I18nFile.REMOVESERVER),
+					i18nFile.getText(I18nFile.CONFIRMREMOVESERVER));
 			if (ok) {
 				for(Item item: itemsSelected)
 					removeOneServer(item);
@@ -2036,10 +2068,10 @@ public class RedisClient {
 			treeItem.getParentItem().setData(ITEM_OPENED, false);
 			dbContainerTreeItemSelected(treeItem.getParentItem(), false);
 			if (!rinfo.isOverwritten() && result.size() > 0) {
-				String failString = "Rename following keys failed because of exist:\n";
+				String failString = i18nFile.getText(I18nFile.RENAMEFAIL);
 				for (String container : result)
 					failString += container + "\n";
-				MessageDialog.openError(shell, "rename keys result",
+				MessageDialog.openError(shell, i18nFile.getText(I18nFile.RENAMERESULT),
 						failString);
 			}
 		}
@@ -2551,8 +2583,8 @@ public class RedisClient {
 			dbContainerTreeItemSelected(items[0], false);
 			
 			if (!rinfo.isOverwritten() && !result) {
-				String failString = "Rename key failed because of exist";
-				MessageDialog.openError(shell, "rename keys result",
+				String failString = i18nFile.getText(I18nFile.RENAMEKEYFAIL);
+				MessageDialog.openError(shell, i18nFile.getText(I18nFile.RENAMEKEYRESULT),
 						failString);
 			}
 		}
@@ -2787,7 +2819,7 @@ public class RedisClient {
 			if (serverId == id) 
 				return treeItem;
 		}
-		throw new RuntimeException("Can't find the server, please check if the server is removed");
+		throw new RuntimeException(i18nFile.getText(I18nFile.FINDSERVER));
 	}
 	
 	private TreeItem findDBTreeItem(int id, int db)  {
@@ -2799,7 +2831,7 @@ public class RedisClient {
 			if (dbItem.getText().equals(DB_PREFIX+db)) 
 				return dbItem;
 		}
-		throw new RuntimeException("Can't find the database");
+		throw new RuntimeException(i18nFile.getText(I18nFile.FINDDB));
 	}
 
 	private void selectTreeItem() {
@@ -2847,8 +2879,8 @@ public class RedisClient {
 	}
 
 	private void deleteOneKey() {
-		boolean ok = MessageDialog.openConfirm(shell, "delete key",
-				"Are you sure delete this key?");
+		boolean ok = MessageDialog.openConfirm(shell, i18nFile.getText(I18nFile.DELETEKEY),
+				i18nFile.getText(I18nFile.CONFIRMDELETEKEY));
 		if (ok) 
 			deleteKey(itemsSelected[0]);
 	}
@@ -2907,5 +2939,39 @@ public class RedisClient {
 		history.add(rootRedisServers);
 		btnBackward.setEnabled(false);
 		btnForward.setEnabled(false);
+	}
+
+	private void refreshLangUI() {
+		menu.dispose();
+		initMenu();
+		rootRedisServers.setText(i18nFile.getText(I18nFile.REDISSERVERS));
+		menu_key.dispose();
+		initMenuData();
+		menuTreeDBContainer.dispose();
+		menuTreeDBContainer = initMenuTreeDB();
+		menuTableDBContainer.dispose();
+		menuTableDBContainer = initMenuTableDB();
+		menu_Multi.dispose();
+		initMenuMulti();
+		menu_null.dispose();
+		initMenuNull();
+		menuTreeServer.dispose();
+		menuTreeServer = initMenuTreeServer();
+		menuTableServer.dispose();
+		menuTableServer = initMenuTableServer();
+		
+		tblclmnName.setText(i18nFile.getText(I18nFile.NAME));
+		tblclmnType.setText(i18nFile.getText(I18nFile.TYPE));
+		tblclmnSize.setText(i18nFile.getText(I18nFile.SIZE));
+		
+		ConfigFile.setLanguage(language);
+	}
+
+	private void updateView(ContainerKeyInfo cinfo) {
+		refreshDB();
+		if(cinfo.getId()!= -1 && cinfo.getDb() != -1)
+			gotoDBContainer(cinfo.getId(), cinfo.getDb(), cinfo.getContainerStr(), false, false);
+		
+		ConfigFile.setFlatView(flatView);
 	}
 }
