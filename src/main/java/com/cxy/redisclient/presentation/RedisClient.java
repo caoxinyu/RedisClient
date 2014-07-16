@@ -2964,14 +2964,17 @@ public class RedisClient {
 		tblclmnType.setText(i18nFile.getText(I18nFile.TYPE));
 		tblclmnSize.setText(i18nFile.getText(I18nFile.SIZE));
 		
+		treeItemSelected(true);
 		ConfigFile.setLanguage(language);
 	}
 
 	private void updateView(ContainerKeyInfo cinfo) {
 		refreshDB();
-		if(cinfo.getId()!= -1 && cinfo.getDb() != -1)
-			gotoDBContainer(cinfo.getId(), cinfo.getDb(), cinfo.getContainerStr(), false, false);
-		
+		if(cinfo.getId()!= -1 && cinfo.getDb() != -1){
+			TreeItem item = gotoDBContainer(cinfo.getId(), cinfo.getDb(), cinfo.getContainerStr(), false, false);
+			history.add(item);
+			btnBackward.setEnabled(true);
+		}
 		ConfigFile.setFlatView(flatView);
 	}
 }
