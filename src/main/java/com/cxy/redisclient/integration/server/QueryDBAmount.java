@@ -19,7 +19,10 @@ public class QueryDBAmount extends JedisCommand {
 	@Override
 	public void command() {
 		List<String> dbs = jedis.configGet("databases");
-		dbAmount = Integer.parseInt(dbs.get(1));
+		if(dbs.size() > 0)
+			dbAmount = Integer.parseInt(dbs.get(1));
+		else
+			dbAmount = 15;
 	}
 
 	@Override
