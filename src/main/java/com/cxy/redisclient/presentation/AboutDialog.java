@@ -42,7 +42,7 @@ public class AboutDialog extends RedisClientDialog {
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shell.setSize(450, 300);
+		shell.setSize(450, 350);
 		shell.setText(RedisClient.i18nFile.getText(I18nFile.ABOUTREDISCLIENT));
 		shell.setLayout(new GridLayout(1, false));
 		
