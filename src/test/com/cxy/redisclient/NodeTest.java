@@ -17,7 +17,7 @@ public class NodeTest extends TestCase {
 
 	public void testAddKey() throws IOException {
 		NodeService service2 = new NodeService();
-		service2.addString(1, 0, "key", "value");
+		service2.addString(1, 0, "key", "value", -1);
 		
 		String value = service2.readString(1, 0, "key");
 		assertEquals(value, "value");

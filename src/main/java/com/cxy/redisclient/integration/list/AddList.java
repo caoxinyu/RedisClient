@@ -44,6 +44,12 @@ public class AddList extends JedisCommand {
 				jedis.lpushx(key, value);
 		}
 
+		afterAdd();
+	}
+
+	protected void afterAdd() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	protected void beforeAdd() {

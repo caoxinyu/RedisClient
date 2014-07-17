@@ -31,6 +31,8 @@ import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.presentation.component.EditListener;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
+import com.cxy.redisclient.presentation.component.TTLTabItem;
+import com.cxy.redisclient.presentation.component.UpdateTTLTabItem;
 
 public class NewSetDialog extends RedisClientDialog {
 
@@ -170,6 +172,8 @@ public class NewSetDialog extends RedisClientDialog {
 		btnDelete.setEnabled(false);
 		btnDelete.setText(RedisClient.i18nFile.getText(I18nFile.DELETE));
 
+		final TTLTabItem tbtmTTL = getTTLTabItem(tabFolder);
+		
 		Composite composite_1 = new Composite(shell, SWT.NONE);
 		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
 		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false,
@@ -191,13 +195,13 @@ public class NewSetDialog extends RedisClientDialog {
 					MessageDialog.openError(shell, RedisClient.i18nFile.getText(I18nFile.ERROR),
 							RedisClient.i18nFile.getText(I18nFile.KEYENDERROR) + ":");
 					
-				}else {
-					for (TableItem item : items) {
-						if(item.getText().length() > 0)
-							values.add(item.getText());
-					}
-					result = new SetInfo(key, values);
-					shell.dispose();
+				}else if(tbtmTTL instanceof UpdateTTLTabItem && ((UpdateTTLTabItem)tbtmTTL).getBtnApplyButton().isEnabled()){
+					boolean ok = MessageDialog.openConfirm(shell, RedisClient.i18nFile.getText(I18nFile.APPLYTTL), RedisClient.i18nFile.getText(I18nFile.APPLYTTLEXCEPTION));
+					if(ok)
+						okSelected(tbtmTTL, items, key, values);
+				}
+				else {
+					okSelected(tbtmTTL, items, key, values);
 				}
 
 			}
@@ -216,6 +220,10 @@ public class NewSetDialog extends RedisClientDialog {
 		super.createContents();
 	}
 
+	protected TTLTabItem getTTLTabItem(TabFolder tabFolder) {
+		return new TTLTabItem(tabFolder);
+	}
+
 	protected Table getTable() {
 		return new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION
 				| SWT.MULTI);
@@ -230,5 +238,18 @@ public class NewSetDialog extends RedisClientDialog {
 		} else {
 			btnDelete.setEnabled(false);
 		}
+	}
+
+	protected void okSelected(final TTLTabItem tbtmTTL, TableItem[] items,
+			String key, Set<String> values) {
+		for (TableItem item : items) {
+			if(item.getText().length() > 0)
+				values.add(item.getText());
+		}
+		if(tbtmTTL instanceof UpdateTTLTabItem)
+			result = new SetInfo(key, values, -1);
+		else
+			result = new SetInfo(key, values, tbtmTTL.getTTL());
+		shell.dispose();
 	}
 }

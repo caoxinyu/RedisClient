@@ -31,6 +31,8 @@ import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.presentation.component.EditListener;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
+import com.cxy.redisclient.presentation.component.TTLTabItem;
+import com.cxy.redisclient.presentation.component.UpdateTTLTabItem;
 
 public class NewHashDialog extends RedisClientDialog {
 
@@ -45,8 +47,8 @@ public class NewHashDialog extends RedisClientDialog {
 	}
 
 	private String server;
-	private int db;
-	private String key;
+	protected int db;
+	protected String key;
 	protected Text text;
 	protected Table table;
 	private Button btnDelete;
@@ -180,6 +182,8 @@ public class NewHashDialog extends RedisClientDialog {
 		btnDelete.setText(RedisClient.i18nFile.getText(I18nFile.DELETE));
 		new Label(grpValues, SWT.NONE);
 
+		final TTLTabItem tbtmTTL = getTTLTabItem(tabFolder);
+		
 		Composite composite_1 = new Composite(shell, SWT.NONE);
 		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
 		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false,
@@ -201,15 +205,13 @@ public class NewHashDialog extends RedisClientDialog {
 					MessageDialog.openError(shell, RedisClient.i18nFile.getText(I18nFile.ERROR),
 							RedisClient.i18nFile.getText(I18nFile.KEYENDERROR)+ ":");
 					
-				}else {
-					for (TableItem item : items) {
-						if((item.getText(0).length() == 0 && item.getText(1).length() > 0) || (item.getText(0).length() > 0 && item.getText(1).length() == 0))
-							throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.INPUTWHOLE) + item.getText(0) + " " + item.getText(1));
-						if((item.getText(0).length() > 0 && item.getText(1).length() > 0))
-							values.put(item.getText(0), item.getText(1));
-					}
-					result = new HashInfo(key, values);
-					shell.dispose();
+				}else if(tbtmTTL instanceof UpdateTTLTabItem && ((UpdateTTLTabItem)tbtmTTL).getBtnApplyButton().isEnabled()){
+					boolean ok = MessageDialog.openConfirm(shell, RedisClient.i18nFile.getText(I18nFile.APPLYTTL), RedisClient.i18nFile.getText(I18nFile.APPLYTTLEXCEPTION));
+					if(ok)
+						okSelected(tbtmTTL, items, key, values);
+				}
+				else {
+					okSelected(tbtmTTL, items, key, values);
 				}
 
 			}
@@ -228,6 +230,10 @@ public class NewHashDialog extends RedisClientDialog {
 		super.createContents();
 	}
 
+	protected TTLTabItem getTTLTabItem(TabFolder tabFolder) {
+		return new TTLTabItem(tabFolder);
+	}
+
 	protected void tableItemSelected() {
 		TableItem[] items = table.getSelection();
 		if (items.length == 1) {
@@ -237,5 +243,20 @@ public class NewHashDialog extends RedisClientDialog {
 		} else {
 			btnDelete.setEnabled(false);
 		}
+	}
+
+	protected void okSelected(final TTLTabItem tbtmTTL, TableItem[] items,
+			String key, Map<String, String> values) {
+		for (TableItem item : items) {
+			if((item.getText(0).length() == 0 && item.getText(1).length() > 0) || (item.getText(0).length() > 0 && item.getText(1).length() == 0))
+				throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.INPUTWHOLE) + item.getText(0) + " " + item.getText(1));
+			if((item.getText(0).length() > 0 && item.getText(1).length() > 0))
+				values.put(item.getText(0), item.getText(1));
+		}
+		if(tbtmTTL instanceof UpdateTTLTabItem)
+			result = new HashInfo(key, values, -1);
+		else
+			result = new HashInfo(key, values, tbtmTTL.getTTL());
+		shell.dispose();
 	}
 }

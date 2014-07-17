@@ -72,4 +72,12 @@ public abstract class JedisCommand implements Comparable<JedisCommand>{
 			size = jedis.zcard(key);
 		return size;
 	}
+	
+	protected boolean isPersist(String key) {
+		long ttl = jedis.ttl(key);
+		if(ttl > 0)
+			return false;
+		else
+			return true;
+	}
 }

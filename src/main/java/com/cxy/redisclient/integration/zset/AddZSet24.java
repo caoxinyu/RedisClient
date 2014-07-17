@@ -15,9 +15,7 @@ public class AddZSet24 extends AddZSet {
 		return RedisVersion.REDIS_2_4;
 	}
 
-	@Override
-	protected void command() {
-		super.command();
+	protected void addZSet() {
 		jedis.zadd(key, values);
 	}
 

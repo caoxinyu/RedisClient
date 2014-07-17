@@ -70,12 +70,12 @@ public class ListContainerKeys extends JedisCommand {
 			if (ckey.length == 1) {
 				NodeType nodeType = getValueType(nextKey);
 				long size = getSize(nextKey);
-				
+				boolean persist = isPersist(nextKey);
 				DataNode node;
 				if(!flat)
-					node = new DataNode(id, db, ckey[0], nodeType, size, order, orderBy);
+					node = new DataNode(id, db, ckey[0], nodeType, size, persist, order, orderBy);
 				else
-					node = new DataNode(id, db, nextKey, nodeType, size, order, orderBy);
+					node = new DataNode(id, db, nextKey, nodeType, size, persist, order, orderBy);
 				keys.add(node);
 			}
 		}

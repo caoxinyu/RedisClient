@@ -75,6 +75,7 @@ import com.cxy.redisclient.service.ExportService;
 import com.cxy.redisclient.service.FavoriteService;
 import com.cxy.redisclient.service.HashService;
 import com.cxy.redisclient.service.ImportService;
+import com.cxy.redisclient.service.KeyNotExistException;
 import com.cxy.redisclient.service.ListService;
 import com.cxy.redisclient.service.NodeService;
 import com.cxy.redisclient.service.ServerService;
@@ -138,6 +139,11 @@ public class RedisClient {
 	private Image listImage;
 	private Image zsetImage;
 	private Image hashImage;
+	private Image strGrayImage;
+	private Image setGrayImage;
+	private Image listGrayImage;
+	private Image zsetGrayImage;
+	private Image hashGrayImage;
 	private Image leftImage;
 	private Image rightImage;
 	private Image upImage;
@@ -206,18 +212,29 @@ public class RedisClient {
 				.getResourceAsStream("/redis.png"));
 		dbImage = new Image(shell.getDisplay(), getClass().getResourceAsStream(
 				"/db.png"));
-		strImage = new Image(shell.getDisplay(), getClass().getResourceAsStream(
-				"/string.png"));
-		setImage = new Image(shell.getDisplay(), getClass().getResourceAsStream(
-				"/set.png"));
-		listImage = new Image(shell.getDisplay(), getClass()
-				.getResourceAsStream("/list.png"));
-		zsetImage = new Image(shell.getDisplay(), getClass()
-				.getResourceAsStream("/zset.png"));
-		hashImage = new Image(shell.getDisplay(), getClass()
-				.getResourceAsStream("/hash.png"));
+		
 		containerImage = new Image(shell.getDisplay(), getClass()
 				.getResourceAsStream("/container.png"));
+		
+		strImage = new Image(shell.getDisplay(), getClass().getResourceAsStream(
+				"/string.png"));
+		strGrayImage =  new Image(shell.getDisplay(), strImage, SWT.IMAGE_GRAY);
+		
+		setImage = new Image(shell.getDisplay(), getClass().getResourceAsStream(
+				"/set.png"));
+		setGrayImage =  new Image(shell.getDisplay(), setImage, SWT.IMAGE_GRAY);
+		
+		listImage = new Image(shell.getDisplay(), getClass()
+				.getResourceAsStream("/list.png"));
+		listGrayImage =  new Image(shell.getDisplay(), listImage, SWT.IMAGE_GRAY);
+		
+		zsetImage = new Image(shell.getDisplay(), getClass()
+				.getResourceAsStream("/zset.png"));
+		zsetGrayImage =  new Image(shell.getDisplay(), zsetImage, SWT.IMAGE_GRAY);
+		
+		hashImage = new Image(shell.getDisplay(), getClass()
+				.getResourceAsStream("/hash.png"));
+		hashGrayImage =  new Image(shell.getDisplay(), hashImage, SWT.IMAGE_GRAY);
 		
 		leftImage = new Image(shell.getDisplay(), getClass()
 				.getResourceAsStream("/left.png"));
@@ -1069,11 +1086,14 @@ public class RedisClient {
 		parseContainer(treeItem, cinfo);
 		String key = cinfo.getContainerStr() + items[0].getText();
 		
+		if(!service2.isKeyExist(cinfo.getId(), cinfo.getDb(), key))
+			throw new KeyNotExistException(cinfo.getId(), cinfo.getDb(), key);
+		
 		if(type == NodeType.STRING) {
 			String value = service2.readString(cinfo.getId(), cinfo.getDb(), key);
 			
 			UpdateStringDialog dialog = new UpdateStringDialog(shell,
-					iconImage,  cinfo.getServerName(),
+					iconImage,  cinfo.getId(), cinfo.getServerName(),
 					cinfo.getDb(), key, value);
 			StringInfo info = (StringInfo) dialog.open();
 			
@@ -1083,15 +1103,14 @@ public class RedisClient {
 			Map<String, String> value = service7.read(cinfo.getId(), cinfo.getDb(), key);
 			
 			UpdateHashDialog dialog = new UpdateHashDialog(shell,
-					iconImage, cinfo.getServerName(),
+					iconImage, cinfo.getId(), cinfo.getServerName(),
 					cinfo.getDb(), key, value);
 			
 			HashInfo info = (HashInfo) dialog.open();
 			if (info != null) {
-				service7.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
+				service7.update(cinfo.getId(), cinfo.getDb(), info.getKey(),
 						info.getValues());
-				treeItem.setData(ITEM_OPENED, false);
-				dbContainerTreeItemSelected(treeItem, false);
+				
 			}
 		} else if(type == NodeType.LIST) {
 			UpdateListDialog dialog = new UpdateListDialog(shell,
@@ -1103,8 +1122,7 @@ public class RedisClient {
 			if (info != null) {
 				service4.update(cinfo.getId(), cinfo.getDb(), info.getKey(),
 						info.getValues(), info.isHeadTail());
-				treeItem.setData(ITEM_OPENED, false);
-				dbContainerTreeItemSelected(treeItem, false);
+				
 			}
 		} else if(type == NodeType.SET) {
 			UpdateSetDialog dialog = new UpdateSetDialog(shell,
@@ -1113,10 +1131,9 @@ public class RedisClient {
 			
 			SetInfo info = (SetInfo) dialog.open();
 			if (info != null) {
-				service5.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
+				service5.update(cinfo.getId(), cinfo.getDb(), info.getKey(),
 						info.getValues());
-				treeItem.setData(ITEM_OPENED, false);
-				dbContainerTreeItemSelected(treeItem, false);
+				
 			}
 		} else if(type == NodeType.SORTEDSET) {
 			UpdateZSetDialog dialog = new UpdateZSetDialog(shell,
@@ -1125,12 +1142,13 @@ public class RedisClient {
 			
 			ZSetInfo info = (ZSetInfo) dialog.open();
 			if (info != null) {
-				service6.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
+				service6.update(cinfo.getId(), cinfo.getDb(), info.getKey(),
 						info.getValues());
-				treeItem.setData(ITEM_OPENED, false);
-				dbContainerTreeItemSelected(treeItem, false);
+				
 			}
 		}
+		treeItem.setData(ITEM_OPENED, false);
+		dbContainerTreeItemSelected(treeItem, false);
 	}
 
 	protected void dataItemSelected() {
@@ -2289,19 +2307,34 @@ public class RedisClient {
 					node1.getType().toString(), String.valueOf(node1.getSize()) });
 			switch (node1.getType()) {
 			case STRING:
-				item.setImage(strImage);
+				if(node1.isPersist())
+					item.setImage(strImage);
+				else
+					item.setImage(strGrayImage);
 				break;
 			case SET:
-				item.setImage(setImage);
+				if(node1.isPersist())
+					item.setImage(setImage);
+				else
+					item.setImage(setGrayImage);
 				break;
 			case LIST:
-				item.setImage(listImage);
+				if(node1.isPersist())
+					item.setImage(listImage);
+				else
+					item.setImage(listGrayImage);
 				break;
 			case HASH:
-				item.setImage(hashImage);
+				if(node1.isPersist())
+					item.setImage(hashImage);
+				else
+					item.setImage(hashGrayImage);
 				break;
 			case SORTEDSET:
-				item.setImage(zsetImage);
+				if(node1.isPersist())
+					item.setImage(zsetImage);
+				else
+					item.setImage(zsetGrayImage);
 				break;
 			default:
 				break;
@@ -2432,7 +2465,7 @@ public class RedisClient {
 		StringInfo info = (StringInfo) dialog.open();
 		if (info != null) {
 			service2.addString(cinfo.getId(), cinfo.getDb(), info.getKey(),
-					info.getValue());
+					info.getValue(), info.getTtl());
 
 			treeItem.setData(ITEM_OPENED, false);
 			dbContainerTreeItemSelected(treeItem, false);
@@ -2457,7 +2490,7 @@ public class RedisClient {
 		ListInfo info = (ListInfo) dialog.open();
 		if (info != null) {
 			service4.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
-					info.getValues(), info.isHeadTail(), info.isExist());
+					info.getValues(), info.isHeadTail(), info.isExist(), info.getTtl());
 			treeItem.setData(ITEM_OPENED, false);
 			dbContainerTreeItemSelected(treeItem, false);
 		}
@@ -2479,7 +2512,7 @@ public class RedisClient {
 		SetInfo info = (SetInfo) dialog.open();
 		if (info != null) {
 			service5.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
-					info.getValues());
+					info.getValues(), info.getTtl());
 			treeItem.setData(ITEM_OPENED, false);
 			dbContainerTreeItemSelected(treeItem, false);
 		}
@@ -2502,7 +2535,7 @@ public class RedisClient {
 		ZSetInfo info = (ZSetInfo) dialog.open();
 		if (info != null) {
 			service6.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
-					info.getValues());
+					info.getValues(), info.getTtl());
 			treeItem.setData(ITEM_OPENED, false);
 			dbContainerTreeItemSelected(treeItem, false);
 		}
@@ -2526,7 +2559,7 @@ public class RedisClient {
 		HashInfo info = (HashInfo) dialog.open();
 		if (info != null) {
 			service7.add(cinfo.getId(), cinfo.getDb(), info.getKey(),
-					info.getValues());
+					info.getValues(), info.getTtl());
 			treeItem.setData(ITEM_OPENED, false);
 			dbContainerTreeItemSelected(treeItem, false);
 		}

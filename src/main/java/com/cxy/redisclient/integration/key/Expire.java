@@ -1,24 +1,28 @@
-package com.cxy.redisclient.integration.string;
+package com.cxy.redisclient.integration.key;
 
 import com.cxy.redisclient.domain.RedisVersion;
 import com.cxy.redisclient.integration.JedisCommand;
 
-public class AddString extends JedisCommand {
+public class Expire extends JedisCommand {
 	private int db;
 	private String key;
-	private String value;
+	private int second;
 	
-	public AddString(int id, int db, String key, String value) {
+	public Expire(int id, int db, String key, int l) {
 		super(id);
 		this.db = db;
 		this.key = key;
-		this.value = value;
+		this.second = l;
 	}
 
 	@Override
-	public void command() {
+	protected void command() {
 		jedis.select(db);
-		jedis.set(key, value);
+		if(second != -1)
+			jedis.expire(key, second);
+		else
+			jedis.persist(key);
+		
 	}
 
 	@Override

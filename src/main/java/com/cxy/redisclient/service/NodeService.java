@@ -14,6 +14,7 @@ import com.cxy.redisclient.dto.Order;
 import com.cxy.redisclient.dto.OrderBy;
 import com.cxy.redisclient.integration.key.DeleteKey;
 import com.cxy.redisclient.integration.key.DumpKey;
+import com.cxy.redisclient.integration.key.Expire;
 import com.cxy.redisclient.integration.key.FindContainerKeys;
 import com.cxy.redisclient.integration.key.FindContainerKeysFactory;
 import com.cxy.redisclient.integration.key.GetSize;
@@ -23,15 +24,17 @@ import com.cxy.redisclient.integration.key.ListContainers;
 import com.cxy.redisclient.integration.key.ListKeys;
 import com.cxy.redisclient.integration.key.RenameKey;
 import com.cxy.redisclient.integration.key.RestoreKey;
+import com.cxy.redisclient.integration.key.TTLs;
 import com.cxy.redisclient.integration.server.QueryServerVersion;
 import com.cxy.redisclient.integration.string.AddString;
 import com.cxy.redisclient.integration.string.ReadString;
 import com.cxy.redisclient.integration.string.UpdateString;
 
 public class NodeService {
-	public void addString(int id, int db, String key, String value) {
+	public void addString(int id, int db, String key, String value, int ttl) {
 		AddString command = new AddString(id, db, key ,value);
 		command.execute();
+		expire(id, db, key, ttl);
 	}
 	
 	public String readString(int id, int db, String key) {
@@ -298,5 +301,20 @@ public class NodeService {
 		command.execute();
 		return command.getSize();
 		
+	}
+	public long getTTL(int id, int db, String key) {
+		TTLs command = new TTLs(id, db, key);
+		command.execute();
+		long ttl = command.getSecond();
+		
+		if(ttl == -2)
+			throw new KeyNotExistException(id, db, key);
+		return ttl;
+	}
+	public void expire(int id, int db, String key, int ttl){
+		
+		Expire command1 = new Expire(id, db, key, ttl);
+		command1.execute();
+
 	}
 }

@@ -149,6 +149,14 @@ public class I18nFile extends PropertyFile {
 	public static final String SETEXIST = "SETEXIST";
 	public static final String ZSETEXIST = "ZSETEXIST";
 	public static final String KEYNOTEXIST = "KEYNOTEXIST";
+	public static final String STAR = "STAR";
+	public static final String TTL = "TTL";
+	public static final String EXPIRE = "EXPIRE";
+	public static final String TTLS = "TTLS";
+	public static final String TTLEXCEPTION = "TTLEXCEPTION";
+	public static final String APPLY = "APPLY";
+	public static final String APPLYTTL = "APPLYTTL";
+	public static final String APPLYTTLEXCEPTION = "APPLYTTLEXCEPTION";
 	
 	
 	public I18nFile(){

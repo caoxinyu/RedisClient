@@ -48,6 +48,7 @@ public class DataNode extends Node  {
 	}
 
 	private long size;
+	private boolean persist;
 	private OrderBy orderBy;
 
 	public long getSize() {
@@ -58,10 +59,19 @@ public class DataNode extends Node  {
 		this.size = size;
 	}
 
-	public DataNode(int id, int db, String key, NodeType type, long size,
+	public boolean isPersist() {
+		return persist;
+	}
+
+	public void setPersist(boolean persist) {
+		this.persist = persist;
+	}
+	
+	public DataNode(int id, int db, String key, NodeType type, long size, boolean persist,
 			Order order, OrderBy orderBy) {
 		super(id, db, key, type, order);
 		this.size = size;
+		this.persist = persist;
 		this.orderBy = orderBy;
 	}
 

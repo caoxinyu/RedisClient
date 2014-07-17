@@ -5,10 +5,18 @@ import java.util.Set;
 public class SetInfo {
 	private String key;
 	private Set<String> values;
-	public SetInfo(String key, Set<String> values) {
+	private int ttl;
+	public SetInfo(String key, Set<String> values, int ttl) {
 		super();
 		this.key = key;
 		this.values = values;
+		this.ttl = ttl;
+	}
+	public int getTtl() {
+		return ttl;
+	}
+	public void setTtl(int ttl) {
+		this.ttl = ttl;
 	}
 	public String getKey() {
 		return key;

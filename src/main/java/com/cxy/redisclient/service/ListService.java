@@ -2,6 +2,7 @@ package com.cxy.redisclient.service;
 
 import java.util.List;
 
+import com.cxy.redisclient.integration.key.Expire;
 import com.cxy.redisclient.integration.key.IsKeyExist;
 import com.cxy.redisclient.integration.list.AddList;
 import com.cxy.redisclient.integration.list.InsertList;
@@ -12,9 +13,13 @@ import com.cxy.redisclient.integration.list.SetValue;
 import com.cxy.redisclient.integration.list.UpdateList;
 
 public class ListService {
-	public void add(int id, int db, String key, List<String> values, boolean headTail, boolean exist) {
+	public void add(int id, int db, String key, List<String> values, boolean headTail, boolean exist, int ttl) {
 		AddList command = new AddList(id, db, key, values, headTail, exist);
 		command.execute();
+		
+		Expire command1 = new Expire(id, db, key, ttl);
+		command1.execute();
+
 	}
 	
 	public void update(int id, int db, String key, List<String> values, boolean headTail){

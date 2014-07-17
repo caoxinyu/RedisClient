@@ -3,11 +3,14 @@ package com.cxy.redisclient.presentation.zset;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.Table;
 
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.presentation.component.PagingListener;
+import com.cxy.redisclient.presentation.component.TTLTabItem;
+import com.cxy.redisclient.presentation.component.UpdateTTLTabItem;
 
 public class UpdateZSetDialog extends NewZSetDialog {
 	private int id;
@@ -21,7 +24,7 @@ public class UpdateZSetDialog extends NewZSetDialog {
 	@Override
 	protected void createContents() {
 		super.createContents();
-		shell.setText(RedisClient.i18nFile.getText(I18nFile.ZSETPROPERTY));
+		shell.setText(RedisClient.i18nFile.getText(I18nFile.ZSETPROPERTY)+": "+key);
 		text.setEditable(false);
 		text.removeModifyListener(new ModifyKey());
 		btnOk.setEnabled(true);
@@ -32,5 +35,8 @@ public class UpdateZSetDialog extends NewZSetDialog {
 	protected Table getTable() {
 		return new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION
 				| SWT.MULTI | SWT.VIRTUAL);
+	}
+	protected TTLTabItem getTTLTabItem(TabFolder tabFolder) {
+		return new UpdateTTLTabItem(tabFolder, id, db, key);
 	}
 }

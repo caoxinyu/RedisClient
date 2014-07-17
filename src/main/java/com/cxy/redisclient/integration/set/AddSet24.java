@@ -10,9 +10,7 @@ public class AddSet24 extends AddSet {
 		super(id, db, key, values);
 	}
 
-	@Override
-	protected void command() {
-		super.command();
+	protected void addSet() {
 		jedis.sadd(key, values);
 	}
 

@@ -93,6 +93,14 @@ public class AboutDialog extends RedisClientDialog {
 		Link link_1 = new Link(composite, SWT.NONE);
 		link_1.addSelectionListener(openUrl);
 		link_1.setText("<a href=\"https://github.com/caoxinyu/redisclient/issues?state=open\">" + RedisClient.i18nFile.getText(I18nFile.CLICK) + "</a>");
+		new Label(composite, SWT.NONE);
+		
+		Label lblStar = new Label(composite, SWT.NONE);
+		lblStar.setText(RedisClient.i18nFile.getText(I18nFile.STAR));
+		
+		Link link_2 = new Link(composite, SWT.NONE);
+		link_2.addSelectionListener(openUrl);
+		link_2.setText("<a href=\"https://github.com/caoxinyu/RedisClient/stargazers\">" + RedisClient.i18nFile.getText(I18nFile.CLICK) + "</a>");
 		
 		Composite composite_1 = new Composite(shell, SWT.NONE);
 		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));

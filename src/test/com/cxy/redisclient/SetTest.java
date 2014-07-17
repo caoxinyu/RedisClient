@@ -15,7 +15,7 @@ public class SetTest extends TestCase {
 		values.add("hello1");
 		values.add("world1");
 		
-		service.add(1, 0, "myset", values);
+		service.add(1, 0, "myset", values, -1);
 	}
 	
 	public void testRemove() {

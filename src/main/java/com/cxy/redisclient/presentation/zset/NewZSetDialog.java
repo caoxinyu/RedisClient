@@ -31,6 +31,8 @@ import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.presentation.component.EditListener;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
+import com.cxy.redisclient.presentation.component.TTLTabItem;
+import com.cxy.redisclient.presentation.component.UpdateTTLTabItem;
 
 public class NewZSetDialog extends RedisClientDialog {
 
@@ -180,7 +182,8 @@ public class NewZSetDialog extends RedisClientDialog {
 		btnDelete.setText(RedisClient.i18nFile.getText(I18nFile.DELETE));
 		new Label(grpValues, SWT.NONE);
 		
-
+		final TTLTabItem tbtmTTL = getTTLTabItem(tabFolder);
+		
 		Composite composite_1 = new Composite(shell, SWT.NONE);
 		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
 		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false,
@@ -202,15 +205,13 @@ public class NewZSetDialog extends RedisClientDialog {
 					MessageDialog.openError(shell, RedisClient.i18nFile.getText(I18nFile.ERROR),
 							RedisClient.i18nFile.getText(I18nFile.KEYENDERROR)+":");
 					
-				}else {
-					for (TableItem item : items) {
-						if((item.getText(0).length() == 0 && item.getText(1).length() > 0) || (item.getText(0).length() > 0 && item.getText(1).length() == 0))
-							throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.INPUTWHOLE) + item.getText(0) + " " + item.getText(1));
-						if((item.getText(0).length() > 0 && item.getText(1).length() > 0))
-							values.put(item.getText(1),	Double.valueOf(item.getText(0)));
-					}
-					result = new ZSetInfo(key, values);
-					shell.dispose();
+				}else if(tbtmTTL instanceof UpdateTTLTabItem && ((UpdateTTLTabItem)tbtmTTL).getBtnApplyButton().isEnabled()){
+					boolean ok = MessageDialog.openConfirm(shell, RedisClient.i18nFile.getText(I18nFile.APPLYTTL), RedisClient.i18nFile.getText(I18nFile.APPLYTTLEXCEPTION));
+					if(ok)
+						okSelected(tbtmTTL, items, key, values);
+				}
+				else {
+					okSelected(tbtmTTL, items, key, values);
 				}
 
 			}
@@ -229,6 +230,10 @@ public class NewZSetDialog extends RedisClientDialog {
 		super.createContents();
 	}
 
+	protected TTLTabItem getTTLTabItem(TabFolder tabFolder) {
+		return new TTLTabItem(tabFolder);
+	}
+
 	protected Table getTable() {
 		return new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION
 				| SWT.MULTI);
@@ -243,6 +248,21 @@ public class NewZSetDialog extends RedisClientDialog {
 		} else {
 			btnDelete.setEnabled(false);
 		}
+	}
+
+	protected void okSelected(final TTLTabItem tbtmTTL, TableItem[] items,
+			String key, Map<String, Double> values) {
+		for (TableItem item : items) {
+			if((item.getText(0).length() == 0 && item.getText(1).length() > 0) || (item.getText(0).length() > 0 && item.getText(1).length() == 0))
+				throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.INPUTWHOLE) + item.getText(0) + " " + item.getText(1));
+			if((item.getText(0).length() > 0 && item.getText(1).length() > 0))
+				values.put(item.getText(1),	Double.valueOf(item.getText(0)));
+		}
+		if(tbtmTTL instanceof UpdateTTLTabItem)
+			result = new ZSetInfo(key, values, -1);
+		else
+			result = new ZSetInfo(key, values, tbtmTTL.getTTL());
+		shell.dispose();
 	}
 
 }

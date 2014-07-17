@@ -22,6 +22,8 @@ import com.cxy.redisclient.dto.StringInfo;
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
+import com.cxy.redisclient.presentation.component.TTLTabItem;
+import com.cxy.redisclient.presentation.component.UpdateTTLTabItem;
 
 public class NewStringDialog extends RedisClientDialog {
 
@@ -38,7 +40,7 @@ public class NewStringDialog extends RedisClientDialog {
 	protected Text text_key;
 	protected Text text_value;
 	private String server;
-	private int db;
+	protected int db;
 	protected String key;
 	protected Button btnOk;
 
@@ -102,6 +104,8 @@ public class NewStringDialog extends RedisClientDialog {
 		text_value = new Text(composite, SWT.BORDER);
 		text_value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
 		
+		final TTLTabItem tbtmTTL = getTTLTabItem(tabFolder);
+		
 		Composite composite_1 = new Composite(shell, SWT.NONE);
 		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
 		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
@@ -120,9 +124,13 @@ public class NewStringDialog extends RedisClientDialog {
 					MessageDialog.openError(shell, RedisClient.i18nFile.getText(I18nFile.ERROR),
 							RedisClient.i18nFile.getText(I18nFile.KEYENDERROR)+":");
 					
-				}else {
-					result = new StringInfo(key, value);
-					shell.dispose();
+				}else if(tbtmTTL instanceof UpdateTTLTabItem && ((UpdateTTLTabItem)tbtmTTL).getBtnApplyButton().isEnabled()){
+					boolean ok = MessageDialog.openConfirm(shell, RedisClient.i18nFile.getText(I18nFile.APPLYTTL), RedisClient.i18nFile.getText(I18nFile.APPLYTTLEXCEPTION));
+					if(ok)
+						okSelected(tbtmTTL, key, value);
+				}
+				else {
+					okSelected(tbtmTTL, key, value);
 				}
 			}
 		});
@@ -138,5 +146,17 @@ public class NewStringDialog extends RedisClientDialog {
 		button_1.setText(RedisClient.i18nFile.getText(I18nFile.CANCEL));
 
 		super.createContents();
+	}
+
+	protected TTLTabItem getTTLTabItem(TabFolder tabFolder) {
+		return new TTLTabItem(tabFolder);
+	}
+
+	protected void okSelected(final TTLTabItem tbtmTTL, String key, String value) {
+		if(tbtmTTL instanceof UpdateTTLTabItem)
+			result = new StringInfo(key, value, -1);
+		else
+			result = new StringInfo(key, value, tbtmTTL.getTTL());
+		shell.dispose();
 	}
 }

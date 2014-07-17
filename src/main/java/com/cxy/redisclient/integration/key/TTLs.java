@@ -1,24 +1,28 @@
-package com.cxy.redisclient.integration.string;
+package com.cxy.redisclient.integration.key;
 
 import com.cxy.redisclient.domain.RedisVersion;
 import com.cxy.redisclient.integration.JedisCommand;
 
-public class AddString extends JedisCommand {
+public class TTLs extends JedisCommand {
 	private int db;
 	private String key;
-	private String value;
+	private long second;
 	
-	public AddString(int id, int db, String key, String value) {
+	public long getSecond() {
+		return second;
+	}
+
+	public TTLs(int id, int db, String key) {
 		super(id);
 		this.db = db;
 		this.key = key;
-		this.value = value;
 	}
 
 	@Override
-	public void command() {
+	protected void command() {
 		jedis.select(db);
-		jedis.set(key, value);
+		second = jedis.ttl(key);
+		
 	}
 
 	@Override

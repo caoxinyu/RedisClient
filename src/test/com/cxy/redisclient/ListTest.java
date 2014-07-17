@@ -15,7 +15,7 @@ public class ListTest extends TestCase {
 		values.add("hello");
 		values.add("world");
 		
-		service.add(1, 0, "mylist", values, true, true);
+		service.add(1, 0, "mylist", values, true, true, -1);
 		
 		List<String> lists = service.list(1, 0, "mylist");
 		assertTrue(lists.size() > 0);
@@ -27,7 +27,7 @@ public class ListTest extends TestCase {
 		values.add("hello");
 		values.add("world");
 		
-		service.add(1, 0, "notexist", values, true, false);
+		service.add(1, 0, "notexist", values, true, false, -1);
 		
 		List<String> lists = service.list(1, 0, "notexist");
 		assertTrue(lists.size() == 0);

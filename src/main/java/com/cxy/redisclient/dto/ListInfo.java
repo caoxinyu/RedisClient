@@ -7,13 +7,21 @@ public class ListInfo {
 	private List<String> values;
 	private boolean headTail;
 	private boolean exist;
+	private int ttl;
 	public ListInfo(String key, List<String> values, boolean headTail,
-			boolean exist) {
+			boolean exist, int ttl) {
 		super();
 		this.key = key;
 		this.values = values;
 		this.headTail = headTail;
 		this.exist = exist;
+		this.ttl = ttl;
+	}
+	public int getTtl() {
+		return ttl;
+	}
+	public void setTtl(int ttl) {
+		this.ttl = ttl;
 	}
 	public String getKey() {
 		return key;

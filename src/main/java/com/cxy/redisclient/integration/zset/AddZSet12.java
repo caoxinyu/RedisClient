@@ -15,9 +15,7 @@ public class AddZSet12 extends AddZSet {
 		return RedisVersion.REDIS_1_2;
 	}
 
-	@Override
-	protected void command() {
-		super.command();
+	protected void addZSet() {
 		for(Map.Entry<String, Double> value: values.entrySet())
 			jedis.zadd(key, value.getValue(), value.getKey());
 	}

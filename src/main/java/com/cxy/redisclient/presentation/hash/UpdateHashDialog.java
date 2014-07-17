@@ -8,24 +8,29 @@ import java.util.Set;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TableItem;
 
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
+import com.cxy.redisclient.presentation.component.TTLTabItem;
+import com.cxy.redisclient.presentation.component.UpdateTTLTabItem;
 
 public class UpdateHashDialog extends NewHashDialog {
 	private Map<String, String> value;
+	private int id;
 	
-	public UpdateHashDialog(Shell parent, Image image, String server, int db,
+	public UpdateHashDialog(Shell parent, Image image, int id, String server, int db,
 			String key, Map<String , String> value) {
 		super(parent, image, server, db, key);
+		this.id = id;
 		this.value = value;
 	}
 
 	@Override
 	protected void createContents() {
 		super.createContents();
-		shell.setText(RedisClient.i18nFile.getText(I18nFile.HASHPROPERTY));
+		shell.setText(RedisClient.i18nFile.getText(I18nFile.HASHPROPERTY)+": "+key);
 		text.setEditable(false);
 		text.removeModifyListener(new ModifyKey());
 		
@@ -41,6 +46,10 @@ public class UpdateHashDialog extends NewHashDialog {
 			
 			item.setText(values);
 		}
+	}
+	
+	protected TTLTabItem getTTLTabItem(TabFolder tabFolder) {
+		return new UpdateTTLTabItem(tabFolder, id, db, key);
 	}
 
 }
