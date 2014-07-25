@@ -47,7 +47,6 @@ public class RenameKeysDialog extends RedisClientDialog {
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shell.setSize(600, 258);
 		shell.setText(RedisClient.i18nFile.getText(I18nFile.RENAME));
 		
 		shell.setLayout(new GridLayout(1, false));

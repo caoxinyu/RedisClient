@@ -41,7 +41,6 @@ public class AddServerDialog extends RedisClientDialog {
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shell.setSize(362, 284);
 		shell.setText(getTitle());
 
 		shell.setLayout(new GridLayout(1, false));

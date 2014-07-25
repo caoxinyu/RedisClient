@@ -46,7 +46,6 @@ public class FindKeyDialog extends RedisClientDialog {
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shell.setSize(612, 369);
 		shell.setText(RedisClient.i18nFile.getText(I18nFile.FIND));
 
 		shell.setLayout(new GridLayout(1, false));

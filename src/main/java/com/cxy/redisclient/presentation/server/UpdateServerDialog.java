@@ -16,7 +16,6 @@ public class UpdateServerDialog extends AddServerDialog {
 
 	@Override
 	protected void createContents() {
-		// TODO Auto-generated method stub
 		super.createContents();
 		text_3.setText(server.getName());
 		text_3.selectAll();

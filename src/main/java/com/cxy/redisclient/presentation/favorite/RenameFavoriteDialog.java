@@ -39,14 +39,12 @@ public class RenameFavoriteDialog extends RedisClientDialog {
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shell.setSize(340, 234);
 		shell.setText(RedisClient.i18nFile.getText(I18nFile.UPDATEFAVORITE));
 
 		shell.setLayout(new GridLayout(1, false));
 		
 		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		tabFolder.setSize(290, 101);
 		
 		TabItem tbtmString = new TabItem(tabFolder, SWT.NONE);
 		tbtmString.setText(RedisClient.i18nFile.getText(I18nFile.FAVORITE));

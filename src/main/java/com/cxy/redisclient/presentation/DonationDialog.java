@@ -31,7 +31,6 @@ public class DonationDialog extends RedisClientDialog {
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shell.setSize(480, 500);
 		shell.setText(RedisClient.i18nFile.getText(I18nFile.DONATION));
 		shell.setLayout(new GridLayout(1, false));
 		
@@ -47,7 +46,6 @@ public class DonationDialog extends RedisClientDialog {
 		label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		label.setAlignment(SWT.CENTER);
 		label.setImage(code);
-		label.setBounds(0, 0, 61, 17);
 		
 		Composite composite_1 = new Composite(shell, SWT.NONE);
 		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));

@@ -37,17 +37,14 @@ public class DeleteContainerDialog extends RedisClientDialog {
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shell.setSize(500, 200);
 		shell.setText(RedisClient.i18nFile.getText(I18nFile.DELETE));
 		shell.setLayout(new GridLayout(2, false));
 		
 		Label lblNewLabel_1 = new Label(shell, SWT.NONE);
 		lblNewLabel_1.setImage(questionImage);
-		lblNewLabel_1.setBounds(0, 0, 61, 17);
 		
 		Label lblNewLabel = new Label(shell, SWT.NONE);
 		lblNewLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
-		lblNewLabel.setBounds(0, 0, 61, 17);
 		if(containerNo == -1)
 			lblNewLabel.setText(RedisClient.i18nFile.getText(I18nFile.DELETECONTAINERS));
 		else if(containerNo == 1)
@@ -59,7 +56,6 @@ public class DeleteContainerDialog extends RedisClientDialog {
 			btnDeleteSubcontainerUnder = new Button(shell, SWT.CHECK);
 			btnDeleteSubcontainerUnder.setSelection(true);
 			btnDeleteSubcontainerUnder.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 2, 1));
-			btnDeleteSubcontainerUnder.setBounds(0, 0, 98, 17);
 			btnDeleteSubcontainerUnder.setText(RedisClient.i18nFile.getText(I18nFile.DELETESUBCONTAINER));
 		}else
 			btnDeleteSubcontainerUnder = null;

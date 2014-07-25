@@ -47,7 +47,6 @@ public class PropertiesDialog extends RedisClientDialog {
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
-		shell.setSize(940, 569);
 		shell.setText(info.getName() + " " + RedisClient.i18nFile.getText(I18nFile.SERVERPROPERTY));
 		shell.setLayout(new GridLayout(1, false));
 		

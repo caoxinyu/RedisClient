@@ -53,7 +53,6 @@ public class OrganizeFavoriteDialog extends RedisClientDialog {
 				shell.dispose();
 			}
 		});
-		shell.setSize(546, 423);
 		shell.setText(RedisClient.i18nFile.getText(I18nFile.ORGANIZEFAVORITE));
 		
 		
@@ -61,13 +60,11 @@ public class OrganizeFavoriteDialog extends RedisClientDialog {
 		
 		Group grpFavorites = new Group(shell, SWT.NONE);
 		grpFavorites.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		grpFavorites.setSize(417, 231);
 		grpFavorites.setText(RedisClient.i18nFile.getText(I18nFile.FAVORITES));
 		grpFavorites.setLayout(new GridLayout(4, false));
 		
 		table = new Table(grpFavorites, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 2));
-		table.setSize(308, 45);
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

@@ -16,7 +16,7 @@ public abstract class RedisClientDialog extends Dialog {
 	protected Object result;
 	protected Shell shell;
 	protected Image image;
-	protected int minWidth = 300;
+	protected int minWidth = 350;
 	protected int minHeight = 150;
 	/**
 	 * Create the dialog.
