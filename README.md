@@ -13,7 +13,7 @@ This is a redis client GUI tool written based on Java SWT and Jedis. It's my obj
 
 **Multiple Redis version adaptive**
 
- 1. Manage redis server
+ 1. Manage redis server, support server password authentication
  2. Manage redis data favorite
  3. Manage redis data
  	* New redis data: string, list, hash, set, sorted set
@@ -25,6 +25,11 @@ This is a redis client GUI tool written based on Java SWT and Jedis. It's my obj
  	* Search redis data
  	* Order redis data by key, data type, size
  	* Navigation history
+ 	* Support time to live
+ 	* Support paging query redis data
+ 	* Support multiple selection to delete, cut, copy, export
+ 	* Support flat view and hierarchy view to list redis data
+ 	* Support multiple language, now support English and Chinese
 
 
 ## Install & run
