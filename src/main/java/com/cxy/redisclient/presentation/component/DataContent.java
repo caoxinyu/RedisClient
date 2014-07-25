@@ -15,7 +15,6 @@ import org.eclipse.swt.widgets.TabFolder;
 
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
-import com.cxy.redisclient.service.KeyNotExistException;
 import com.cxy.redisclient.service.NodeService;
 
 public abstract class DataContent extends NewDataContent {
@@ -61,9 +60,8 @@ public abstract class DataContent extends NewDataContent {
 			public void widgetSelected(SelectionEvent e) {
 				try{
 					service.expire(id, db, key, getTTL());
-				}catch(KeyNotExistException e1){
+				}finally{
 					setTTLApply(false);
-					throw e1;
 				}
 			}
 		});
@@ -79,9 +77,8 @@ public abstract class DataContent extends NewDataContent {
 			public void widgetSelected(SelectionEvent e) {
 				try{
 					setTTL((int) service.getTTL(id, db, key));
-				}catch(KeyNotExistException e1){
+				}finally{
 					setTTLApply(false);
-					throw e1;
 				}
 			}
 		});
