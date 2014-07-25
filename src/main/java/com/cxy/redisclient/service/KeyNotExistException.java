@@ -17,6 +17,6 @@ public class KeyNotExistException extends RuntimeException {
 
 	@Override
 	public String getMessage() {
-		return RedisClient.i18nFile.getText(I18nFile.KEYNOTEXIST)+key;
+		return RedisClient.i18nFile.getText(I18nFile.KEYNOTEXIST)+": "+key;
 	}
 }

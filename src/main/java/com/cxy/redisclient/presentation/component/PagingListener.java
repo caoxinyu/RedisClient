@@ -7,6 +7,9 @@ import org.eclipse.swt.widgets.TableItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cxy.redisclient.integration.I18nFile;
+import com.cxy.redisclient.presentation.RedisClient;
+
 public class PagingListener implements Listener {
 	private static final Logger logger = LoggerFactory.getLogger(PagingListener.class);
 	
@@ -74,6 +77,8 @@ public class PagingListener implements Listener {
 	}
 	public void setCount(){
 		this.count = (int) page.getCount();
+		if(count == 0)
+			throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.KEYNOTEXIST));
 		table.setItemCount(count);
 		
 	}
