@@ -4,17 +4,13 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
 
 public class PagingListener implements Listener {
-	private static final Logger logger = LoggerFactory.getLogger(PagingListener.class);
-	
 	private Table table;
-	private final int PAGE_SIZE = 2;
+	private final int PAGE_SIZE = 20;
 	private IPage page;
 	private int count;
 	private boolean addHead = false;
@@ -25,14 +21,12 @@ public class PagingListener implements Listener {
 		this.count = (int) page.getCount();
 		table.setItemCount(count);
 		this.addHead = false;
-		logger.info("constructor not add head, now addhead is " + addHead);
 	}
 	
 	public PagingListener(Table table, IPage page, boolean addHead){
 		this.table = table;
 		this.page = page;
 		this.addHead = addHead;
-		logger.info("constructor add head, now addhead is " + addHead);
 		
 		if(!addHead){
 			this.count = (int) page.getCount();
@@ -43,7 +37,6 @@ public class PagingListener implements Listener {
 	}
 	@Override
 	public void handleEvent(Event event) {
-		logger.info("trigger set page");
 		TableItem item = (TableItem) event.item;
 		setPage(table.indexOf(item));
 	}

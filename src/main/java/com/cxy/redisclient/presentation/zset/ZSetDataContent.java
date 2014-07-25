@@ -18,8 +18,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
@@ -29,8 +27,6 @@ import com.cxy.redisclient.presentation.component.PagingListener;
 import com.cxy.redisclient.service.ZSetService;
 
 public class ZSetDataContent extends DataContent {
-	private static final Logger logger = LoggerFactory.getLogger(ZSetDataContent.class);
-	
 	private Table table;
 	private Button btnDelete;
 	private Button btnAdd;
@@ -172,7 +168,6 @@ public class ZSetDataContent extends DataContent {
 					statusChanged();
 					break;
 				}
-				logger.info("cancel, now status is "+ status);
 			}
 		});
 		btnCancel.setEnabled(false);
@@ -225,7 +220,6 @@ public class ZSetDataContent extends DataContent {
 		
 		if(status != Status.Normal)
 			addModifyTextListener();
-		logger.info("tabitem selected, now status is " + status);
 		
 		if(items.length > 0 && currentItem != items[0]){
 			switch(status){
@@ -244,8 +238,6 @@ public class ZSetDataContent extends DataContent {
 			}
 			currentItem = items[0];
 			status = Status.Normal;
-			
-			logger.info("tabitem changed, now status is " + status);
 		}
 		statusChanged();
 	}
@@ -283,7 +275,6 @@ public class ZSetDataContent extends DataContent {
 			break;
 		
 		}
-		logger.info("status changed, now status is " + status);
 	}
 	private void addModifyTextListener() {
 		editor = editListener.getText();
@@ -302,7 +293,6 @@ public class ZSetDataContent extends DataContent {
 					case Adding:
 						break;
 					}
-					logger.info("input text, now status is " + status);
 				}
 			});
 		}

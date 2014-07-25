@@ -1,12 +1,13 @@
 package com.cxy.redisclient.integration;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import com.cxy.redisclient.presentation.RedisClient;
 
 public class I18nFile extends PropertyFile {
-	private static String propertyFile;
+	private static InputStream propertyFile;
 	private static Properties properties;
 	
 	public static final String SERVER = "SERVER";
@@ -180,7 +181,7 @@ public class I18nFile extends PropertyFile {
 	
 	
 	public I18nFile(){
-		propertyFile = getClass().getResource("/i18n.properties").getFile();
+		propertyFile = getClass().getResourceAsStream("/i18n.properties");
 		try {
 			properties = getProperty(propertyFile);
 		} catch (IOException e) {

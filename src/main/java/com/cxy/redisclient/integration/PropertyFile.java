@@ -45,7 +45,13 @@ public class PropertyFile {
 		return props;
 	}
 
-	
+	protected static Properties getProperty(InputStream is) throws IOException {
+		Properties props = new Properties();
+
+		props.load(is);
+		is.close();
+		return props;
+	}
 
 	public static void write(String propertyFile, String key, String value) throws IOException {
 		Properties props = getProperty(propertyFile);

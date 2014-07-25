@@ -12,12 +12,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
@@ -25,11 +24,8 @@ import com.cxy.redisclient.presentation.component.DataContent;
 import com.cxy.redisclient.presentation.component.EditListener;
 import com.cxy.redisclient.presentation.component.PagingListener;
 import com.cxy.redisclient.service.ListService;
-import org.eclipse.swt.widgets.Label;
 
 public class ListDataContent extends DataContent {
-	private static final Logger logger = LoggerFactory.getLogger(ListDataContent.class);
-	
 	private Table table;
 	private Button btnAppendTail;
 	private Button btnDeleteHead;
@@ -189,7 +185,6 @@ public class ListDataContent extends DataContent {
 					statusChanged();
 					break;
 				}
-				logger.info("cancel, now status is "+ status);
 				
 			}
 		});
@@ -307,7 +302,6 @@ public class ListDataContent extends DataContent {
 					case Updating:
 						break;
 					}
-					logger.info("input text, now status is " + status);
 				}
 			});
 		}

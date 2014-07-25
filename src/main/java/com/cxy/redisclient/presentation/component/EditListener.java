@@ -9,12 +9,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class EditListener implements Listener {
-	private static final Logger logger = LoggerFactory.getLogger(EditListener.class);
-	
 	private Table table;
 	private TableEditor editor;
 	protected Text text;
@@ -58,15 +54,12 @@ public class EditListener implements Listener {
 		
 	}
 	public void clickRow(final TableItem item, final int column) {
-		logger.info("click row");
 		text = new Text(table, SWT.NONE);
 		text.setEditable(edit);
 		Listener textListener = new Listener() {
 			public void handleEvent(final Event e) {
 				switch (e.type) {
 				case SWT.FocusOut:
-					logger.info("focus out");
-					
 					item.setText(column, text.getText());
 					text.dispose();
 				

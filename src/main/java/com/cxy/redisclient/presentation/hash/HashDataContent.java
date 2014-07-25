@@ -21,8 +21,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
@@ -31,8 +29,6 @@ import com.cxy.redisclient.presentation.component.EditListener;
 import com.cxy.redisclient.service.HashService;
 
 public class HashDataContent extends DataContent {
-	private static final Logger logger = LoggerFactory.getLogger(HashDataContent.class);
-	
 	private Table table;
 	private Button btnDelete;
 	private HashService service = new HashService();
@@ -280,8 +276,6 @@ public class HashDataContent extends DataContent {
 	}
 	
 	protected void tableItemSelected() {
-		logger.info("table item selected");
-		
 		addModifyTextListener();
 		
 		TableItem[] items = table.getSelection();
@@ -316,7 +310,6 @@ public class HashDataContent extends DataContent {
 			}
 			currentData.setItem(items[0]);
 			
-			logger.info("table item changed, now status is "+currentStatus);
 		}
 		
 	}
@@ -360,7 +353,6 @@ public class HashDataContent extends DataContent {
 			break;
 			
 		}
-		logger.info("status changed, now status is "+currentStatus);
 	}
 
 	private void add() {
@@ -370,7 +362,6 @@ public class HashDataContent extends DataContent {
 		currentStatus = Status.Add;
 		currentData.setItem(item);
 		addModifyTextListener();
-		logger.info("click add, current status is: " + currentStatus);
 		statusChanged();
 	}
 
@@ -397,7 +388,6 @@ public class HashDataContent extends DataContent {
 					case Editing:
 						break;
 					}
-					logger.info("input text, now status is "+currentStatus);
 				}
 			});
 		}
