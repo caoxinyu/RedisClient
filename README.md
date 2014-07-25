@@ -27,7 +27,7 @@ This is a redis client GUI tool written based on Java SWT and Jedis. It's my obj
  	* Navigation history
  	* Support time to live
  	* Support paging query redis data
- 	* Support multiple selection to delete, cut, copy, export
+ 	* Support multiple selection to delete, cut, copy, export redis data
  	* Support flat view and hierarchy view to list redis data
  	* Support multiple language, now support English and Chinese
 
