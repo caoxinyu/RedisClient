@@ -90,9 +90,8 @@ import com.cxy.redisclient.service.SetService;
 import com.cxy.redisclient.service.ZSetService;
 
 public class RedisClient {
-
-	private static final Logger logger = LoggerFactory
-			.getLogger(RedisClient.class);
+	@SuppressWarnings("unused")
+	private static final Logger logger = LoggerFactory.getLogger(RedisClient.class);
 
 	private Shell shell;
 	private PasteBuffer pBuffer = new PasteBuffer();;
@@ -872,7 +871,6 @@ public class RedisClient {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
-				logger.debug("table double clicked");
 				TreeItem[] treeItems = tree.getSelection();
 				Point point = new Point(e.x, e.y);
 				TableItem selectedItem = table.getItem(point);
@@ -1057,8 +1055,6 @@ public class RedisClient {
 	}
 
 	private void tableItemSelected() {
-		logger.debug("table selected");
-
 		TableItem[] items = table.getSelection();
 		if (items.length == 1) {
 			itemsSelected = items;
@@ -1188,7 +1184,6 @@ public class RedisClient {
 
 					openDataContent.remove(dataContent);
 					tbtmNewItem.dispose();
-					logger.info("tabitem disposed");
 				}
 			});
 
@@ -3141,7 +3136,6 @@ public class RedisClient {
 	}
 
 	private void selectTreeItem() {
-		logger.debug("tree selected");
 		TreeItem[] items = tree.getSelection();
 
 		if ((itemsSelected[0] instanceof TreeItem && items[0] != itemsSelected[0])) {
