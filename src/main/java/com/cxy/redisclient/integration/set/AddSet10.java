@@ -9,10 +9,15 @@ public class AddSet10 extends AddSet {
 	public AddSet10(int id, int db, String key, Set<String> values) {
 		super(id, db, key, values);
 	}
+	public AddSet10(int id, int db, String key, String[] values) {
+		super(id, db, key, values);
+	}
 
 	protected void addSet() {
-		for(String value: values)
+		for(String value: values){
 			jedis.sadd(key, value);
+			size++;
+		}
 	}
 
 	@Override

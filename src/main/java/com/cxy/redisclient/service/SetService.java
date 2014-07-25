@@ -13,17 +13,25 @@ import com.cxy.redisclient.integration.set.RemoveSet;
 import com.cxy.redisclient.integration.set.RemoveSetFactory;
 
 public class SetService {
-	public void add(int id, int db, String key, Set<String> values, int ttl) {
+	public long add(int id, int db, String key, Set<String> values, int ttl) {
 		AddSet command = (AddSet) new AddSetFactory(id, db, key, values).getCommand();
 		command.execute();
 		
 		Expire command1 = new Expire(id, db, key, ttl);
 		command1.execute();
+		return command.getSize();
 
 	}
-	public void update(int id, int db, String key, Set<String> values) {
+	public long addValues(int id, int db, String key, Set<String> values) {
 		AddSet command = (AddSet) new AddSetFactory(id, db, key, values).getCommand();
 		command.execute();
+		return command.getSize();
+		
+	}
+	public long addValues(int id, int db, String key, String[] values) {
+		AddSet command = (AddSet) new AddSetFactory(id, db, key, values).getCommand();
+		command.execute();
+		return command.getSize();
 	}
 	
 	public Set<String> list(int id, int db, String key) {

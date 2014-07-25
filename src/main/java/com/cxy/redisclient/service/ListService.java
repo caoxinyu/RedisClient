@@ -1,5 +1,6 @@
 package com.cxy.redisclient.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.cxy.redisclient.integration.key.Expire;
@@ -58,6 +59,22 @@ public class ListService {
 		command.execute();
 	}
 	
+	public void addHead(int id, int db, String key, String value){
+		List<String> values = new ArrayList<String>();
+		values.add(value);
+		
+		AddList command = new AddList(id, db, key, values, false, true);
+		command.execute();
+		
+	}
+	public void addTail(int id, int db, String key, String value){
+		List<String> values = new ArrayList<String>();
+		values.add(value);
+		
+		AddList command = new AddList(id, db, key, values, true, true);
+		command.execute();
+		
+	}
 	public List<String> getPage(int id, int db, String key, int start, int end) {
 		ListListPage command = new ListListPage(id, db, key, start, end);
 		command.execute();

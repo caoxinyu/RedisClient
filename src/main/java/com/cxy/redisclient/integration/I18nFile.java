@@ -157,6 +157,26 @@ public class I18nFile extends PropertyFile {
 	public static final String APPLY = "APPLY";
 	public static final String APPLYTTL = "APPLYTTL";
 	public static final String APPLYTTLEXCEPTION = "APPLYTTLEXCEPTION";
+	public static final String SCOREERROR = "SCOREERROR";
+	public static final String REDISDATAEXPLORER = "REDISDATAEXPLORER";
+	public static final String ORDER = "ORDER";
+	public static final String ORDERBY = "ORDERBY";
+	public static final String ASCEND = "ASCEND";
+	public static final String DESCEND = "DESCEND";
+	public static final String LANGUAGE = "LANGUAGE";
+	public static final String INPUTKEY = "INPUTKEY";
+	public static final String UPDATEFIELD = "UPDATEFIELD";
+	public static final String DELETEHASH = "DELETEHASH";
+	public static final String INSERTHEAD = "INSERTHEAD";
+	public static final String APPENDTAIL = "APPENDTAIL";
+	public static final String DELETEHEAD = "DELETEHEAD";
+	public static final String DELETETAIL = "DELETETAIL";
+	public static final String EDITING = "EDITING";
+	public static final String EDITINGERROR = "EDITINGERROR";
+	public static final String ADDSETVALUES = "ADDSETVALUES";
+	public static final String CLOSEAPP = "CLOSEAPP";
+	public static final String CLOSEAPPERROR = "CLOSEAPPERROR";
+	
 	
 	
 	public I18nFile(){

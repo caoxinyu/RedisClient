@@ -11,5 +11,10 @@ public class AddSetFactory extends JedisCommandFactory {
 		commands.add(new AddSet10(id, db, key, values));
 		commands.add(new AddSet24(id, db, key, values));
 	}
+	public AddSetFactory(int id, int db, String key, String[] values) {
+		super(id);
+		commands.add(new AddSet10(id, db, key, values));
+		commands.add(new AddSet24(id, db, key, values));
+	}
 
 }

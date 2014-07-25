@@ -11,6 +11,7 @@ import com.cxy.redisclient.integration.zset.AddZSet;
 import com.cxy.redisclient.integration.zset.AddZSetFactory;
 import com.cxy.redisclient.integration.zset.ListZSet;
 import com.cxy.redisclient.integration.zset.ListZSetPage;
+import com.cxy.redisclient.integration.zset.RemoveMembers;
 
 public class ZSetService {
 	public void add(int id, int db, String key, Map<String, Double> values, int ttl) {
@@ -36,8 +37,12 @@ public class ZSetService {
 		command.execute();
 		return command.getPage();
 	}
-	public void update(int id, int db, String key, Map<String, Double> values) {
+	public void addValues(int id, int db, String key, Map<String, Double> values) {
 		AddZSet command = (AddZSet) new AddZSetFactory(id, db, key, values).getCommand();
+		command.execute();
+	}
+	public void removeMembers(int id, int db, String key, String[] members){
+		RemoveMembers command = new RemoveMembers(id, db, key, members);
 		command.execute();
 	}
 }

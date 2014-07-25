@@ -16,7 +16,8 @@ public abstract class RedisClientDialog extends Dialog {
 	protected Object result;
 	protected Shell shell;
 	protected Image image;
-
+	protected int minWidth = 300;
+	protected int minHeight = 150;
 	/**
 	 * Create the dialog.
 	 * @param parent
@@ -55,6 +56,8 @@ public abstract class RedisClientDialog extends Dialog {
 	 * Create contents of the dialog.
 	 */
 	protected void createContents() {
+		shell.setMinimumSize(minWidth, minHeight);
+		shell.pack();
 		Rectangle screenSize = shell.getParent().getBounds();
 		Rectangle shellSize = shell.getBounds();
 		shell.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,

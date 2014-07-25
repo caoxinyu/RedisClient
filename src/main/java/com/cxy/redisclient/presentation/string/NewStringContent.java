@@ -1,0 +1,31 @@
+package com.cxy.redisclient.presentation.string;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
+
+import com.cxy.redisclient.integration.I18nFile;
+import com.cxy.redisclient.presentation.RedisClient;
+import com.cxy.redisclient.presentation.component.NewDataContent;
+
+public class NewStringContent extends NewDataContent {
+	private Text text_value;
+	public NewStringContent(int id, String server, int db, String key,
+			String dataTitle) {
+		super(id, server, db, key, dataTitle);
+		// TODO Auto-generated constructor stub
+	}
+	@Override
+	protected void initData(Composite dataComposite) {
+		Label label = new Label(dataComposite, SWT.NONE);
+		label.setText(RedisClient.i18nFile.getText(I18nFile.VALUE));
+		
+		text_value = new Text(dataComposite, SWT.BORDER);
+		text_value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+	}
+	public Text getText() {
+		return text_value;
+	}
+}

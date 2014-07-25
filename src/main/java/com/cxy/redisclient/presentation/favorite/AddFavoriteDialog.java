@@ -62,7 +62,7 @@ public class AddFavoriteDialog extends RedisClientDialog {
 		text_2.setFocus();
 		
 		Composite composite_1 = new Composite(shell, SWT.NONE);
-		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.BOTTOM, false, true, 1, 1));
 		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
 		
 		Button button = new Button(composite_1, SWT.NONE);

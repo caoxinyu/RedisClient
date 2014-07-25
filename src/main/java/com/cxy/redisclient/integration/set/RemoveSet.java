@@ -1,5 +1,6 @@
 package com.cxy.redisclient.integration.set;
 
+import java.util.Iterator;
 import java.util.Set;
 
 import com.cxy.redisclient.integration.JedisCommand;
@@ -16,9 +17,11 @@ public abstract class RemoveSet extends JedisCommand {
 		int size = values.size();
 		this.values = new String[size];
 		
-		for(int i = 0 ; i < size; i++) {
-			String value = values.iterator().next();
-			this.values[i] = value;
+		Iterator<String> iterator = values.iterator();
+		int i = 0;
+		while (iterator.hasNext()) {
+			String value = (String) iterator.next();
+			this.values[i++] = value;
 		}
 	}
 

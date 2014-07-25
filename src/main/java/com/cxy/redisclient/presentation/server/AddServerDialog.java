@@ -48,7 +48,6 @@ public class AddServerDialog extends RedisClientDialog {
 		
 		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		tabFolder.setSize(290, 118);
 		
 		TabItem tbtmServerInformation = new TabItem(tabFolder, SWT.NONE);
 		tbtmServerInformation.setText(RedisClient.i18nFile.getText(I18nFile.SERVER));
