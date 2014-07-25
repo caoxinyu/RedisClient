@@ -25,6 +25,8 @@ public class ZSetPage extends Page {
 		String[] values = new String[]{"", ""};
 		
 		int index = row-start;
+		if(index == -1)
+			return new String[]{"", ""};
 		if(index < page.length){
 			Tuple tuple = (Tuple) page[index];
 			values = new String[]{String.valueOf(tuple.getScore()), tuple.getElement()};

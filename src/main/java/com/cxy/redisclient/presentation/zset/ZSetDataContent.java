@@ -93,13 +93,12 @@ public class ZSetDataContent extends DataContent {
 		btnAdd.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				table.clearAll();
-				
 				table.addListener(SWT.MouseDown, editListener);
 				
 				table.removeListener(SWT.SetData, pageListener);
 				pageListener = new PagingListener(table, new ZSetPage(id, db, key), true);
 				table.addListener(SWT.SetData, pageListener);
+				table.clearAll();
 				
 				TableItem item = table.getItem(0);
 				

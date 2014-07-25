@@ -28,14 +28,15 @@ public class PagingListener implements Listener {
 	public PagingListener(Table table, IPage page, boolean addHead){
 		this.table = table;
 		this.page = page;
-		this.count = (int) page.getCount();
 		this.addHead = addHead;
 		logger.info("constructor add head, now addhead is " + addHead);
 		
-		if(!addHead)
-			table.setItemCount(count);
-		else
-			table.setItemCount(count + 1);
+		if(!addHead){
+			this.count = (int) page.getCount();
+		}else{
+			this.count = (int) page.getCount()+1;
+		}
+		this.table.setItemCount(count);
 	}
 	@Override
 	public void handleEvent(Event event) {
@@ -46,21 +47,34 @@ public class PagingListener implements Listener {
 	
 	private void setPage(int index) {
 		TableItem item;
-        int start = index / PAGE_SIZE * PAGE_SIZE;
-        int end = Math.min(start + PAGE_SIZE, table.getItemCount());
+		int start;
+        int end;
+        
+        if(!addHead){
+        	start = index / PAGE_SIZE * PAGE_SIZE;
+        	end = Math.min(start + PAGE_SIZE, count);
+        }else{
+        	start = index / PAGE_SIZE * PAGE_SIZE-1;
+        	if(start < 0)
+        		start = 0;
+        	end = Math.min(start + PAGE_SIZE, count-1);
+        }
+        
 		this.page.initPage(start, end);
-		logger.info("set page, now addhead is " + addHead);
+		
 		
 		for (int i = start; i < end; i++) {
 			if(!addHead)
 				item = table.getItem (i);
-			else
+			else{
 				item = table.getItem (i+1);
+			}
 			item.setText (this.page.getText(i));
 		}
 	}
 	public void setCount(){
 		this.count = (int) page.getCount();
 		table.setItemCount(count);
+		
 	}
 }
