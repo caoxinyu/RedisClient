@@ -33,10 +33,10 @@ public class DataContents {
 		}
 		return null;
 	}
-	public boolean canClose(){
+	public String canClose(){
 		for(DataContent dataContent : dataContents)
 			if(!dataContent.canClose())
-				return false;
-		return true;
+				return dataContent.getKey();
+		return null;
 	}
 }

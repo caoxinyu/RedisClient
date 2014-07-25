@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.TabFolder;
 
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
+import com.cxy.redisclient.service.KeyNotExistException;
 import com.cxy.redisclient.service.NodeService;
 
 public abstract class DataContent extends NewDataContent {
@@ -43,6 +44,9 @@ public abstract class DataContent extends NewDataContent {
 		super.refreshLangUI();
 	}
 
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	@Override
 	protected void initTTLTabItem(TabFolder tabFolder) {
 		super.initTTLTabItem(tabFolder);
@@ -55,8 +59,12 @@ public abstract class DataContent extends NewDataContent {
 		btnApply.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				service.expire(id, db, key, getTTL());
-				setTTLApply(false);
+				try{
+					service.expire(id, db, key, getTTL());
+				}catch(KeyNotExistException e1){
+					setTTLApply(false);
+					throw e1;
+				}
 			}
 		});
 		btnApply.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
@@ -69,8 +77,12 @@ public abstract class DataContent extends NewDataContent {
 		btnRefresh.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				setTTL((int) service.getTTL(id, db, key));
-				setTTLApply(false);
+				try{
+					setTTL((int) service.getTTL(id, db, key));
+				}catch(KeyNotExistException e1){
+					setTTLApply(false);
+					throw e1;
+				}
 			}
 		});
 		btnExpire.addSelectionListener(new SelectionAdapter() {

@@ -364,7 +364,7 @@ public class HashDataContent extends DataContent {
 	}
 
 	private void add() {
-		TableItem item = new TableItem(table, SWT.NONE);
+		TableItem item = new TableItem(table, SWT.NONE, 0);
 		table.setSelection(item);
 		listener.clickRow(item, 0);
 		currentStatus = Status.Add;

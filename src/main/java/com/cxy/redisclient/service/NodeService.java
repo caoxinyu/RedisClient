@@ -303,6 +303,9 @@ public class NodeService {
 		
 	}
 	public long getTTL(int id, int db, String key) {
+		if(!isKeyExist(id, db, key))
+			throw new KeyNotExistException(id, db, key);
+		
 		TTLs command = new TTLs(id, db, key);
 		command.execute();
 		long ttl = command.getSecond();
@@ -312,6 +315,8 @@ public class NodeService {
 		return ttl;
 	}
 	public void expire(int id, int db, String key, int ttl){
+		if(!isKeyExist(id, db, key))
+			throw new KeyNotExistException(id, db, key);
 		
 		Expire command1 = new Expire(id, db, key, ttl);
 		command1.execute();

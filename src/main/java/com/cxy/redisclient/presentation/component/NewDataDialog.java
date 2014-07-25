@@ -55,7 +55,7 @@ public abstract class NewDataDialog extends RedisClientDialog {
 		inputKey = dataContent.getInputKey();
 		btnOk = okCancel.getOkButton();
 		
-		minWidth = 500;
+		minWidth = 600;
 		minHeight = 500;
 		
 		super.createContents();

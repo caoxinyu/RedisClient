@@ -28,12 +28,16 @@ public class NewListContent extends NewDataContent {
 	private boolean exist = true;
 	private Group grpWhenListNot;
 	private Group grpValues;
+	private TableColumn tblclmnNewColumn;
 	
 	public NewListContent(int id, String server, int db, String key,
 			String dataTitle) {
 		super(id, server, db, key, dataTitle);
 	}
 
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	@Override
 	protected void initData(Composite dataComposite) {
 		grpValues = new Group(dataComposite, SWT.NONE);
@@ -42,9 +46,10 @@ public class NewListContent extends NewDataContent {
 		grpValues.setText(RedisClient.i18nFile.getText(I18nFile.VALUES));
 		grpValues.setLayout(new GridLayout(4, false));
 
-		table =  new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);;
+		table =  new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		table.setHeaderVisible(true);;
 		
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 4));
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 4));
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -54,7 +59,8 @@ public class NewListContent extends NewDataContent {
 		table.setLinesVisible(true);
 		table.addListener(SWT.MouseDown, new EditListener(table, true));
 
-		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
+		tblclmnNewColumn = new TableColumn(table, SWT.NONE);
+		tblclmnNewColumn.setText(RedisClient.i18nFile.getText(I18nFile.VALUE));
 		tblclmnNewColumn.setWidth(200);
 
 		Button btnAdd = new Button(grpValues, SWT.NONE);

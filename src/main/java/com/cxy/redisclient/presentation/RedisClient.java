@@ -282,8 +282,9 @@ public class RedisClient {
 		shell = new Shell();
 		shell.addListener(SWT.Close, new Listener() {
 			public void handleEvent(Event event) {
-				if(!openDataContent.canClose()){
-					boolean ok = MessageDialog.openConfirm(shell, i18nFile.getText(I18nFile.CLOSEAPP), i18nFile.getText(I18nFile.CLOSEAPPERROR));
+				String key = openDataContent.canClose();
+				if(key != null){
+					boolean ok = MessageDialog.openConfirm(shell, i18nFile.getText(I18nFile.CLOSEAPP), key + ": " + i18nFile.getText(I18nFile.CLOSEAPPERROR));
 					event.doit = ok;
 				}else
 					event.doit = true;

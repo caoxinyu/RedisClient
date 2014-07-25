@@ -33,6 +33,7 @@ public class SetDataContent extends DataContent {
 	private Group grpValues;
 	private Button btnAdd;
 	private Button btnRefresh;
+	private TableColumn tblclmnNewColumn;
 	
 	public SetDataContent(CTabItem tabItem, int id, String server, int db, String key,
 			String dataTitle) {
@@ -52,6 +53,7 @@ public class SetDataContent extends DataContent {
 		grpValues.setLayout(new GridLayout(4, false));
 
 		table = new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL);
+		table.setHeaderVisible(true);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 3));
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -64,7 +66,8 @@ public class SetDataContent extends DataContent {
 		pageListener = new PagingListener(table, new SetPage(id, db, key));
 		table.addListener(SWT.SetData, pageListener);
 		
-		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
+		tblclmnNewColumn = new TableColumn(table, SWT.NONE);
+		tblclmnNewColumn.setText(RedisClient.i18nFile.getText(I18nFile.VALUE));
 		tblclmnNewColumn.setWidth(200);
 
 		btnAdd = new Button(grpValues, SWT.NONE);
@@ -123,6 +126,7 @@ public class SetDataContent extends DataContent {
 	@Override
 	public void refreshLangUI() {
 		grpValues.setText(RedisClient.i18nFile.getText(I18nFile.VALUES));
+		tblclmnNewColumn.setText(RedisClient.i18nFile.getText(I18nFile.VALUE));
 		btnAdd.setText(RedisClient.i18nFile.getText(I18nFile.ADD));
 		btnDelete.setText(RedisClient.i18nFile.getText(I18nFile.DELETE));
 		btnRefresh.setText(RedisClient.i18nFile.getText(I18nFile.REFRESH));

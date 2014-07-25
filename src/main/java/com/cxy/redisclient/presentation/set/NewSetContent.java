@@ -23,12 +23,16 @@ public class NewSetContent extends NewDataContent {
 	private Table table;
 	private Button btnDelete;
 	private Group grpValues;
+	private TableColumn tblclmnNewColumn;
 	
 	public NewSetContent(int id, String server, int db, String key,
 			String dataTitle) {
 		super(id, server, db, key, dataTitle);
 		// TODO Auto-generated constructor stub
 	}
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	@Override
 	protected void initData(Composite dataComposite) {
 		grpValues = new Group(dataComposite, SWT.NONE);
@@ -38,6 +42,7 @@ public class NewSetContent extends NewDataContent {
 		grpValues.setLayout(new GridLayout(4, false));
 
 		table = new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI);
+		table.setHeaderVisible(true);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 2));
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -48,7 +53,8 @@ public class NewSetContent extends NewDataContent {
 		table.setLinesVisible(true);
 		table.addListener(SWT.MouseDown, new EditListener(table, true));
 
-		TableColumn tblclmnNewColumn = new TableColumn(table, SWT.NONE);
+		tblclmnNewColumn = new TableColumn(table, SWT.NONE);
+		tblclmnNewColumn.setText(RedisClient.i18nFile.getText(I18nFile.VALUE));
 		tblclmnNewColumn.setWidth(200);
 
 		Button btnAdd = new Button(grpValues, SWT.NONE);
