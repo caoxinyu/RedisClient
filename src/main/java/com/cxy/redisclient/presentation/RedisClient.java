@@ -289,7 +289,6 @@ public class RedisClient {
 					event.doit = true;
 			}
 		});
-		shell.setSize(1074, 772);
 		shell.setText("RedisClient");
 		shell.setLayout(new GridLayout(1, false));
 
@@ -2970,7 +2969,7 @@ public class RedisClient {
 			pBuffer.getCutItem().dispose();
 		}
 
-		if (source.getContainer().isKey()) {
+		if (source.getContainer() != null && source.getContainer().isKey()) {
 			String newKey = service2.pasteKey(source.getId(), source.getDb(),
 					source.getContainerStr(), target.getId(), target.getDb(),
 					target.getContainerStr()
