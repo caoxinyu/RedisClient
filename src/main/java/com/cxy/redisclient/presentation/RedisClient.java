@@ -391,7 +391,7 @@ public class RedisClient {
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		text.setEditable(false);
 
-		SashForm sashForm = new SashForm(composite_1, SWT.NONE);
+		final SashForm sashForm = new SashForm(composite_1, SWT.NONE);
 		sashForm.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
 				1));
 
@@ -407,15 +407,27 @@ public class RedisClient {
 
 		initMenuMulti();
 
-		Composite composite_2 = new Composite(sashForm, SWT.NONE);
+		final Composite composite_2 = new Composite(sashForm, SWT.NONE);
 		composite_2.setLayout(new GridLayout(1, false));
 
-		SashForm sashForm_1 = new SashForm(composite_2, SWT.VERTICAL);
+		final SashForm sashForm_1 = new SashForm(composite_2, SWT.VERTICAL);
 		sashForm_1.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,
 				1, 1));
 		sashForm_1.setLocation(0, 0);
 
 		tabFolder = new CTabFolder(sashForm_1, SWT.BORDER);
+		tabFolder.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				if(sashForm_1.getMaximizedControl() != tabFolder){
+					sashForm.setMaximizedControl(composite_2);
+					sashForm_1.setMaximizedControl(tabFolder);
+				}else{
+					sashForm.setMaximizedControl(null);
+					sashForm_1.setMaximizedControl(null);
+				}
+			}
+		});
 		tabFolder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -434,6 +446,18 @@ public class RedisClient {
 		initTable(tabFolder);
 
 		tabFolder_1 = new CTabFolder(sashForm_1, SWT.BORDER);
+		tabFolder_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				if(sashForm_1.getMaximizedControl() != tabFolder_1){
+					sashForm.setMaximizedControl(composite_2);
+					sashForm_1.setMaximizedControl(tabFolder_1);
+				}else{
+					sashForm.setMaximizedControl(null);
+					sashForm_1.setMaximizedControl(null);
+				}
+			}
+		});
 		tabFolder_1.setBounds(0, 0, 156, 127);
 		tabFolder_1.setSelectionBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
