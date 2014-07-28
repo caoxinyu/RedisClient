@@ -619,22 +619,23 @@ public class RedisClient {
 
 					selectTreeItem();
 
+					
 					if (selectedItem == rootRedisServers
 							|| selectedItem == null) {
-						tree.setMenu(menu_null);
+						tree.getMenu().setVisible(true);
 					} else {
 						NodeType type = (NodeType) selectedItem
 								.getData(NODE_TYPE);
-
+						
 						if (type == NodeType.ROOT) {
-							tree.setMenu(menu_null);
+							tree.getMenu().setVisible(true);
 						} else if (type == NodeType.SERVER) {
 							updateMenuServer(false, menuTreeServer);
-							tree.setMenu(menuTreeServer);
+							tree.getMenu().setVisible(true);
 						} else if (type == NodeType.DATABASE
 								|| type == NodeType.CONTAINER) {
 							updateMenuDBContainer(type, menuTreeDBContainer);
-							tree.setMenu(menuTreeDBContainer);
+							tree.getMenu().setVisible(true);
 						}
 
 					}
@@ -2407,13 +2408,16 @@ public class RedisClient {
 		switch (type) {
 		case ROOT:
 			rootTreeItemSelected(refresh);
+			tree.setMenu(menu_null);
 			break;
 		case SERVER:
 			serverTreeItemSelected(items[0], refresh);
+			tree.setMenu(menuTreeServer);
 			break;
 		case DATABASE:
 		case CONTAINER:
 			dbContainerTreeItemSelected(items[0], refresh);
+			tree.setMenu(menuTreeDBContainer);
 			break;
 		default:
 			break;
