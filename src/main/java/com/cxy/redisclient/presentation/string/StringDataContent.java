@@ -36,8 +36,8 @@ public class StringDataContent extends DataContent {
 		label = new Label(dataComposite, SWT.NONE);
 		label.setText(RedisClient.i18nFile.getText(I18nFile.VALUE));
 		
-		final Text text_value = new Text(dataComposite, SWT.BORDER);
-		text_value.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3, 1));
+		final Text text_value = new Text(dataComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL| SWT.MULTI);
+		text_value.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
 		
 		value = service.readString(id, db, key);
 		
