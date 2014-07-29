@@ -34,7 +34,7 @@ This is a redis client GUI tool written based on Java SWT and Jedis. It's my obj
 
 ## Install & run
 
- 1. Download the runable jar file [redisclient-linux.x86.1.5.jar](https://github.com/caoxinyu/RedisClient/blob/master/release/redisclient-linux.x86.1.5.jar?raw=true)
+ 1. Download the runable jar file [redisclient-linux.x86.1.5.jar](https://github.com/caoxinyu/RedisClient/blob/linux/release/redisclient-linux.x86.1.5.jar?raw=true)
  2. Run the redisclient-linux.x86.1.5.jar, input `java -jar redisclient-linux.x86.1.5.jar`. 
 
 ## Donate
