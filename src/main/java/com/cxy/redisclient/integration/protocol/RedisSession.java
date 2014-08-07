@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 public class RedisSession {
+	private static final String NEWLINE = "\r\n";
 	private String host;
 	private int port;
 
@@ -38,7 +39,7 @@ public class RedisSession {
 	public String execute(String command) throws IOException {
 		String result = null;
 
-		writer.write(command);
+		writer.write(command + NEWLINE);
 		writer.flush();
 
 		String head = reader.readLine();
@@ -47,13 +48,5 @@ public class RedisSession {
 		result = parser.parse(head, reader);
 		
 		return result;
-	}
-	
-	public boolean selectDB(int db) throws IOException{
-		String result = execute("select " + db + "\r\n");
-		if(result.equals("OK"))
-			return true;
-		else
-			return false;
 	}
 }

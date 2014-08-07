@@ -177,6 +177,17 @@ public class I18nFile extends PropertyFile {
 	public static final String ADDSETVALUES = "ADDSETVALUES";
 	public static final String CLOSEAPP = "CLOSEAPP";
 	public static final String CLOSEAPPERROR = "CLOSEAPPERROR";
+	public static final String TOOL = "TOOL";
+	public static final String CONSOLE = "CONSOLE";
+	public static final String COMMAND = "COMMAND";
+	public static final String TIME = "TIME";
+	public static final String DURATION = "DURATION";
+	public static final String RESULT = "RESULT";
+	public static final String CONSOLECLOSED = "CONSOLECLOSED";
+	public static final String QUITCONSOLE = "QUITCONSOLE";
+	public static final String RUNCURRENT = "RUNCURRENT";
+	public static final String RUNSELECT = "RUNSELECT";
+	public static final String RUNFOLLOW = "RUNFOLLOW";
 	
 	
 	

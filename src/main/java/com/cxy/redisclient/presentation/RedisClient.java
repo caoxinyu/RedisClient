@@ -60,6 +60,7 @@ import com.cxy.redisclient.dto.ZSetInfo;
 import com.cxy.redisclient.integration.ConfigFile;
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.component.DataContent;
+import com.cxy.redisclient.presentation.console.Console;
 import com.cxy.redisclient.presentation.favorite.AddFavoriteDialog;
 import com.cxy.redisclient.presentation.favorite.OrganizeFavoriteDialog;
 import com.cxy.redisclient.presentation.hash.HashDataContent;
@@ -119,6 +120,7 @@ public class RedisClient {
 	private CTabFolder tabFolder;
 	private CTabFolder tabFolder_1;
 	private DataContents openDataContent = new DataContents();
+	private Consoles openConsole = new Consoles();
 
 	private Menu menuTreeServer;
 	private Menu menuTableServer;
@@ -132,6 +134,7 @@ public class RedisClient {
 	private Menu menuFavorite;
 	private Menu menuServer;
 	private Menu menuView;
+	private Menu menuTool;
 
 	private MenuItem mntmNameOrder;
 	private MenuItem mntmTypeOrder;
@@ -176,7 +179,7 @@ public class RedisClient {
 
 	private Order clientOrder = Order.Ascend;
 	private OrderBy clientOrderBy = OrderBy.NAME;
-
+	
 	/**
 	 * Launch the application.
 	 * 
@@ -461,10 +464,10 @@ public class RedisClient {
 		tabFolder_1.setBounds(0, 0, 156, 127);
 		tabFolder_1.setSelectionBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_TITLE_INACTIVE_BACKGROUND_GRADIENT));
+		
 		sashForm_1.setWeights(new int[] { 1, 1 });
-
 		sashForm.setWeights(new int[] { 1, 4 });
-
+		
 		initMenuNull();
 
 		menuTreeServer = initMenuTreeServer();
@@ -477,7 +480,7 @@ public class RedisClient {
 		treeItemSelected(false);
 
 		history.add(rootRedisServers);
-
+		
 		shell.setImage(iconImage);
 
 	}
@@ -1201,6 +1204,11 @@ public class RedisClient {
 			final CTabItem tbtmNewItem = new CTabItem(tabFolder_1, SWT.NONE);
 			tbtmNewItem.setText("New Item");
 			tbtmNewItem.setShowClose(true);
+			Composite composite_2 = new Composite(tabFolder_1, SWT.NONE);
+			tbtmNewItem.setControl(composite_2);
+			composite_2.setLayout(new GridLayout(1, false));
+			tbtmNewItem.setText(key);
+			
 			tbtmNewItem.addDisposeListener(new DisposeListener() {
 				public void widgetDisposed(DisposeEvent e) {
 					DataContent dataContent = (DataContent) tbtmNewItem
@@ -1211,10 +1219,7 @@ public class RedisClient {
 				}
 			});
 
-			Composite composite_2 = new Composite(tabFolder_1, SWT.NONE);
-			tbtmNewItem.setControl(composite_2);
-			composite_2.setLayout(new GridLayout(1, false));
-			tbtmNewItem.setText(key);
+			
 			DataContent content = null;
 			if (type == NodeType.STRING) {
 				tbtmNewItem.setImage(strImage);
@@ -1322,6 +1327,17 @@ public class RedisClient {
 		});
 		mntmProperties_4.setText(i18nFile.getText(I18nFile.PROPERTIES));
 
+		new MenuItem(menu_server_1, SWT.SEPARATOR);
+		
+		MenuItem mntmNewItem_1 = new MenuItem(menu_server_1, SWT.NONE);
+		mntmNewItem_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				console();
+			}
+		});
+		mntmNewItem_1.setText(i18nFile.getText(I18nFile.CONSOLE));
+		
 		new MenuItem(menu_server_1, SWT.SEPARATOR);
 
 		MenuItem menuItem_2 = new MenuItem(menu_server_1, SWT.NONE);
@@ -1571,8 +1587,8 @@ public class RedisClient {
 
 			}
 		});
-		mntmDelete_3.setText(i18nFile.getText(I18nFile.DELETE) + "\tDel");
-		mntmDelete_3.setAccelerator(SWT.DEL);
+		mntmDelete_3.setText(i18nFile.getText(I18nFile.DELETE));
+		//mntmDelete_3.setAccelerator(SWT.DEL);
 
 		MenuItem mntmProperties_2 = new MenuItem(menuData, SWT.NONE);
 		mntmProperties_2.addSelectionListener(new SelectionAdapter() {
@@ -1839,6 +1855,21 @@ public class RedisClient {
 		});
 		menuItem_1.setText(i18nFile.getText(I18nFile.REFRESH) + "\tF5");
 		menuItem_1.setAccelerator(SWT.F5);
+		
+		MenuItem mntmTool = new MenuItem(menu, SWT.CASCADE);
+		mntmTool.setText(i18nFile.getText(I18nFile.TOOL));
+		
+		menuTool = new Menu(mntmTool);
+		mntmTool.setMenu(menuTool);
+		
+		MenuItem mntmNewItem = new MenuItem(menuTool, SWT.NONE);
+		mntmNewItem.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				console();
+			}
+		});
+		mntmNewItem.setText(i18nFile.getText(I18nFile.CONSOLE));
 
 		MenuItem mntmFavorites = new MenuItem(menu, SWT.CASCADE);
 		mntmFavorites.setText(i18nFile.getText(I18nFile.FAVORITES));
@@ -2108,10 +2139,10 @@ public class RedisClient {
 
 	private void exportOne(ContainerKeyInfo cinfo, String file, Item item) {
 		ContainerKey containerKey = cinfo.getContainer();
-
+		
 		if (item instanceof TableItem) {
 			NodeType type = (NodeType) item.getData(NODE_TYPE);
-			if (type != NodeType.CONTAINER) {
+			if (type != NodeType.CONTAINER && type != NodeType.DATABASE) {
 				String con = containerKey == null ? "" : containerKey
 						.getContainerKey();
 				containerKey = new ContainerKey(con + item.getText());
@@ -2538,6 +2569,8 @@ public class RedisClient {
 		menuView.getItem(2).setEnabled(true);
 
 		menuFavorite.getItem(0).setEnabled(true);
+		
+		menuTool.getItem(0).setEnabled(false);
 	}
 
 	private void tableItemOrderSelected(ContainerKeyInfo info) {
@@ -2652,6 +2685,8 @@ public class RedisClient {
 		menuView.getItem(2).setEnabled(false);
 
 		menuFavorite.getItem(0).setEnabled(false);
+		
+		menuTool.getItem(0).setEnabled(false);
 	}
 
 	private void serverTreeItemSelected(TreeItem selectedItem, boolean refresh) {
@@ -2712,6 +2747,8 @@ public class RedisClient {
 		menuView.getItem(2).setEnabled(false);
 
 		menuFavorite.getItem(0).setEnabled(false);
+		
+		menuTool.getItem(0).setEnabled(true);
 	}
 
 	private void newString() {
@@ -3304,6 +3341,9 @@ public class RedisClient {
 		for (DataContent dataContent : openDataContent.getList()) {
 			dataContent.refreshLangUI();
 		}
+		for (Console console : openConsole.getList()) {
+			console.refreshLangUI();
+		}
 		ConfigFile.setLanguage(language);
 	}
 
@@ -3366,5 +3406,23 @@ public class RedisClient {
 			}
 
 		}
+	}
+
+	private void console() {
+		int id = (Integer) itemsSelected[0].getData(NODE_ID);
+
+		if(!openConsole.isOpen(id)){
+			final Console console = new Console(tabFolder_1, id);
+			CTabItem  tabItem = console.init();
+			openConsole.add(console);
+			
+			tabItem.addDisposeListener(new DisposeListener() {
+				public void widgetDisposed(DisposeEvent e) {
+					openConsole.remove(console);
+				}
+			});
+		}else
+			tabFolder_1.setSelection(openConsole.getTabItem(id));
+			
 	}
 }

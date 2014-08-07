@@ -12,6 +12,7 @@ public class ContainerKeyInfo {
 		super();
 		this.id = -1;
 		this.db = -1;
+		this.container = new ContainerKey("");
 	}
 	public int getId() {
 		return id;

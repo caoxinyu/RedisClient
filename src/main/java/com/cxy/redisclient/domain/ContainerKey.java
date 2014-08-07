@@ -8,6 +8,8 @@ public class ContainerKey {
 	}
 	
 	public boolean isKey() {
+		if(containerKey.length() == 0)
+			return false;
 		char lastChar = containerKey.charAt(containerKey.length() - 1);
 		
 		if (lastChar == ':')
