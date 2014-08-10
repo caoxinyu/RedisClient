@@ -239,7 +239,8 @@ public class Console {
 	}
 
 	private Command getCommand(String cmd){
-		if(cmd.trim().equalsIgnoreCase("quit"))
+		String[] strs = cmd.trim().split(" ");
+		if(strs[0].equalsIgnoreCase("quit"))
 			return new QuitCmd(this, cmd);
 		else
 			return new Command(this, cmd);
