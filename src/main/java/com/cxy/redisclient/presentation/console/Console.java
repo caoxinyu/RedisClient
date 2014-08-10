@@ -65,6 +65,8 @@ public class Console {
 		server = service.listById(id);
 		Image runImage = new Image(tabFolder.getShell().getDisplay(), getClass()
 				.getResourceAsStream("/run.png"));
+		Image consoleImage = new Image(tabFolder.getShell().getDisplay(), getClass()
+				.getResourceAsStream("/console.png"));
 		
 		tbtmNewItem = new CTabItem(tabFolder, SWT.NONE);
 		tbtmNewItem.setShowClose(true);
@@ -72,6 +74,7 @@ public class Console {
 		tbtmNewItem.setControl(composite_3);
 		composite_3.setLayout(new GridLayout(1, false));
 		tbtmNewItem.setText(server.getName() +" "+RedisClient.i18nFile.getText(I18nFile.CONSOLE));
+		tbtmNewItem.setImage(consoleImage);
 		
 		Composite composite_4 = new Composite(composite_3, SWT.NONE);
 		composite_4.setLayout(new GridLayout(3, false));
