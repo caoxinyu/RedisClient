@@ -16,6 +16,8 @@ import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.GlyphMetrics;
@@ -52,22 +54,23 @@ public class Console {
 	private Button btnExecSelectButton;
 	private Button btnExecNextButton;
 	private Server server;
-	
-	public Console(CTabFolder tabFolder, int id){
+	private Composite composite_4;
+
+	public Console(CTabFolder tabFolder, int id) {
 		this.tabFolder = tabFolder;
 		this.id = id;
 	}
-	
+
 	/**
 	 * @wbp.parser.entryPoint
 	 */
 	public CTabItem init(){
 		server = service.listById(id);
-		Image runImage = new Image(tabFolder.getShell().getDisplay(), getClass()
-				.getResourceAsStream("/run.png"));
-		Image consoleImage = new Image(tabFolder.getShell().getDisplay(), getClass()
-				.getResourceAsStream("/console.png"));
-		
+		Image runImage = new Image(tabFolder.getShell().getDisplay(),
+				getClass().getResourceAsStream("/run.png"));
+		Image consoleImage = new Image(tabFolder.getShell().getDisplay(),
+				getClass().getResourceAsStream("/console.png"));
+
 		tbtmNewItem = new CTabItem(tabFolder, SWT.NONE);
 		tbtmNewItem.setShowClose(true);
 		Composite composite_3 = new Composite(tabFolder, SWT.NONE);
@@ -75,23 +78,26 @@ public class Console {
 		composite_3.setLayout(new GridLayout(1, false));
 		tbtmNewItem.setText(server.getName() +" "+RedisClient.i18nFile.getText(I18nFile.CONSOLE));
 		tbtmNewItem.setImage(consoleImage);
-		
-		Composite composite_4 = new Composite(composite_3, SWT.NONE);
+
+		composite_4 = new Composite(composite_3, SWT.NONE);
 		composite_4.setLayout(new GridLayout(3, false));
 		composite_4.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false, 1, 1));
 		
 		btnExecButton = new Button(composite_4, SWT.NONE);
 		btnExecButton.setText(RedisClient.i18nFile.getText(I18nFile.RUNCURRENT));
 		btnExecButton.setImage(runImage);
-		
+		btnExecButton.setToolTipText(RedisClient.i18nFile.getText(I18nFile.RUNCURRENTTIP)+"\tF7");
+
 		btnExecSelectButton = new Button(composite_4, SWT.NONE);
 		btnExecSelectButton.setText(RedisClient.i18nFile.getText(I18nFile.RUNSELECT));
 		btnExecSelectButton.setImage(runImage);
-		
+		btnExecSelectButton.setToolTipText(RedisClient.i18nFile.getText(I18nFile.RUNSELECTTIP)+"\tF8");
+
 		btnExecNextButton = new Button(composite_4, SWT.NONE);
 		btnExecNextButton.setText(RedisClient.i18nFile.getText(I18nFile.RUNFOLLOW));
 		btnExecNextButton.setImage(runImage);
-		
+		btnExecNextButton.setToolTipText(RedisClient.i18nFile.getText(I18nFile.RUNFOLLOWTIP)+"\tF9");
+
 		SashForm sashForm3 = new SashForm(composite_3, SWT.VERTICAL);
 		sashForm3.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
@@ -103,22 +109,22 @@ public class Console {
 		        StyleRange style = new StyleRange();
 		        style.metrics = new GlyphMetrics(0, 0, Integer.toString(100000).length()*5);
 
-		        e.bullet = new Bullet(ST.BULLET_DOT,style);
-		    }
+				e.bullet = new Bullet(ST.BULLET_DOT, style);
+			}
 		});
-		
+
 		inputCmd.addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e) {
 				inputCmd.setFocus();
 			}
 		});
-		
+
 		CTabFolder tabFolder_2 = new CTabFolder(sashForm3, SWT.BORDER);
-		
+
 		tbtmNewItem_1 = new CTabItem(tabFolder_2, SWT.NONE);
 		tbtmNewItem_1.setText(RedisClient.i18nFile.getText(I18nFile.RESULT));
-		
+
 		Composite composite_5 = new Composite(tabFolder_2, SWT.NONE);
 		tbtmNewItem_1.setControl(composite_5);
 		composite_5.setLayout(new GridLayout(1, false));
@@ -126,11 +132,11 @@ public class Console {
 		cmdResult = new StyledText(composite_5, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		cmdResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		cmdResult.setEditable(false);
-		
+
 		tabFolder.setSelection(tbtmNewItem);
 		tabFolder_2.setSelection(tbtmNewItem_1);
 		inputCmd.setFocus();
-		
+
 		sashForm3.setWeights(new int[] { 1, 1 });
 		
 		session = new RedisSession(server.getHost(), Integer.parseInt(server.getPort()));
@@ -139,45 +145,52 @@ public class Console {
 		} catch (IOException e) {
 			throw new RuntimeException(e.getMessage());
 		}
-		
+
 		tbtmNewItem.addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				quit();
 			}
 		});
-		
+
 		btnExecButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String cmd = inputCmd.getLine(inputCmd.getLineAtOffset(inputCmd.getCaretOffset()));
-				execCmd(cmd);
+				execCurrent();
 			}
 		});
-		
+
 		btnExecSelectButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String[] cmds = inputCmd.getSelectionText().split(inputCmd.getLineDelimiter());
-				for(String cmd: cmds){
-					if(execCmd(cmd))
-						break;
-				}
+				execSelect();
 			}
 		});
-		
+
 		btnExecNextButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				int start = inputCmd.getLineAtOffset(inputCmd.getCaretOffset());
-				int end = inputCmd.getLineCount();
-				for(int i = start; i < end; i ++){
-					String cmd = inputCmd.getLine(i);
-					if(execCmd(cmd))
-						break;
+				execNext();
+			}
+		});
+
+		inputCmd.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				switch (e.keyCode) {
+				case SWT.F7:
+					execCurrent();
+					break;
+				case SWT.F8:
+					execSelect();
+					break;
+				case SWT.F9:
+					execNext();
+					break;
+				default:
+					// ignore everything else
 				}
 			}
 		});
-		
+
 		return tbtmNewItem;
 	}
 
@@ -221,32 +234,63 @@ public class Console {
 		}
 		tbtmNewItem.dispose();
 	}
-	
-	public void refreshLangUI(){
-		tbtmNewItem.setText(server.getName() +" "+RedisClient.i18nFile.getText(I18nFile.CONSOLE));
+
+	public void refreshLangUI() {
+		tbtmNewItem.setText(server.getName() + " " + RedisClient.i18nFile.getText(I18nFile.CONSOLE));
 		tbtmNewItem_1.setText(RedisClient.i18nFile.getText(I18nFile.RESULT));
 		btnExecButton.setText(RedisClient.i18nFile.getText(I18nFile.RUNCURRENT));
+		btnExecButton.setToolTipText(RedisClient.i18nFile.getText(I18nFile.RUNCURRENTTIP)+"\tF7");
 		btnExecSelectButton.setText(RedisClient.i18nFile.getText(I18nFile.RUNSELECT));
+		btnExecSelectButton.setToolTipText(RedisClient.i18nFile.getText(I18nFile.RUNSELECTTIP)+"\tF8");
 		btnExecNextButton.setText(RedisClient.i18nFile.getText(I18nFile.RUNFOLLOW));
+		btnExecNextButton.setToolTipText(RedisClient.i18nFile.getText(I18nFile.RUNFOLLOWTIP)+"\tF9");
+		btnExecButton.pack();
+		btnExecSelectButton.pack();
+		btnExecNextButton.pack();
+		composite_4.pack();
 	}
 
 	private boolean execCmd(String cmd) {
-		if(cmd.trim().length() == 0){
+		if (cmd.trim().length() == 0) {
 			inputCmd.setFocus();
 			return false;
 		}
-		
+
 		Command command = getCommand(cmd);
 		command.execute();
 		return !command.canContinue();
 	}
 
-	private Command getCommand(String cmd){
+	private Command getCommand(String cmd) {
 		String[] strs = cmd.trim().split(" ");
-		if(strs[0].equalsIgnoreCase("quit"))
+		if (strs[0].equalsIgnoreCase("quit"))
 			return new QuitCmd(this, cmd);
 		else
 			return new Command(this, cmd);
 	}
-}
 
+	private void execCurrent() {
+		String cmd = inputCmd.getLine(inputCmd.getLineAtOffset(inputCmd
+				.getCaretOffset()));
+		execCmd(cmd);
+	}
+
+	private void execSelect() {
+		String[] cmds = inputCmd.getSelectionText().split(
+				inputCmd.getLineDelimiter());
+		for (String cmd : cmds) {
+			if (execCmd(cmd))
+				break;
+		}
+	}
+
+	private void execNext() {
+		int start = inputCmd.getLineAtOffset(inputCmd.getCaretOffset());
+		int end = inputCmd.getLineCount();
+		for (int i = start; i < end; i++) {
+			String cmd = inputCmd.getLine(i);
+			if (execCmd(cmd))
+				break;
+		}
+	}
+}

@@ -188,6 +188,9 @@ public class I18nFile extends PropertyFile {
 	public static final String RUNCURRENT = "RUNCURRENT";
 	public static final String RUNSELECT = "RUNSELECT";
 	public static final String RUNFOLLOW = "RUNFOLLOW";
+	public static final String RUNCURRENTTIP = "RUNCURRENTTIP";
+	public static final String RUNSELECTTIP = "RUNSELECTTIP";
+	public static final String RUNFOLLOWTIP = "RUNFOLLOWTIP";
 	
 	
 	
