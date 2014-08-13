@@ -191,8 +191,9 @@ public class I18nFile extends PropertyFile {
 	public static final String RUNCURRENTTIP = "RUNCURRENTTIP";
 	public static final String RUNSELECTTIP = "RUNSELECTTIP";
 	public static final String RUNFOLLOWTIP = "RUNFOLLOWTIP";
-	
-	
+	public static final String SELECTALL = "SELECTALL";
+	public static final String CLEAR = "CLEAR";
+		
 	
 	public I18nFile(){
 		propertyFile = getClass().getResourceAsStream("/i18n.properties");

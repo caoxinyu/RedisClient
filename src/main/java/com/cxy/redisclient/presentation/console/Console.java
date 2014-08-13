@@ -14,12 +14,16 @@ import org.eclipse.swt.custom.ST;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.GlyphMetrics;
@@ -28,6 +32,8 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 import com.cxy.redisclient.domain.Server;
 import com.cxy.redisclient.integration.I18nFile;
@@ -51,6 +57,7 @@ public class Console {
 	private CTabItem tbtmNewItem_1;
 	private StyledText cmdResult;
 	private StyledText inputCmd;
+	private StyledText text = null;
 	private RedisSession session;
 	private Button btnExecButton;
 	private Button btnExecSelectButton;
@@ -59,6 +66,7 @@ public class Console {
 	private Composite composite_4;
 	private CTabFolder tabFolder_2;
 	private List<DataCommand> dataCmds = new ArrayList<DataCommand>();
+	private Menu menu;
 	
 	public Console(CTabFolder tabFolder, int id) {
 		this.tabFolder = tabFolder;
@@ -75,6 +83,8 @@ public class Console {
 		Image consoleImage = new Image(tabFolder.getShell().getDisplay(),
 				getClass().getResourceAsStream("/console.png"));
 
+		initMenu();
+		
 		tbtmNewItem = new CTabItem(tabFolder, SWT.NONE);
 		tbtmNewItem.setShowClose(true);
 		Composite composite_3 = new Composite(tabFolder, SWT.NONE);
@@ -123,7 +133,30 @@ public class Console {
 				inputCmd.setFocus();
 			}
 		});
-
+		inputCmd.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				text = inputCmd;
+				final Clipboard cb = new Clipboard(tabFolder.getShell().getDisplay());
+				TextTransfer transfer = TextTransfer.getInstance();
+		        String data = (String) cb.getContents(transfer);
+		        if(data != null)
+		        	menu.getItem(2).setEnabled(true);
+		        else
+		        	menu.getItem(2).setEnabled(false);
+		        
+				if(inputCmd.getSelectionText().length() > 0){
+					menu.getItem(0).setEnabled(true);
+					menu.getItem(1).setEnabled(true);
+				}else{
+					menu.getItem(0).setEnabled(false);
+					menu.getItem(1).setEnabled(false);
+				}
+				inputCmd.setMenu(menu);
+					
+			}
+		});
+		
 		tabFolder_2 = new CTabFolder(sashForm3, SWT.BORDER);
 
 		tbtmNewItem_1 = new CTabItem(tabFolder_2, SWT.NONE);
@@ -136,7 +169,22 @@ public class Console {
 		cmdResult = new StyledText(composite_5, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		cmdResult.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		cmdResult.setEditable(false);
-
+		cmdResult.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				text = cmdResult;
+				menu.getItem(0).setEnabled(false);
+				menu.getItem(2).setEnabled(false);
+				if(cmdResult.getSelectionText().length() > 0){
+					menu.getItem(1).setEnabled(true);
+				}else{
+					menu.getItem(1).setEnabled(false);
+				}
+				cmdResult.setMenu(menu);
+					
+			}
+		});
+		
 		tabFolder.setSelection(tbtmNewItem);
 		tabFolder_2.setSelection(tbtmNewItem_1);
 		inputCmd.setFocus();
@@ -198,6 +246,55 @@ public class Console {
 		return tbtmNewItem;
 	}
 
+	private void initMenu() {
+		menu = new Menu(tabFolder.getShell());
+
+		MenuItem mntmCut = new MenuItem(menu, SWT.NONE);
+		mntmCut.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				text.cut();
+			}
+		});
+		mntmCut.setText(RedisClient.i18nFile.getText(I18nFile.CUT));
+		
+		MenuItem mntmCopy = new MenuItem(menu, SWT.NONE);
+		mntmCopy.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				text.copy();
+			}
+		});
+		mntmCopy.setText(RedisClient.i18nFile.getText(I18nFile.COPY));
+		
+		MenuItem mntmPaste = new MenuItem(menu, SWT.NONE);
+		mntmPaste.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				text.paste();
+			}
+		});
+		mntmPaste.setText(RedisClient.i18nFile.getText(I18nFile.PASTE));
+		
+		MenuItem mntmSelectAll = new MenuItem(menu, SWT.NONE);
+		mntmSelectAll.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				text.selectAll();
+			}
+		});
+		mntmSelectAll.setText(RedisClient.i18nFile.getText(I18nFile.SELECTALL));
+		
+		MenuItem mntmClear = new MenuItem(menu, SWT.NONE);
+		mntmClear.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				text.setText("");
+			}
+		});
+		mntmClear.setText(RedisClient.i18nFile.getText(I18nFile.CLEAR));
+	}
+
 	public CTabFolder getTabFolder_2() {
 		return tabFolder_2;
 	}
@@ -254,6 +351,8 @@ public class Console {
 		btnExecNextButton.setToolTipText(RedisClient.i18nFile.getText(I18nFile.RUNFOLLOWTIP)+"\tF9");
 		for(DataCommand dataCommand: dataCmds)
 			dataCommand.refreshLangUI();
+		menu.dispose();
+		initMenu();
 		composite_4.pack();
 	}
 
