@@ -11,11 +11,13 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Display;
 
 import com.cxy.redisclient.integration.I18nFile;
+import com.cxy.redisclient.integration.protocol.Result;
 import com.cxy.redisclient.presentation.RedisClient;
 
 public class Command {
 	protected Console console;
 	protected String cmd;
+	protected Result result;
 	
 	public Command(Console console, String cmd){
 		this.console = console;
@@ -23,7 +25,6 @@ public class Command {
 	}
 	
 	public void execute(){
-		String result;
 		long start, end;
 		try {
 			start = System.currentTimeMillis();
@@ -40,7 +41,7 @@ public class Command {
 		printKeyValue(console.getCmdResult(), RedisClient.i18nFile.getText(I18nFile.COMMAND) + ": ", cmd);
 		printKeyValue(console.getCmdResult(), RedisClient.i18nFile.getText(I18nFile.TIME) + ": ", time);
 		printKeyValue(console.getCmdResult(), RedisClient.i18nFile.getText(I18nFile.DURATION) + "(ms): ", String.valueOf(end-start));
-		printKeyValue(console.getCmdResult(), RedisClient.i18nFile.getText(I18nFile.RESULT) + ":\r\n", result);
+		printKeyValue(console.getCmdResult(), RedisClient.i18nFile.getText(I18nFile.RESULT) + ":\r\n", result.getResult());
 		console.getCmdResult().append(console.getCmdResult().getLineDelimiter());
 	}
 

@@ -36,17 +36,14 @@ public class RedisSession {
 		socket.close();
 	}
 
-	public String execute(String command) throws IOException {
-		String result = null;
-
+	public Result execute(String command) throws IOException {
 		writer.write(command + NEWLINE);
 		writer.flush();
 
 		String head = reader.readLine();
 
 		ProtocolParser parser = ProtocolParser.getParser(head);
-		result = parser.parse(head, reader);
 		
-		return result;
+		return parser.parse(head, reader);
 	}
 }

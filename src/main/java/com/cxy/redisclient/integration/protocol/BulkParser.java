@@ -6,7 +6,7 @@ import java.io.IOException;
 public class BulkParser extends ProtocolParser {
 
 	@Override
-	public String parse(String head, BufferedReader reader) throws IOException {
+	public Result parse(String head, BufferedReader reader) throws IOException {
 		int length = Integer.parseInt(head.substring(1, head.length()));
 		if(length == -1)
 			throw new NullReplyException("NULL Bulk Reply");
@@ -15,7 +15,7 @@ public class BulkParser extends ProtocolParser {
 		
 		reader.read(value);
 		reader.readLine();
-		return new String(value);
+		return new Result(new String(value), ResultType.Bulk);
 	}
 
 }

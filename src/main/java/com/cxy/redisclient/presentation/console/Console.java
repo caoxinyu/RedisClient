@@ -55,6 +55,7 @@ public class Console {
 	private Button btnExecNextButton;
 	private Server server;
 	private Composite composite_4;
+	private CTabFolder tabFolder_2;
 
 	public Console(CTabFolder tabFolder, int id) {
 		this.tabFolder = tabFolder;
@@ -120,7 +121,7 @@ public class Console {
 			}
 		});
 
-		CTabFolder tabFolder_2 = new CTabFolder(sashForm3, SWT.BORDER);
+		tabFolder_2 = new CTabFolder(sashForm3, SWT.BORDER);
 
 		tbtmNewItem_1 = new CTabItem(tabFolder_2, SWT.NONE);
 		tbtmNewItem_1.setText(RedisClient.i18nFile.getText(I18nFile.RESULT));
@@ -190,8 +191,12 @@ public class Console {
 				}
 			}
 		});
-
+		
 		return tbtmNewItem;
+	}
+
+	public CTabFolder getTabFolder_2() {
+		return tabFolder_2;
 	}
 
 	public CTabFolder getTabFolder() {
@@ -244,9 +249,6 @@ public class Console {
 		btnExecSelectButton.setToolTipText(RedisClient.i18nFile.getText(I18nFile.RUNSELECTTIP)+"\tF8");
 		btnExecNextButton.setText(RedisClient.i18nFile.getText(I18nFile.RUNFOLLOW));
 		btnExecNextButton.setToolTipText(RedisClient.i18nFile.getText(I18nFile.RUNFOLLOWTIP)+"\tF9");
-		btnExecButton.pack();
-		btnExecSelectButton.pack();
-		btnExecNextButton.pack();
 		composite_4.pack();
 	}
 
@@ -265,17 +267,21 @@ public class Console {
 		String[] strs = cmd.trim().split(" ");
 		if (strs[0].equalsIgnoreCase("quit"))
 			return new QuitCmd(this, cmd);
+		else if (strs[0].equalsIgnoreCase("hgetall"))
+			return new HGetallCmd(this, cmd);
 		else
 			return new Command(this, cmd);
 	}
 
 	private void execCurrent() {
+		clearData();
 		String cmd = inputCmd.getLine(inputCmd.getLineAtOffset(inputCmd
 				.getCaretOffset()));
 		execCmd(cmd);
 	}
 
 	private void execSelect() {
+		clearData();
 		String[] cmds = inputCmd.getSelectionText().split(
 				inputCmd.getLineDelimiter());
 		for (String cmd : cmds) {
@@ -285,12 +291,20 @@ public class Console {
 	}
 
 	private void execNext() {
+		clearData();
 		int start = inputCmd.getLineAtOffset(inputCmd.getCaretOffset());
 		int end = inputCmd.getLineCount();
 		for (int i = start; i < end; i++) {
 			String cmd = inputCmd.getLine(i);
 			if (execCmd(cmd))
 				break;
+		}
+	}
+	private void clearData(){
+		CTabItem[] items = tabFolder_2.getItems();
+		if(items.length > 1){
+			for(int i = 1; i < items.length; i ++)
+				items[i].dispose();
 		}
 	}
 }

@@ -6,7 +6,7 @@ import java.io.IOException;
 public class MultiBulkParser extends ProtocolParser {
 
 	@Override
-	public String parse(String head, BufferedReader reader) throws IOException {
+	public Result parse(String head, BufferedReader reader) throws IOException {
 		int replys = Integer.parseInt(head.substring(1, head.length()));
 		if(replys == -1)
 			throw new NullReplyException("NULL Multi Bulk Reply");
@@ -14,10 +14,10 @@ public class MultiBulkParser extends ProtocolParser {
 		for(int i = 0; i < replys; i ++){
 			String subHead = reader.readLine();
 			ProtocolParser parser = ProtocolParser.getParser(subHead);
-			result += parser.parse(subHead, reader);
+			result += parser.parse(subHead, reader).getResult();
 			result += "\n";
 		}
-		return result;
+		return new Result(result, ResultType.MultiBulk);
 	}
 
 }

@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 public abstract class ProtocolParser {
-	public abstract String parse(String head, BufferedReader reader) throws IOException;
+	public abstract Result parse(String head, BufferedReader reader) throws IOException;
 	public static ProtocolParser getParser(String head) {
 		switch (head.charAt(0)) {
 		case '-':
