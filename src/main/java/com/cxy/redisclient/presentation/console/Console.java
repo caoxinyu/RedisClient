@@ -280,6 +280,10 @@ public class Console {
 			return new InfoCmd(this, cmd);
 		else if (strs[0].equalsIgnoreCase("lrange"))
 			return new LRangeCmd(this, cmd);
+		else if (strs[0].equalsIgnoreCase("smembers"))
+			return new SMembersCmd(this, cmd);
+		else if (strs[0].equalsIgnoreCase("zrange"))
+			return new ZRangeCmd(this, cmd);
 		else
 			return new Command(this, cmd);
 	}
