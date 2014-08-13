@@ -1,6 +1,8 @@
 package com.cxy.redisclient.presentation.console;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.Bullet;
@@ -56,7 +58,8 @@ public class Console {
 	private Server server;
 	private Composite composite_4;
 	private CTabFolder tabFolder_2;
-
+	private List<DataCommand> dataCmds = new ArrayList<DataCommand>();
+	
 	public Console(CTabFolder tabFolder, int id) {
 		this.tabFolder = tabFolder;
 		this.id = id;
@@ -249,6 +252,8 @@ public class Console {
 		btnExecSelectButton.setToolTipText(RedisClient.i18nFile.getText(I18nFile.RUNSELECTTIP)+"\tF8");
 		btnExecNextButton.setText(RedisClient.i18nFile.getText(I18nFile.RUNFOLLOW));
 		btnExecNextButton.setToolTipText(RedisClient.i18nFile.getText(I18nFile.RUNFOLLOWTIP)+"\tF9");
+		for(DataCommand dataCommand: dataCmds)
+			dataCommand.refreshLangUI();
 		composite_4.pack();
 	}
 
@@ -260,6 +265,8 @@ public class Console {
 
 		Command command = getCommand(cmd);
 		command.execute();
+		if(command instanceof DataCommand)
+			dataCmds.add((DataCommand) command);
 		return !command.canContinue();
 	}
 
@@ -271,6 +278,8 @@ public class Console {
 			return new HGetallCmd(this, cmd);
 		else if (strs[0].equalsIgnoreCase("info"))
 			return new InfoCmd(this, cmd);
+		else if (strs[0].equalsIgnoreCase("lrange"))
+			return new LRangeCmd(this, cmd);
 		else
 			return new Command(this, cmd);
 	}
@@ -308,5 +317,6 @@ public class Console {
 			for(int i = 1; i < items.length; i ++)
 				items[i].dispose();
 		}
+		dataCmds.clear();
 	}
 }

@@ -13,6 +13,8 @@ import com.cxy.redisclient.presentation.RedisClient;
 
 public abstract class DataCommand extends Command {
 
+	private Group grpValues;
+	private CTabItem tbtmNewItem;
 	@Override
 	public boolean printResult() {
 		return result.getType() == ResultType.Error;
@@ -25,15 +27,14 @@ public abstract class DataCommand extends Command {
 		super.execute();
 		
 		if(result.getType() != ResultType.Error){
-			CTabItem tbtmNewItem = new CTabItem(console.getTabFolder_2(), SWT.NONE);
-			tbtmNewItem.setText(RedisClient.i18nFile.getText(I18nFile.DATA)+(console.getTabFolder_2().getItemCount()-1));
+			tbtmNewItem = new CTabItem(console.getTabFolder_2(), SWT.NONE);
+			tbtmNewItem.setText(RedisClient.i18nFile.getText(I18nFile.DATA)+(console.getTabFolder_2().indexOf(tbtmNewItem)));
 			Composite composite = new Composite(console.getTabFolder_2(), SWT.NONE);
 			tbtmNewItem.setControl(composite);
 			composite.setLayout(new GridLayout(1, false));
 			
-			Group grpValues = new Group(composite, SWT.NONE);
-			grpValues.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4,
-					1));
+			grpValues = new Group(composite, SWT.NONE);
+			grpValues.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
 			grpValues.setText(RedisClient.i18nFile.getText(I18nFile.VALUES));
 			grpValues.setLayout(new GridLayout(4, false));
 	
@@ -43,4 +44,8 @@ public abstract class DataCommand extends Command {
 		}
 	}
 	protected abstract void initData(Group grpValues) ;
+	protected void refreshLangUI(){
+		tbtmNewItem.setText(RedisClient.i18nFile.getText(I18nFile.DATA)+(console.getTabFolder_2().indexOf(tbtmNewItem)));
+		grpValues.setText(RedisClient.i18nFile.getText(I18nFile.VALUES));
+	}
 }

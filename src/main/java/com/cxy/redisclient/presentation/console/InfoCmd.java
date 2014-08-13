@@ -15,6 +15,9 @@ import com.cxy.redisclient.presentation.component.EditListener;
 
 public class InfoCmd extends DataCommand {
 
+	private TableColumn clmnKey;
+	private TableColumn clmnValue;
+
 	public InfoCmd(Console console, String cmd) {
 		super(console, cmd);
 	}
@@ -38,11 +41,11 @@ public class InfoCmd extends DataCommand {
 				EditListener listener = new EditListener(table, false);
 				table.addListener(SWT.MouseDown, listener);
 				
-				TableColumn clmnKey = new TableColumn(table, SWT.LEFT);
+				clmnKey = new TableColumn(table, SWT.LEFT);
 				clmnKey.setText(RedisClient.i18nFile.getText(I18nFile.KEY));
 				clmnKey.setWidth(250);
 				
-				TableColumn clmnValue = new TableColumn(table, SWT.LEFT);
+				clmnValue = new TableColumn(table, SWT.LEFT);
 				clmnValue.setWidth(442);
 				clmnValue.setText(RedisClient.i18nFile.getText(I18nFile.VALUE));
 				
@@ -53,6 +56,13 @@ public class InfoCmd extends DataCommand {
 				}
 			}
 		}
+	}
+
+	@Override
+	protected void refreshLangUI() {
+		clmnKey.setText(RedisClient.i18nFile.getText(I18nFile.KEY));
+		clmnValue.setText(RedisClient.i18nFile.getText(I18nFile.VALUE));
+		super.refreshLangUI();
 	}
 
 }
