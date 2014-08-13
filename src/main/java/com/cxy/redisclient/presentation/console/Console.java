@@ -269,6 +269,8 @@ public class Console {
 			return new QuitCmd(this, cmd);
 		else if (strs[0].equalsIgnoreCase("hgetall"))
 			return new HGetallCmd(this, cmd);
+		else if (strs[0].equalsIgnoreCase("info"))
+			return new InfoCmd(this, cmd);
 		else
 			return new Command(this, cmd);
 	}

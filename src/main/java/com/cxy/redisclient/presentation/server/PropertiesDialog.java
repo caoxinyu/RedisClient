@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.TableItem;
 import com.cxy.redisclient.domain.Server;
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
+import com.cxy.redisclient.presentation.component.EditListener;
 import com.cxy.redisclient.presentation.component.RedisClientDialog;
 
 public class PropertiesDialog extends RedisClientDialog {
@@ -60,6 +61,8 @@ public class PropertiesDialog extends RedisClientDialog {
 		tbtmServer.setControl(tableServer);
 		tableServer.setHeaderVisible(true);
 		tableServer.setLinesVisible(true);
+		EditListener listener = new EditListener(tableServer, false);
+		tableServer.addListener(SWT.MouseDown, listener);
 		
 		TableColumn tblclmnKey = new TableColumn(tableServer, SWT.LEFT);
 		tblclmnKey.setText(RedisClient.i18nFile.getText(I18nFile.KEY));
@@ -92,6 +95,8 @@ public class PropertiesDialog extends RedisClientDialog {
 			tbtmServerInformation.setControl(table);
 			table.setHeaderVisible(true);
 			table.setLinesVisible(true);
+			EditListener listener1 = new EditListener(table, false);
+			table.addListener(SWT.MouseDown, listener1);
 			
 			TableColumn clmnKey = new TableColumn(table, SWT.LEFT);
 			clmnKey.setText(RedisClient.i18nFile.getText(I18nFile.KEY));

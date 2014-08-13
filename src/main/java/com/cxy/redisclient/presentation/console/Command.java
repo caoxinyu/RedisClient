@@ -41,14 +41,17 @@ public class Command {
 		printKeyValue(console.getCmdResult(), RedisClient.i18nFile.getText(I18nFile.COMMAND) + ": ", cmd);
 		printKeyValue(console.getCmdResult(), RedisClient.i18nFile.getText(I18nFile.TIME) + ": ", time);
 		printKeyValue(console.getCmdResult(), RedisClient.i18nFile.getText(I18nFile.DURATION) + "(ms): ", String.valueOf(end-start));
-		printKeyValue(console.getCmdResult(), RedisClient.i18nFile.getText(I18nFile.RESULT) + ":\r\n", result.getResult());
+		if(printResult())
+			printKeyValue(console.getCmdResult(), RedisClient.i18nFile.getText(I18nFile.RESULT) + ":\r\n", result.getResult());
 		console.getCmdResult().append(console.getCmdResult().getLineDelimiter());
 	}
 
 	public boolean canContinue(){
 		return true;
 	}
-	
+	public boolean printResult(){
+		return true;
+	}
 	private void printKeyValue(final StyledText styledText,String key, String value) {
 		value += styledText.getLineDelimiter();
 		
