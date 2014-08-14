@@ -28,7 +28,7 @@ public class ReadHash extends JedisCommand {
 	}
 
 	@Override
-	public RedisVersion getVersion() {
+	public RedisVersion getSupportVersion() {
 		return RedisVersion.REDIS_2_0;
 	}
 

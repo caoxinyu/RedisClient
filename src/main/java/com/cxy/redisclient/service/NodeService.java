@@ -9,6 +9,7 @@ import com.cxy.redisclient.domain.ContainerKey;
 import com.cxy.redisclient.domain.DataNode;
 import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
+import com.cxy.redisclient.domain.RedisVersion;
 import com.cxy.redisclient.domain.Server;
 import com.cxy.redisclient.dto.Order;
 import com.cxy.redisclient.dto.OrderBy;
@@ -157,7 +158,7 @@ public class NodeService {
 		}
 	}
 	
-	public String listServerVersion(int id) {
+	public RedisVersion listServerVersion(int id) {
 		QueryServerVersion command = new QueryServerVersion(id);
 		command.execute();
 		return command.getVersionInfo();

@@ -24,7 +24,7 @@ public class FindContainerKeys10 extends FindContainerKeys {
 	}
 
 	@Override
-	public RedisVersion getVersion() {
+	public RedisVersion getSupportVersion() {
 		return RedisVersion.REDIS_1_0;
 	}
 }

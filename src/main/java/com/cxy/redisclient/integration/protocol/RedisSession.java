@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 public class RedisSession {
+	private static final String CODEC = "UTF8";
 	private static final String NEWLINE = "\r\n";
 	private String host;
 	private int port;
@@ -24,10 +25,10 @@ public class RedisSession {
 	public void connect() throws IOException {
 		socket = new Socket(host, port);
 		reader = new BufferedReader(new InputStreamReader(
-				socket.getInputStream(), "UTF8"));
+				socket.getInputStream(), CODEC));
 		writer = new BufferedWriter(new OutputStreamWriter(
-				socket.getOutputStream(), "UTF8"));
-		socket.setSoTimeout(1000);
+				socket.getOutputStream(), CODEC));
+		socket.setSoTimeout(10000);
 	}
 
 	public void disconnect() throws IOException {

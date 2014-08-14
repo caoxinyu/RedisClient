@@ -17,7 +17,7 @@ public class AddSet24 extends AddSet {
 	}
 
 	@Override
-	public RedisVersion getVersion() {
+	public RedisVersion getSupportVersion() {
 		return RedisVersion.REDIS_2_4;
 	}
 

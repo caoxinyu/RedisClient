@@ -18,7 +18,7 @@ public class RemoveSet10 extends RemoveSet {
 	}
 
 	@Override
-	public RedisVersion getVersion() {
+	public RedisVersion getSupportVersion() {
 		return RedisVersion.REDIS_1_0;
 	}
 

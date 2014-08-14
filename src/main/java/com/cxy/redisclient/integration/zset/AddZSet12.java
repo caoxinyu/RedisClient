@@ -11,7 +11,7 @@ public class AddZSet12 extends AddZSet {
 	}
 
 	@Override
-	public RedisVersion getVersion() {
+	public RedisVersion getSupportVersion() {
 		return RedisVersion.REDIS_1_2;
 	}
 

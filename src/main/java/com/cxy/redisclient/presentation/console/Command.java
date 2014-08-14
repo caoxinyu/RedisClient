@@ -26,13 +26,13 @@ public class Command {
 	
 	public void execute(){
 		long start, end;
+		start = System.currentTimeMillis();
 		try {
-			start = System.currentTimeMillis();
 			result = console.getSession().execute(cmd);
-			end = System.currentTimeMillis();
 		} catch (IOException e1) {
 			throw new RuntimeException(e1.getLocalizedMessage());
 		}
+		end = System.currentTimeMillis();
 		console.getInputCmd().setFocus();
 		
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS", Locale.getDefault());

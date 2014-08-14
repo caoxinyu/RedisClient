@@ -193,6 +193,7 @@ public class I18nFile extends PropertyFile {
 	public static final String RUNFOLLOWTIP = "RUNFOLLOWTIP";
 	public static final String SELECTALL = "SELECTALL";
 	public static final String CLEAR = "CLEAR";
+	public static final String VERSIONNOTSUPPORT = "VERSIONNOTSUPPORT";
 		
 	
 	public I18nFile(){

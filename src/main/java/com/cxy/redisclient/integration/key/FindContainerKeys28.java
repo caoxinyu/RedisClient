@@ -40,7 +40,7 @@ public class FindContainerKeys28 extends FindContainerKeys {
 	}
 
 	@Override
-	public RedisVersion getVersion() {
+	public RedisVersion getSupportVersion() {
 		return RedisVersion.REDIS_2_8;
 	}
 

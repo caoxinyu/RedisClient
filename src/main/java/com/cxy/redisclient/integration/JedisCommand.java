@@ -5,11 +5,12 @@ import redis.clients.jedis.Jedis;
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.domain.RedisVersion;
 import com.cxy.redisclient.domain.Server;
+import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.service.ServerService;
 
 public abstract class JedisCommand implements Comparable<JedisCommand>{
 	public int compareTo(JedisCommand arg0) {
-		return this.getVersion().compareTo(arg0.getVersion()) * -1;
+		return this.getSupportVersion().compareTo(arg0.getSupportVersion()) * -1;
 	}
 
 	protected int id;
@@ -28,17 +29,26 @@ public abstract class JedisCommand implements Comparable<JedisCommand>{
 		if(server.getPassword() != null && server.getPassword().length() > 0)
 			jedis.auth(server.getPassword());
 		
-		command();
+		runCommand();
+		
 		jedis.close();
 	}
 
 	public void execute(Jedis jedis) {
 		this.jedis = jedis;
+		runCommand();
+	}
+	protected void runCommand(){
+		RedisVersion version = getRedisVersion();
+		RedisVersion supportVersion = getSupportVersion();
+		if(supportVersion.getVersion() > version.getVersion())
+			throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.VERSIONNOTSUPPORT));
+		
 		command();
 	}
 	protected abstract void command();
 
-	public abstract RedisVersion getVersion();
+	public abstract RedisVersion getSupportVersion();
 
 	protected NodeType getValueType(String key) {
 		String type = jedis.type(key);
@@ -79,5 +89,33 @@ public abstract class JedisCommand implements Comparable<JedisCommand>{
 			return false;
 		else
 			return true;
+	}
+	protected RedisVersion getRedisVersion(){
+		String info = jedis.info();
+		String[] infos = info.split("\r\n");
+		String version = null;
+		
+		for(int i = 0; i < infos.length; i++) {
+			if(infos[i].startsWith("redis_version:")){
+				String[] versionInfo = infos[i].split(":");
+				version = versionInfo[1];
+				break;
+			}
+		}
+		
+		if (version.startsWith("3.0"))
+			return RedisVersion.REDIS_3_0;
+		else if (version.startsWith("2.8"))
+			return RedisVersion.REDIS_2_8;
+		else if (version.startsWith("2.6"))
+			return RedisVersion.REDIS_2_6;
+		else if (version.startsWith("2.4"))
+			return RedisVersion.REDIS_2_4;
+		else if (version.startsWith("2.2"))
+			return RedisVersion.REDIS_2_2;
+		else if (version.startsWith("2.0"))
+			return RedisVersion.REDIS_2_0;
+		else
+			return RedisVersion.REDIS_1_0;
 	}
 }
