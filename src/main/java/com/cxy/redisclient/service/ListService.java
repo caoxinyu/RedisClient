@@ -18,8 +18,10 @@ public class ListService {
 		AddList command = new AddList(id, db, key, values, headTail, exist);
 		command.execute();
 		
-		Expire command1 = new Expire(id, db, key, ttl);
-		command1.execute();
+		if(ttl != -1){
+			Expire command1 = new Expire(id, db, key, ttl);
+			command1.execute();
+		}
 
 	}
 	

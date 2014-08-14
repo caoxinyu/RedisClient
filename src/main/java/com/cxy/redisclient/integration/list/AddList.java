@@ -58,7 +58,14 @@ public class AddList extends JedisCommand {
 
 	@Override
 	public RedisVersion getSupportVersion() {
-		return RedisVersion.REDIS_2_4;
+		if (headTail && exist)
+			return RedisVersion.REDIS_1_0;
+		else if (headTail && !exist)
+			return RedisVersion.REDIS_2_2;
+		else if (!headTail && exist)
+			return RedisVersion.REDIS_1_0;
+		else
+			return RedisVersion.REDIS_2_2;
 	}
 
 }

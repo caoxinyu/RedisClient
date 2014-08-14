@@ -18,9 +18,10 @@ public class ZSetService {
 		AddZSet command = (AddZSet) new AddZSetFactory(id, db, key, values).getCommand();
 		command.execute();
 		
-		Expire command1 = new Expire(id, db, key, ttl);
-		command1.execute();
-	
+		if(ttl != -1){
+			Expire command1 = new Expire(id, db, key, ttl);
+			command1.execute();
+		}
 	}
 	public Set<Tuple> list(int id, int db, String key){
 		IsKeyExist command1 = new IsKeyExist(id, db, key);

@@ -14,8 +14,11 @@ public class HashService {
 	public void add(int id, int db, String key, Map<String, String> values, int ttl) {
 		AddHash command = new AddHash(id, db, key, values);
 		command.execute();
-		Expire command1 = new Expire(id, db, key, ttl);
-		command1.execute();
+		
+		if(ttl != -1){
+			Expire command1 = new Expire(id, db, key, ttl);
+			command1.execute();
+		}
 	}
 	
 	public void update(int id, int db, String key, Map<String, String> values) {

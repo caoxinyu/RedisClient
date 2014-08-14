@@ -27,7 +27,10 @@ public class Expire extends JedisCommand {
 
 	@Override
 	public RedisVersion getSupportVersion() {
-		return RedisVersion.REDIS_1_0;
+		if(second != -1)
+			return RedisVersion.REDIS_1_0;
+		else
+			return RedisVersion.REDIS_2_2;
 	}
 
 }

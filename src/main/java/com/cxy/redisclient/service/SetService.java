@@ -17,8 +17,10 @@ public class SetService {
 		AddSet command = (AddSet) new AddSetFactory(id, db, key, values).getCommand();
 		command.execute();
 		
-		Expire command1 = new Expire(id, db, key, ttl);
-		command1.execute();
+		if(ttl != -1){
+			Expire command1 = new Expire(id, db, key, ttl);
+			command1.execute();
+		}
 		return command.getSize();
 
 	}
