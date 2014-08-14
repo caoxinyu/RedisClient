@@ -38,7 +38,17 @@ public class RedisSession {
 	}
 
 	public Result execute(String command) throws IOException {
-		writer.write(command + NEWLINE);
+		String[] parameters = command.trim().replaceAll("\\s{2,}", " ").split(" ");
+		int number = parameters.length;
+		String cmd = "*" + number + NEWLINE;
+		for(String parameter: parameters){
+			cmd += "$";
+			cmd += parameter.length();
+			cmd += NEWLINE;
+			cmd += parameter;
+			cmd += NEWLINE;
+		}
+		writer.write(cmd);
 		writer.flush();
 
 		String head = reader.readLine();
