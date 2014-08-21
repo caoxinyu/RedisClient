@@ -75,7 +75,7 @@ public class AboutDialog extends RedisClientDialog {
 		lblNewLabel_1.setText(RedisClient.i18nFile.getText(I18nFile.VERSION));
 		
 		Label lblNewLabel_2 = new Label(composite, SWT.NONE);
-		lblNewLabel_2.setText("1.5.0");
+		lblNewLabel_2.setText("1.8.0");
 		new Label(composite, SWT.NONE);
 		
 		Label lblNewLabel_3 = new Label(composite, SWT.NONE);
