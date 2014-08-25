@@ -70,6 +70,7 @@ import com.cxy.redisclient.presentation.key.FindKeyDialog;
 import com.cxy.redisclient.presentation.key.RenameKeysDialog;
 import com.cxy.redisclient.presentation.list.ListDataContent;
 import com.cxy.redisclient.presentation.list.NewListDialog;
+import com.cxy.redisclient.presentation.pubsub.Publish;
 import com.cxy.redisclient.presentation.server.AddServerDialog;
 import com.cxy.redisclient.presentation.server.PropertiesDialog;
 import com.cxy.redisclient.presentation.server.UpdateServerDialog;
@@ -120,7 +121,8 @@ public class RedisClient {
 	private CTabFolder tabFolder;
 	private CTabFolder tabFolder_1;
 	private DataContents openDataContent = new DataContents();
-	private Consoles openConsole = new Consoles();
+	private Tools<Console> openConsole = new Tools<Console>();
+	private Tools<Publish> openPublish = new Tools<Publish>();
 
 	private Menu menuTreeServer;
 	private Menu menuTableServer;
@@ -1338,6 +1340,24 @@ public class RedisClient {
 		});
 		mntmNewItem_1.setText(i18nFile.getText(I18nFile.CONSOLE));
 		
+		MenuItem mntmNewItem_2 = new MenuItem(menu_server_1, SWT.NONE);
+		mntmNewItem_2.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				publish();
+			}
+		});
+		mntmNewItem_2.setText(i18nFile.getText(I18nFile.PUBLISH));
+		
+		MenuItem mntmNewItem_3 = new MenuItem(menu_server_1, SWT.NONE);
+		mntmNewItem_3.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				subscribe();
+			}
+		});
+		mntmNewItem_3.setText(i18nFile.getText(I18nFile.SUBSCRIBE));
+		
 		new MenuItem(menu_server_1, SWT.SEPARATOR);
 
 		MenuItem menuItem_2 = new MenuItem(menu_server_1, SWT.NONE);
@@ -1870,6 +1890,24 @@ public class RedisClient {
 			}
 		});
 		mntmNewItem.setText(i18nFile.getText(I18nFile.CONSOLE));
+		
+		MenuItem mntmPublish = new MenuItem(menuTool, SWT.NONE);
+		mntmPublish.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				publish();
+			}
+		});
+		mntmPublish.setText(i18nFile.getText(I18nFile.PUBLISH));
+		
+		MenuItem mntmSubscribe = new MenuItem(menuTool, SWT.NONE);
+		mntmSubscribe.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				subscribe();
+			}
+		});
+		mntmSubscribe.setText(i18nFile.getText(I18nFile.SUBSCRIBE));
 
 		MenuItem mntmFavorites = new MenuItem(menu, SWT.CASCADE);
 		mntmFavorites.setText(i18nFile.getText(I18nFile.FAVORITES));
@@ -2571,6 +2609,8 @@ public class RedisClient {
 		menuFavorite.getItem(0).setEnabled(true);
 		
 		menuTool.getItem(0).setEnabled(false);
+		menuTool.getItem(1).setEnabled(false);
+		menuTool.getItem(2).setEnabled(false);
 	}
 
 	private void tableItemOrderSelected(ContainerKeyInfo info) {
@@ -2687,6 +2727,8 @@ public class RedisClient {
 		menuFavorite.getItem(0).setEnabled(false);
 		
 		menuTool.getItem(0).setEnabled(false);
+		menuTool.getItem(1).setEnabled(false);
+		menuTool.getItem(2).setEnabled(false);
 	}
 
 	private void serverTreeItemSelected(TreeItem selectedItem, boolean refresh) {
@@ -2749,6 +2791,8 @@ public class RedisClient {
 		menuFavorite.getItem(0).setEnabled(false);
 		
 		menuTool.getItem(0).setEnabled(true);
+		menuTool.getItem(1).setEnabled(true);
+		menuTool.getItem(2).setEnabled(true);
 	}
 
 	private void newString() {
@@ -3341,8 +3385,11 @@ public class RedisClient {
 		for (DataContent dataContent : openDataContent.getList()) {
 			dataContent.refreshLangUI();
 		}
-		for (Console console : openConsole.getList()) {
+		for (Tool console : openConsole.getList()) {
 			console.refreshLangUI();
+		}
+		for (Tool publish : openPublish.getList()) {
+			publish.refreshLangUI();
 		}
 		ConfigFile.setLanguage(language);
 	}
@@ -3424,5 +3471,26 @@ public class RedisClient {
 		}else
 			tabFolder_1.setSelection(openConsole.getTabItem(id));
 			
+	}
+	
+	private void publish() {
+		int id = (Integer) itemsSelected[0].getData(NODE_ID);
+		
+		if(!openPublish.isOpen(id)){
+			final Publish publish = new Publish(tabFolder_1, id);
+			CTabItem  tabItem = publish.init();
+			openPublish.add(publish);
+			tabItem.addDisposeListener(new DisposeListener() {
+				public void widgetDisposed(DisposeEvent e) {
+					openPublish.remove(publish);
+				}
+			});
+		}else
+			tabFolder_1.setSelection(openPublish.getTabItem(id));
+	}
+	
+	private void subscribe() {
+		// TODO Auto-generated method stub
+		
 	}
 }

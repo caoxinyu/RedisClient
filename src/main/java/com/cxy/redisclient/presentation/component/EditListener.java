@@ -15,10 +15,19 @@ public class EditListener implements Listener {
 	private TableEditor editor;
 	protected Text text;
 	private boolean edit;
+	private boolean multiline;
 	
 	public EditListener(Table table, boolean edit){
 		this.table = table;
 		this.edit = edit;
+		editor = new TableEditor(table);
+		editor.horizontalAlignment = SWT.LEFT;
+		editor.grabHorizontal = true;
+	}
+	public EditListener(Table table, boolean edit, boolean multiline){
+		this.table = table;
+		this.edit = edit;
+		this.multiline = multiline;
 		editor = new TableEditor(table);
 		editor.horizontalAlignment = SWT.LEFT;
 		editor.grabHorizontal = true;
@@ -54,7 +63,10 @@ public class EditListener implements Listener {
 		
 	}
 	public void clickRow(final TableItem item, final int column) {
-		text = new Text(table, SWT.NONE);
+		if(multiline)
+			text = new Text(table, SWT.NONE | SWT.MULTI);
+		else
+			text = new Text(table, SWT.NONE);
 		text.setEditable(edit);
 		Listener textListener = new Listener() {
 			public void handleEvent(final Event e) {

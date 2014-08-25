@@ -39,13 +39,15 @@ import com.cxy.redisclient.domain.Server;
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.integration.protocol.RedisSession;
 import com.cxy.redisclient.presentation.RedisClient;
+import com.cxy.redisclient.presentation.Tool;
 import com.cxy.redisclient.service.ServerService;
 
-public class Console {
+public class Console implements Tool {
 	public CTabItem getTbtmNewItem() {
 		return tbtmNewItem;
 	}
 
+	@Override
 	public int getId() {
 		return id;
 	}
@@ -73,9 +75,7 @@ public class Console {
 		this.id = id;
 	}
 
-	/**
-	 * @wbp.parser.entryPoint
-	 */
+	@Override
 	public CTabItem init(){
 		server = service.listById(id);
 		Image runImage = new Image(tabFolder.getShell().getDisplay(),
@@ -340,6 +340,7 @@ public class Console {
 		tbtmNewItem.dispose();
 	}
 
+	@Override
 	public void refreshLangUI() {
 		tbtmNewItem.setText(server.getName() + " " + RedisClient.i18nFile.getText(I18nFile.CONSOLE));
 		tbtmNewItem_1.setText(RedisClient.i18nFile.getText(I18nFile.RESULT));

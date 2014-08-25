@@ -194,6 +194,10 @@ public class I18nFile extends PropertyFile {
 	public static final String SELECTALL = "SELECTALL";
 	public static final String CLEAR = "CLEAR";
 	public static final String VERSIONNOTSUPPORT = "VERSIONNOTSUPPORT";
+	public static final String PUBLISH = "PUBLISH";
+	public static final String SUBSCRIBE = "SUBSCRIBE";
+	public static final String CHANNEL = "CHANNEL";
+	public static final String MESSAGE = "MESSAGE";
 		
 	
 	public I18nFile(){
