@@ -35,6 +35,7 @@ public class StringDataContent extends DataContent {
 	protected void initData(Composite dataComposite) {
 		label = new Label(dataComposite, SWT.NONE);
 		label.setText(RedisClient.i18nFile.getText(I18nFile.VALUE));
+		label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1));
 		
 		final Text text_value = new Text(dataComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL| SWT.MULTI);
 		text_value.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));

@@ -2,7 +2,7 @@ package com.cxy.redisclient.presentation.console;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -20,8 +20,8 @@ public class LRangeCmd extends DataCommand {
 	}
 
 	@Override
-	protected void initData(Group grpValues) {
-		Table table =  new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL);
+	protected void initData(Composite composite) {
+		Table table =  new Table(composite, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL);
 		table.setHeaderVisible(true);
 		
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 5));

@@ -2,7 +2,7 @@ package com.cxy.redisclient.presentation.console;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
@@ -23,8 +23,8 @@ public class InfoCmd extends DataCommand {
 	}
 
 	@Override
-	protected void initData(Group grpValues) {
-		TabFolder tabFolder = new TabFolder(grpValues, SWT.NONE);
+	protected void initData(Composite composite) {
+		TabFolder tabFolder = new TabFolder(composite, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
 		String[] tabs = result.getResult().split("#");

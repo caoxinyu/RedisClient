@@ -71,6 +71,7 @@ import com.cxy.redisclient.presentation.key.RenameKeysDialog;
 import com.cxy.redisclient.presentation.list.ListDataContent;
 import com.cxy.redisclient.presentation.list.NewListDialog;
 import com.cxy.redisclient.presentation.pubsub.Publish;
+import com.cxy.redisclient.presentation.pubsub.Subscribe;
 import com.cxy.redisclient.presentation.server.AddServerDialog;
 import com.cxy.redisclient.presentation.server.PropertiesDialog;
 import com.cxy.redisclient.presentation.server.UpdateServerDialog;
@@ -123,6 +124,7 @@ public class RedisClient {
 	private DataContents openDataContent = new DataContents();
 	private Tools<Console> openConsole = new Tools<Console>();
 	private Tools<Publish> openPublish = new Tools<Publish>();
+	private Tools<Subscribe> openSubscribe = new Tools<Subscribe>();
 
 	private Menu menuTreeServer;
 	private Menu menuTableServer;
@@ -3391,6 +3393,9 @@ public class RedisClient {
 		for (Tool publish : openPublish.getList()) {
 			publish.refreshLangUI();
 		}
+		for (Tool subscribe : openSubscribe.getList()) {
+			subscribe.refreshLangUI();
+		}
 		ConfigFile.setLanguage(language);
 	}
 
@@ -3490,7 +3495,19 @@ public class RedisClient {
 	}
 	
 	private void subscribe() {
-		// TODO Auto-generated method stub
+		int id = (Integer) itemsSelected[0].getData(NODE_ID);
+		
+		if(!openSubscribe.isOpen(id)){
+			final Subscribe subscribe = new Subscribe(tabFolder_1, id);
+			CTabItem  tabItem = subscribe.init();
+			openSubscribe.add(subscribe);
+			tabItem.addDisposeListener(new DisposeListener() {
+				public void widgetDisposed(DisposeEvent e) {
+					openSubscribe.remove(subscribe);
+				}
+			});
+		}else
+			tabFolder_1.setSelection(openSubscribe.getTabItem(id));
 		
 	}
 }

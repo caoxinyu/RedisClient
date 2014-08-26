@@ -117,7 +117,7 @@ public class Publish  implements Tool{
 		tblclmnNewColumn_2 = new TableColumn(table, SWT.NONE);
 		tblclmnNewColumn_2.setWidth(100);
 		tblclmnNewColumn_2.setText(RedisClient.i18nFile.getText(I18nFile.MESSAGE));
-		sashForm_2.setWeights(new int[] {1, 1});
+		sashForm_2.setWeights(new int[] {1, 2});
 		
 		btnNewButton = new Button(composite_5, SWT.NONE);
 		btnNewButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
