@@ -2,7 +2,7 @@ package com.cxy.redisclient.integration.protocol;
 
 import java.io.BufferedReader;
 
-public class IntParser extends ProtocolParser {
+public class IntParser extends ReplyParser {
 
 	@Override
 	public Result parse(String head, BufferedReader reader) {

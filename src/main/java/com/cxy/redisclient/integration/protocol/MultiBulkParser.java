@@ -3,7 +3,7 @@ package com.cxy.redisclient.integration.protocol;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-public class MultiBulkParser extends ProtocolParser {
+public class MultiBulkParser extends ReplyParser {
 
 	@Override
 	public Result parse(String head, BufferedReader reader) throws IOException {
@@ -13,7 +13,7 @@ public class MultiBulkParser extends ProtocolParser {
 		String result = "";
 		for(int i = 0; i < replys; i ++){
 			String subHead = reader.readLine();
-			ProtocolParser parser = ProtocolParser.getParser(subHead);
+			ReplyParser parser = ReplyParser.getParser(subHead);
 			result += parser.parse(subHead, reader).getResult();
 			result += "\n";
 		}

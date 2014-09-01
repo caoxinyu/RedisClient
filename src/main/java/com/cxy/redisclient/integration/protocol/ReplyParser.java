@@ -3,9 +3,9 @@ package com.cxy.redisclient.integration.protocol;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-public abstract class ProtocolParser {
+public abstract class ReplyParser {
 	public abstract Result parse(String head, BufferedReader reader) throws IOException;
-	public static ProtocolParser getParser(String head) {
+	public static ReplyParser getParser(String head) {
 		switch (head.charAt(0)) {
 		case '-':
 			return new ErrorParser();

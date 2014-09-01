@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RedisSession {
 	private static final String CODEC = "UTF8";
@@ -38,23 +40,33 @@ public class RedisSession {
 	}
 
 	public Result execute(String command) throws IOException {
-		String[] parameters = command.trim().replaceAll("\\s{2,}", " ").split(" ");
-		int number = parameters.length;
-		String cmd = "*" + number + NEWLINE;
-		for(String parameter: parameters){
+		Pattern pattern = Pattern.compile("(\".*?\"\\s*)|(\\S+)");
+		Matcher matcher = pattern.matcher(command.trim());
+		int number = 0;
+		String cmd = "";
+		String parameter;
+		while (matcher.find()) {
+			parameter = matcher.group();
+			if(parameter.charAt(0) == '"'){
+				int index = parameter.lastIndexOf('"');
+				parameter = parameter.substring(1, index);
+			}
 			cmd += "$";
 			cmd += parameter.length();
 			cmd += NEWLINE;
 			cmd += parameter;
 			cmd += NEWLINE;
+			number++;
 		}
-		writer.write(cmd);
+		String cmdStr = "*" + number + NEWLINE + cmd;
+		
+		writer.write(cmdStr);
 		writer.flush();
 
 		String head = reader.readLine();
 
-		ProtocolParser parser = ProtocolParser.getParser(head);
-		
+		ReplyParser parser = ReplyParser.getParser(head);
+
 		return parser.parse(head, reader);
 	}
 }

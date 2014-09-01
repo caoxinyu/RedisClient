@@ -3,7 +3,7 @@ package com.cxy.redisclient.integration.protocol;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-public class StatusParser extends ProtocolParser {
+public class StatusParser extends ReplyParser {
 
 	@Override
 	public Result parse(String head, BufferedReader reader) throws IOException {
