@@ -208,6 +208,7 @@ public class I18nFile extends PropertyFile {
 	public static final String PAGESIZE = "PAGESIZE";
 	public static final String TIMEEXCEPTION = "TIMEEXCEPTION";
 	public static final String SIZEEXCEPTION = "SIZEEXCEPTION";
+	public static final String CMDEXCEPTION = "CMDEXCEPTION";
 		
 	
 	public I18nFile(){

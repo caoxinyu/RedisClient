@@ -10,6 +10,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.cxy.redisclient.integration.ConfigFile;
+import com.cxy.redisclient.integration.I18nFile;
+import com.cxy.redisclient.presentation.RedisClient;
 
 public class RedisSession {
 	private static final String CODEC = "UTF8";
@@ -51,6 +53,8 @@ public class RedisSession {
 			parameter = matcher.group();
 			if(parameter.charAt(0) == '"'){
 				int index = parameter.lastIndexOf('"');
+				if(index == 0)
+					throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.CMDEXCEPTION));
 				parameter = parameter.substring(1, index);
 			}
 			cmd += "$";
