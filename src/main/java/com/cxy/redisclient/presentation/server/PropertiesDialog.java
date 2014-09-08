@@ -39,7 +39,6 @@ public class PropertiesDialog extends RedisClientDialog {
 	 */
 	public PropertiesDialog(Shell parent, Image image, Server info, Map<String,  String[]> values) {
 		super(parent, image);
-		setText("SWT Dialog");
 		this.info = info;
 		this.values = values;
 	}

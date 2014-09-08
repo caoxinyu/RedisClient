@@ -12,11 +12,13 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Text;
 
+import com.cxy.redisclient.integration.ConfigFile;
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
 
 public abstract class NewDataContent {
 	protected Composite shell;
+	private final String separator = ConfigFile.getSeparator();
 	
 	public Composite getShell() {
 		return shell;
@@ -158,8 +160,8 @@ public abstract class NewDataContent {
 		String key = inputKey.getText();
 		if (key.length() == 0)
 			throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.INPUTKEY));
-		else if(key.endsWith(":")){
-			throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.KEYENDERROR)+ ":");
+		else if(key.endsWith(separator)){
+			throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.KEYENDERROR)+ separator);
 		}
 		
 		return key;

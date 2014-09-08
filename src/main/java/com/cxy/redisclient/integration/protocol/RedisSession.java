@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.cxy.redisclient.integration.ConfigFile;
+
 public class RedisSession {
 	private static final String CODEC = "UTF8";
 	private static final String NEWLINE = "\r\n";
@@ -30,7 +32,7 @@ public class RedisSession {
 				socket.getInputStream(), CODEC));
 		writer = new BufferedWriter(new OutputStreamWriter(
 				socket.getOutputStream(), CODEC));
-		socket.setSoTimeout(10000);
+		socket.setSoTimeout(ConfigFile.getT2());
 	}
 
 	public void disconnect() throws IOException {
@@ -58,7 +60,8 @@ public class RedisSession {
 			cmd += NEWLINE;
 			number++;
 		}
-		String cmdStr = "*" + number + NEWLINE + cmd;
+		String cmdStr1 = "*" + number + NEWLINE + cmd;
+		String cmdStr = cmdStr1;
 		
 		writer.write(cmdStr);
 		writer.flush();

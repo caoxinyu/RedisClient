@@ -1910,6 +1910,17 @@ public class RedisClient {
 			}
 		});
 		mntmSubscribe.setText(i18nFile.getText(I18nFile.SUBSCRIBE));
+		
+		new MenuItem(menuTool, SWT.SEPARATOR);
+		
+		MenuItem mntmOptions = new MenuItem(menuTool, SWT.NONE);
+		mntmOptions.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				options();
+			}
+		});
+		mntmOptions.setText(i18nFile.getText(I18nFile.OPTIONS));
 
 		MenuItem mntmFavorites = new MenuItem(menu, SWT.CASCADE);
 		mntmFavorites.setText(i18nFile.getText(I18nFile.FAVORITES));
@@ -1977,6 +1988,12 @@ public class RedisClient {
 			}
 		});
 		mntmAbout.setText(i18nFile.getText(I18nFile.ABOUT));
+	}
+
+	private void options() {
+		OptionsDialog dialog = new OptionsDialog(shell, iconImage);
+		dialog.open();
+		
 	}
 
 	private void updateOrder() {

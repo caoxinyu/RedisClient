@@ -9,6 +9,8 @@ import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.service.ServerService;
 
 public abstract class JedisCommand implements Comparable<JedisCommand>{
+	public static int timeout = ConfigFile.getT1();
+	
 	public int compareTo(JedisCommand arg0) {
 		return this.getSupportVersion().compareTo(arg0.getSupportVersion()) * -1;
 	}
@@ -25,7 +27,7 @@ public abstract class JedisCommand implements Comparable<JedisCommand>{
 
 	public void execute() {
 		server = service.listById(id);
-		this.jedis = new Jedis(server.getHost(), Integer.parseInt(server.getPort()));
+		this.jedis = new Jedis(server.getHost(), Integer.parseInt(server.getPort()), timeout);
 		if(server.getPassword() != null && server.getPassword().length() > 0)
 			jedis.auth(server.getPassword());
 		

@@ -5,12 +5,13 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
+import com.cxy.redisclient.integration.ConfigFile;
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
 
 public class PagingListener implements Listener {
 	private Table table;
-	private final int PAGE_SIZE = 20;
+	public static int PAGE_SIZE = ConfigFile.getPagesize();
 	private IPage page;
 	private int count;
 	private boolean addHead = false;

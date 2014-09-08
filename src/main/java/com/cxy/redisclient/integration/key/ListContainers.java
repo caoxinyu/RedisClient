@@ -9,6 +9,7 @@ import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.domain.RedisVersion;
 import com.cxy.redisclient.dto.Order;
+import com.cxy.redisclient.integration.ConfigFile;
 import com.cxy.redisclient.integration.JedisCommand;
 
 public class ListContainers extends JedisCommand {
@@ -17,7 +18,8 @@ public class ListContainers extends JedisCommand {
 	private Set<Node> containers = new TreeSet<Node>();
 	private Order order;
 	private boolean flat;
-
+	private final String separator = ConfigFile.getSeparator();
+	
 	public ListContainers(int id, int db, String key, boolean flat, Order order) {
 		super(id);
 		this.db = db;
@@ -43,14 +45,14 @@ public class ListContainers extends JedisCommand {
 			nodekeys = jedis.keys(key + "*");
 			length = key.length();
 		} else {
-			nodekeys = jedis.keys("*:*");
+			nodekeys = jedis.keys("*"+separator+"*");
 			length = 0;
 		}
 
 		if(!flat){
 			Iterator<String> it = nodekeys.iterator();
 			while (it.hasNext()) {
-				String[] ckey = it.next().substring(length).split(":");
+				String[] ckey = it.next().substring(length).split(separator);
 				if (ckey.length > 1) {
 					NodeType nodeType = NodeType.CONTAINER;
 	

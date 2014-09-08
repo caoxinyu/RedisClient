@@ -9,6 +9,7 @@ import com.cxy.redisclient.domain.NodeType;
 import com.cxy.redisclient.domain.RedisVersion;
 import com.cxy.redisclient.dto.Order;
 import com.cxy.redisclient.dto.OrderBy;
+import com.cxy.redisclient.integration.ConfigFile;
 import com.cxy.redisclient.integration.JedisCommand;
 
 public class ListContainerKeys extends JedisCommand {
@@ -66,7 +67,7 @@ public class ListContainerKeys extends JedisCommand {
 		Iterator<String> it = nodekeys.iterator();
 		while (it.hasNext()) {
 			String nextKey = it.next();
-			String[] ckey = nextKey.substring(length).split(":");
+			String[] ckey = nextKey.substring(length).split(ConfigFile.getSeparator());
 			if (ckey.length == 1) {
 				NodeType nodeType = getValueType(nextKey);
 				long size = getSize(nextKey);

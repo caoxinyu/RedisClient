@@ -198,6 +198,16 @@ public class I18nFile extends PropertyFile {
 	public static final String SUBSCRIBE = "SUBSCRIBE";
 	public static final String CHANNEL = "CHANNEL";
 	public static final String MESSAGE = "MESSAGE";
+	public static final String OPTIONS = "OPTIONS";
+	public static final String CONNECTION = "CONNECTION";
+	public static final String NAMESPACE = "NAMESPACE";
+	public static final String PAGING = "PAGING";
+	public static final String COMMANDTIMEOUT = "COMMANDTIMEOUT";
+	public static final String CONSOLETIMEOUT = "CONSOLETIMEOUT";
+	public static final String SEPARATOR = "SEPARATOR";
+	public static final String PAGESIZE = "PAGESIZE";
+	public static final String TIMEEXCEPTION = "TIMEEXCEPTION";
+	public static final String SIZEEXCEPTION = "SIZEEXCEPTION";
 		
 	
 	public I18nFile(){
