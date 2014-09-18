@@ -12,6 +12,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -46,9 +47,9 @@ public class HashDataContent extends DataContent {
 
 	private TableColumn tblclmnMember;
 	
-	public HashDataContent(CTabItem tabItem, int id, String server, int db, String key,
+	public HashDataContent(CTabItem tabItem, Image image, int id, String server, int db, String key,
 			String dataTitle) {
-		super(tabItem, id, server, db, key, dataTitle);
+		super(tabItem, image, id, server, db, key, dataTitle);
 		currentStatus = Status.Normal;
 	}
 

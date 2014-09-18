@@ -209,6 +209,8 @@ public class I18nFile extends PropertyFile {
 	public static final String TIMEEXCEPTION = "TIMEEXCEPTION";
 	public static final String SIZEEXCEPTION = "SIZEEXCEPTION";
 	public static final String CMDEXCEPTION = "CMDEXCEPTION";
+	public static final String WATCH = "WATCH";
+	public static final String DATAWATCHER = "DATAWATCHER";
 		
 	
 	public I18nFile(){

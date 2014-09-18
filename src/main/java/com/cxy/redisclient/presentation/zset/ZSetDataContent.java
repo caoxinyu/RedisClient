@@ -9,6 +9,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -43,9 +44,9 @@ public class ZSetDataContent extends DataContent {
 	private TableItem currentItem;
 	private Text editor;
 	
-	public ZSetDataContent(CTabItem tabItem, int id, String server, int db, String key,
+	public ZSetDataContent(CTabItem tabItem, Image image, int id, String server, int db, String key,
 			String dataTitle) {
-		super(tabItem, id, server, db, key, dataTitle);
+		super(tabItem, image, id, server, db, key, dataTitle);
 		status = Status.Normal;
 	}
 

@@ -6,6 +6,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -19,6 +20,7 @@ import com.cxy.redisclient.service.NodeService;
 
 public abstract class DataContent extends NewDataContent {
 	private CTabItem tabItem;
+	protected Image image;
 	
 	public CTabItem getTabItem() {
 		return tabItem;
@@ -109,10 +111,11 @@ public abstract class DataContent extends NewDataContent {
 		setTTL((int) service.getTTL(id, db, key));
 	}
 
-	public DataContent(CTabItem tabItem, int id, String server, int db, String key, String dataTitle) {
+	public DataContent(CTabItem tabItem, Image image, int id, String server, int db, String key, String dataTitle) {
 		super(id, server, db, key, dataTitle);
 		this.tabItem = tabItem;
 		this.tabItem.setData(this);
+		this.image = image;
 	}
 	public void setTTL(int ttl){
 		if(ttl == -1){

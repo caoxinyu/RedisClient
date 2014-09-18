@@ -1227,27 +1227,27 @@ public class RedisClient {
 			DataContent content = null;
 			if (type == NodeType.STRING) {
 				tbtmNewItem.setImage(strImage);
-				content = new StringDataContent(tbtmNewItem, cinfo.getId(),
+				content = new StringDataContent(tbtmNewItem, iconImage, cinfo.getId(),
 						cinfo.getServerName(), cinfo.getDb(), key,
 						I18nFile.STRING);
 
 			} else if (type == NodeType.HASH) {
 				tbtmNewItem.setImage(hashImage);
-				content = new HashDataContent(tbtmNewItem, cinfo.getId(),
+				content = new HashDataContent(tbtmNewItem, iconImage, cinfo.getId(),
 						cinfo.getServerName(), cinfo.getDb(), key,
 						I18nFile.HASH);
 			} else if (type == NodeType.LIST) {
 				tbtmNewItem.setImage(listImage);
-				content = new ListDataContent(tbtmNewItem, cinfo.getId(),
+				content = new ListDataContent(tbtmNewItem, iconImage, cinfo.getId(),
 						cinfo.getServerName(), cinfo.getDb(), key,
 						I18nFile.LIST);
 			} else if (type == NodeType.SET) {
 				tbtmNewItem.setImage(setImage);
-				content = new SetDataContent(tbtmNewItem, cinfo.getId(),
+				content = new SetDataContent(tbtmNewItem, iconImage, cinfo.getId(),
 						cinfo.getServerName(), cinfo.getDb(), key, I18nFile.SET);
 			} else if (type == NodeType.SORTEDSET) {
 				tbtmNewItem.setImage(zsetImage);
-				content = new ZSetDataContent(tbtmNewItem, cinfo.getId(),
+				content = new ZSetDataContent(tbtmNewItem, iconImage, cinfo.getId(),
 						cinfo.getServerName(), cinfo.getDb(), key,
 						I18nFile.ZSET);
 			}

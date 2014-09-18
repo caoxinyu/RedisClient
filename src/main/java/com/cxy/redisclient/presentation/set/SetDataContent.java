@@ -9,6 +9,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -35,9 +36,9 @@ public class SetDataContent extends DataContent {
 	private Button btnRefresh;
 	private TableColumn tblclmnNewColumn;
 	
-	public SetDataContent(CTabItem tabItem, int id, String server, int db, String key,
+	public SetDataContent(CTabItem tabItem, Image image, int id, String server, int db, String key,
 			String dataTitle) {
-		super(tabItem, id, server, db, key, dataTitle);
+		super(tabItem, image, id, server, db, key, dataTitle);
 		// TODO Auto-generated constructor stub
 	}
 
