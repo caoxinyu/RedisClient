@@ -13,7 +13,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -21,6 +20,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
+import com.cxy.redisclient.presentation.WatchDialog;
 import com.cxy.redisclient.presentation.component.DataContent;
 import com.cxy.redisclient.presentation.component.EditListener;
 import com.cxy.redisclient.presentation.component.PagingListener;
@@ -37,6 +37,7 @@ public class ListDataContent extends DataContent {
 	private Button btnApply;
 	private Button btnCancel;
 	private Button btnRefresh;
+	private Button btnWatch;
 	private CurrentData currentData = new CurrentData();
 	private EditListener listener;
 	private Text editor;
@@ -203,9 +204,19 @@ public class ListDataContent extends DataContent {
 		btnRefresh.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnRefresh.setEnabled(true);
 		btnRefresh.setText(RedisClient.i18nFile.getText(I18nFile.REFRESH));
-		new Label(grpValues, SWT.NONE);
-		new Label(grpValues, SWT.NONE);
-		new Label(grpValues, SWT.NONE);
+
+		btnWatch = new Button(grpValues, SWT.NONE);
+		btnWatch.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
+		btnWatch.setText(RedisClient.i18nFile.getText(I18nFile.WATCH));
+		btnWatch.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				WatchDialog dialog = new WatchDialog(shell.getParent()
+						.getShell(), image, currentData.getValue());
+				dialog.open();
+			}
+		});
+		
 		
 		
 	}
@@ -220,6 +231,7 @@ public class ListDataContent extends DataContent {
 		btnApply.setText(RedisClient.i18nFile.getText(I18nFile.APPLY));
 		btnCancel.setText(RedisClient.i18nFile.getText(I18nFile.CANCEL));
 		btnRefresh.setText(RedisClient.i18nFile.getText(I18nFile.REFRESH));
+		btnWatch.setText(RedisClient.i18nFile.getText(I18nFile.WATCH));
 		super.refreshLangUI();
 	}
 
@@ -259,6 +271,7 @@ public class ListDataContent extends DataContent {
 			setApply(false);
 			btnCancel.setEnabled(false);
 			btnRefresh.setEnabled(true);
+			btnWatch.setEnabled(false);
 			break;
 			
 		case Update:
@@ -270,6 +283,7 @@ public class ListDataContent extends DataContent {
 			setApply(false);
 			btnCancel.setEnabled(true);
 			btnRefresh.setEnabled(true);
+			btnWatch.setEnabled(true);
 			break;
 			
 		case Updating:
@@ -281,6 +295,7 @@ public class ListDataContent extends DataContent {
 			setApply(true);
 			btnCancel.setEnabled(true);
 			btnRefresh.setEnabled(false);
+			btnWatch.setEnabled(false);
 			break;
 		
 		}

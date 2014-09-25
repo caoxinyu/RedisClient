@@ -32,5 +32,8 @@ public class CurrentData {
 		item.setText(0, this.field);
 		item.setText(1, value);
 	}
+	public String getValue() {
+		return value;
+	}
 	
 }

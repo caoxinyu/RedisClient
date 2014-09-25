@@ -4,6 +4,11 @@ import org.eclipse.swt.widgets.TableItem;
 
 public class CurrentData {
 	private String value;
+	public String getValue() {
+		return value;
+	}
+
+
 	private TableItem item;
 	
 	public boolean isItemChanged(TableItem item){

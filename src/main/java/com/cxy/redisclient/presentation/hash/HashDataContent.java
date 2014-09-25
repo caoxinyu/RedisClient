@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
+import com.cxy.redisclient.presentation.WatchDialog;
 import com.cxy.redisclient.presentation.component.DataContent;
 import com.cxy.redisclient.presentation.component.EditListener;
 import com.cxy.redisclient.service.HashService;
@@ -38,6 +39,7 @@ public class HashDataContent extends DataContent {
 	private Button btnCancel;
 	private Button btnApply;
 	private Button btnRefresh;
+	private Button btnWatch;
 	private EditListener listener;
 	private CurrentData currentData = new CurrentData();
 
@@ -63,6 +65,7 @@ public class HashDataContent extends DataContent {
 		btnApply.setText(RedisClient.i18nFile.getText(I18nFile.APPLY));
 		btnCancel.setText(RedisClient.i18nFile.getText(I18nFile.CANCEL));
 		btnRefresh.setText(RedisClient.i18nFile.getText(I18nFile.REFRESH));
+		btnWatch.setText(RedisClient.i18nFile.getText(I18nFile.WATCH));
 		super.refreshLangUI();
 	}
 
@@ -79,7 +82,7 @@ public class HashDataContent extends DataContent {
 
 		table = new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION
 				| SWT.MULTI);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 5));
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 6));
 		table.setHeaderVisible(true);
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -124,6 +127,18 @@ public class HashDataContent extends DataContent {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				refresh();
+			}
+		});
+		
+		btnWatch = new Button(grpValues, SWT.NONE);
+		btnWatch.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
+		btnWatch.setText(RedisClient.i18nFile.getText(I18nFile.WATCH));
+		btnWatch.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				WatchDialog dialog = new WatchDialog(shell.getParent()
+						.getShell(), image, currentData.getValue());
+				dialog.open();
 			}
 		});
 		
@@ -323,6 +338,7 @@ public class HashDataContent extends DataContent {
 			setApply(false);
 			btnCancel.setEnabled(false);
 			btnRefresh.setEnabled(true);
+			btnWatch.setEnabled(false);
 			break;
 		case Add:
 			btnAdd.setEnabled(false);
@@ -330,6 +346,7 @@ public class HashDataContent extends DataContent {
 			setApply(false);
 			btnCancel.setEnabled(true);
 			btnRefresh.setEnabled(true);
+			btnWatch.setEnabled(false);
 			break;
 		case Adding:
 			btnAdd.setEnabled(false);
@@ -337,6 +354,7 @@ public class HashDataContent extends DataContent {
 			setApply(true);
 			btnCancel.setEnabled(true);
 			btnRefresh.setEnabled(false);
+			btnWatch.setEnabled(false);
 			break;
 		case Edit:
 			btnAdd.setEnabled(true);
@@ -344,6 +362,7 @@ public class HashDataContent extends DataContent {
 			setApply(false);
 			btnCancel.setEnabled(true);
 			btnRefresh.setEnabled(true);
+			btnWatch.setEnabled(true);
 			break;
 		case Editing:
 			btnAdd.setEnabled(false);
@@ -351,6 +370,7 @@ public class HashDataContent extends DataContent {
 			setApply(true);
 			btnCancel.setEnabled(true);
 			btnRefresh.setEnabled(false);
+			btnWatch.setEnabled(false);
 			break;
 			
 		}

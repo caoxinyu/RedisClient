@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
+import com.cxy.redisclient.presentation.WatchDialog;
 import com.cxy.redisclient.presentation.component.DataContent;
 import com.cxy.redisclient.presentation.component.EditListener;
 import com.cxy.redisclient.presentation.component.PagingListener;
@@ -33,6 +34,7 @@ public class ZSetDataContent extends DataContent {
 	private Button btnAdd;
 	private Group grpValues;
 	private Button btnRefresh;
+	private Button btnWatch;
 	private TableColumn tblclmnNewColumn;
 	private TableColumn tblclmnMember;
 	private PagingListener pageListener;
@@ -62,7 +64,7 @@ public class ZSetDataContent extends DataContent {
 
 		table = new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION
 				| SWT.MULTI | SWT.VIRTUAL);;
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 5));
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 6));
 		table.setHeaderVisible(true);
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -185,7 +187,18 @@ public class ZSetDataContent extends DataContent {
 		btnRefresh.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnRefresh.setText(RedisClient.i18nFile.getText(I18nFile.REFRESH));
 		
-		
+		btnWatch = new Button(grpValues, SWT.NONE);
+		btnWatch.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
+		btnWatch.setText(RedisClient.i18nFile.getText(I18nFile.WATCH));
+		btnWatch.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TableItem[] items = table.getSelection();
+				WatchDialog dialog = new WatchDialog(shell.getParent()
+						.getShell(), image, items[0].getText(1));
+				dialog.open();
+			}
+		});
 	}
 	@Override
 	public void refreshLangUI() {
@@ -197,6 +210,7 @@ public class ZSetDataContent extends DataContent {
 		btnApply.setText(RedisClient.i18nFile.getText(I18nFile.APPLY));
 		btnCancel.setText(RedisClient.i18nFile.getText(I18nFile.CANCEL));
 		btnRefresh.setText(RedisClient.i18nFile.getText(I18nFile.REFRESH));
+		btnWatch.setText(RedisClient.i18nFile.getText(I18nFile.WATCH));
 		super.refreshLangUI();
 	}
 
@@ -247,11 +261,13 @@ public class ZSetDataContent extends DataContent {
 		switch(status){
 		case Normal:
 			btnAdd.setEnabled(true);
-			if(table.getSelectionCount() > 0)
+			if(table.getSelectionCount() > 0){
 				btnDelete.setEnabled(true);
-			else
+				btnWatch.setEnabled(true);
+			}else{
 				btnDelete.setEnabled(false);
-			
+				btnWatch.setEnabled(false);
+			}
 			setApply(false);
 			btnCancel.setEnabled(false);
 			btnRefresh.setEnabled(true);
@@ -260,7 +276,7 @@ public class ZSetDataContent extends DataContent {
 		case Add:
 			btnAdd.setEnabled(false);
 			btnDelete.setEnabled(false);
-			
+			btnWatch.setEnabled(false);
 			setApply(false);
 			btnCancel.setEnabled(true);
 			btnRefresh.setEnabled(false);
@@ -269,7 +285,7 @@ public class ZSetDataContent extends DataContent {
 		case Adding:
 			btnAdd.setEnabled(false);
 			btnDelete.setEnabled(false);
-			
+			btnWatch.setEnabled(false);
 			setApply(true);
 			btnCancel.setEnabled(true);
 			btnRefresh.setEnabled(false);

@@ -58,6 +58,10 @@ public abstract class RedisClientDialog extends Dialog {
 	protected void createContents() {
 		shell.setMinimumSize(minWidth, minHeight);
 		shell.pack();
+		setMiddle();
+	}
+
+	protected void setMiddle() {
 		Rectangle screenSize = shell.getParent().getBounds();
 		Rectangle shellSize = shell.getBounds();
 		shell.setLocation(screenSize.x + screenSize.width / 2 - shellSize.width / 2,

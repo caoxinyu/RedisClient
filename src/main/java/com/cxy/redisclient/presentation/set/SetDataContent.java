@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
+import com.cxy.redisclient.presentation.WatchDialog;
 import com.cxy.redisclient.presentation.component.DataContent;
 import com.cxy.redisclient.presentation.component.EditListener;
 import com.cxy.redisclient.presentation.component.PagingListener;
@@ -34,6 +35,7 @@ public class SetDataContent extends DataContent {
 	private Group grpValues;
 	private Button btnAdd;
 	private Button btnRefresh;
+	private Button btnWatch;
 	private TableColumn tblclmnNewColumn;
 	
 	public SetDataContent(CTabItem tabItem, Image image, int id, String server, int db, String key,
@@ -55,7 +57,7 @@ public class SetDataContent extends DataContent {
 
 		table = new Table(grpValues, SWT.BORDER | SWT.FULL_SELECTION | SWT.MULTI | SWT.VIRTUAL);
 		table.setHeaderVisible(true);
-		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 3));
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 4));
 		table.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -123,6 +125,19 @@ public class SetDataContent extends DataContent {
 		});
 		btnRefresh.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
 		btnRefresh.setText(RedisClient.i18nFile.getText(I18nFile.REFRESH));
+		
+		btnWatch = new Button(grpValues, SWT.NONE);
+		btnWatch.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, false, 1, 1));
+		btnWatch.setText(RedisClient.i18nFile.getText(I18nFile.WATCH));
+		btnWatch.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				TableItem[] items = table.getSelection();
+				WatchDialog dialog = new WatchDialog(shell.getParent()
+						.getShell(), image, items[0].getText());
+				dialog.open();
+			}
+		});
 	}
 	@Override
 	public void refreshLangUI() {
@@ -131,6 +146,7 @@ public class SetDataContent extends DataContent {
 		btnAdd.setText(RedisClient.i18nFile.getText(I18nFile.ADD));
 		btnDelete.setText(RedisClient.i18nFile.getText(I18nFile.DELETE));
 		btnRefresh.setText(RedisClient.i18nFile.getText(I18nFile.REFRESH));
+		btnWatch.setText(RedisClient.i18nFile.getText(I18nFile.WATCH));
 		super.refreshLangUI();
 	}
 
@@ -138,8 +154,10 @@ public class SetDataContent extends DataContent {
 		TableItem[] items = table.getSelection();
 		if (items != null && items.length >= 1) {
 			btnDelete.setEnabled(true);
+			btnWatch.setEnabled(true);
 		} else {
 			btnDelete.setEnabled(false);
+			btnWatch.setEnabled(false);
 		}
 	}
 

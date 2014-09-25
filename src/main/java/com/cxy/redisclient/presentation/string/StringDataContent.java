@@ -1,7 +1,5 @@
 package com.cxy.redisclient.presentation.string;
 
-import java.io.UnsupportedEncodingException;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.ModifyEvent;
@@ -37,38 +35,18 @@ public class StringDataContent extends DataContent {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public static String byte2HexStr(byte[] b) {
-		String stmp = "";
-		StringBuffer sb = new StringBuffer("");
-		for (int n = 0; n < b.length; n++) {
-			stmp = Integer.toHexString(b[n] & 0xFF);
-			sb.append((stmp.length() == 1) ? "0" + stmp : stmp);
-			sb.append(" ");
-
-		}
-		return sb.toString().toUpperCase().trim();
-	}
-
 	@Override
 	protected void initData(Composite dataComposite) {
 		label = new Label(dataComposite, SWT.NONE);
 		label.setText(RedisClient.i18nFile.getText(I18nFile.VALUE));
 		label.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, true, 1, 1));
 
-		final Text text_value = new Text(dataComposite, SWT.BORDER
-				| SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
-		text_value.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,
-				3, 1));
+		final Text text_value = new Text(dataComposite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
+		text_value.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1));
 
 		value = service.readString(id, db, key);
-		
-		
-		try {
-			text_value.setText(byte2HexStr(value.getBytes("ascii")));
-		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+				
+		text_value.setText(value);
 		text_value.selectAll();
 		text_value.setFocus();
 
@@ -77,26 +55,22 @@ public class StringDataContent extends DataContent {
 		new Label(dataComposite, SWT.NONE);
 
 		Composite composite = new Composite(dataComposite, SWT.NONE);
-		composite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true,
-				false, 1, 1));
+		composite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		composite.setLayout(new GridLayout(4, false));
 
 		btnOk = new Button(composite, SWT.NONE);
-		btnOk.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
-				1, 1));
+		btnOk.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnOk.setText(RedisClient.i18nFile.getText(I18nFile.APPLY));
 		setApply(false);
 
 		btnCancel = new Button(composite, SWT.NONE);
-		btnCancel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
-				false, 1, 1));
+		btnCancel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnCancel.setEnabled(false);
 		btnCancel.setText(RedisClient.i18nFile.getText(I18nFile.CANCEL));
 
 		text_value.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				String newValue = text_value.getText() == null ? ""
-						: text_value.getText();
+				String newValue = text_value.getText() == null ? "" : text_value.getText();
 				if (newValue.equals(value)) {
 					setApply(false);
 					btnCancel.setEnabled(false);

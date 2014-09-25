@@ -56,39 +56,33 @@ public class WatchDialog extends RedisClientDialog {
 
 		Composite composite = new Composite(shell, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
-		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
-				1));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
 		Group grpValueType = new Group(composite, SWT.NONE);
 		grpValueType.setLayout(new GridLayout(2, false));
-		grpValueType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 1, 1));
-		grpValueType.setText("Value type");
+		grpValueType.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		grpValueType.setText(RedisClient.i18nFile.getText(I18nFile.DATATYPE));
 
 		Button btnRadioButton = new Button(grpValueType, SWT.RADIO);
 		btnRadioButton.setSelection(true);
-		btnRadioButton.setText("Text");
-		final Combo textType = new Combo(grpValueType, SWT.DROP_DOWN
-				| SWT.READ_ONLY);
-		textType.setItems(new String[] { "Plain text", "Json", "Xml" });
+		btnRadioButton.setText(RedisClient.i18nFile.getText(I18nFile.TEXT));
+		final Combo textType = new Combo(grpValueType, SWT.DROP_DOWN | SWT.READ_ONLY);
+		textType.setItems(new String[] { RedisClient.i18nFile.getText(I18nFile.PLAINTEXT), RedisClient.i18nFile.getText(I18nFile.JSON), RedisClient.i18nFile.getText(I18nFile.XML) });
 		textType.select(0);
 
 		Button btnRadioButton_1 = new Button(grpValueType, SWT.RADIO);
-		btnRadioButton_1.setText("Image");
-		final Combo imageType = new Combo(grpValueType, SWT.DROP_DOWN
-				| SWT.READ_ONLY);
+		btnRadioButton_1.setText(RedisClient.i18nFile.getText(I18nFile.IMAGE));
+		final Combo imageType = new Combo(grpValueType, SWT.DROP_DOWN | SWT.READ_ONLY);
 		imageType.setEnabled(false);
-		imageType.setItems(new String[] { "base64 image", "raw image" });
+		imageType.setItems(new String[] { RedisClient.i18nFile.getText(I18nFile.BASE64IMAGE) });
 
 		final Group grpValue = new Group(composite, SWT.NONE);
-		grpValue.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
-				1));
-		grpValue.setText("Value");
+		grpValue.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		grpValue.setText(RedisClient.i18nFile.getText(I18nFile.DATA));
 		grpValue.setBounds(0, 0, 70, 81);
 		grpValue.setLayout(new GridLayout(1, false));
 
-		text = new Text(grpValue, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL
-				| SWT.MULTI);
+		text = new Text(grpValue, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
 		text.setEditable(false);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		text.setText(value);
@@ -104,11 +98,9 @@ public class WatchDialog extends RedisClientDialog {
 						label.setVisible(false);
 						label.dispose();
 					}
-					text = new Text(grpValue, SWT.BORDER | SWT.V_SCROLL
-							| SWT.H_SCROLL | SWT.MULTI);
+					text = new Text(grpValue, SWT.BORDER | SWT.V_SCROLL	| SWT.H_SCROLL | SWT.MULTI);
 					text.setEditable(false);
-					text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-							true, 1, 1));
+					text.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 					text.setText(value);
 					tranformText(textType, text);
 					currentText = true;
@@ -127,8 +119,7 @@ public class WatchDialog extends RedisClientDialog {
 						text.dispose();
 					}
 					label = new Label(grpValue, SWT.NONE);
-					label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-							true, 1, 1));
+					label.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 					label.setAlignment(SWT.CENTER);
 					tranformImage(imageType, label);
 					currentText = false;
@@ -151,8 +142,7 @@ public class WatchDialog extends RedisClientDialog {
 		});
 
 		Composite composite_1 = new Composite(shell, SWT.NONE);
-		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true,
-				false, 1, 1));
+		composite_1.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
 		composite_1.setLayout(new FillLayout(SWT.HORIZONTAL));
 
 		Button btnOk = new Button(composite_1, SWT.NONE);
@@ -176,23 +166,23 @@ public class WatchDialog extends RedisClientDialog {
 				ByteArrayInputStream bais = new ByteArrayInputStream(b);
 				Image img = new Image(shell.getDisplay(), bais);
 				label.setImage(img);
-				shell.pack();
+				
 			} catch (SWTException e) {
 				imageType.select(currentImageType);
-				throw new RuntimeException("image format error");
+				throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.IMAGEEXCEPTION));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-
+		shell.pack();
+		setMiddle();
 	}
 
 	private void tranformText(final Combo textType, final Text text) {
 		int index = textType.getSelectionIndex();
 		if (index == 0) {
 			text.setText(value);
-			shell.pack();
 		} else if (index == 1) {
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			JsonParser jp = new JsonParser();
@@ -200,10 +190,9 @@ public class WatchDialog extends RedisClientDialog {
 				JsonElement je = jp.parse(value);
 				String prettyJsonString = gson.toJson(je);
 				text.setText(prettyJsonString);
-				shell.pack();
 			} catch (JsonSyntaxException e) {
 				textType.select(currentTextType);
-				throw new RuntimeException("json syntax error");
+				throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.JSONEXCEPTION));
 			}
 
 		} else if (index == 2) {
@@ -224,15 +213,16 @@ public class WatchDialog extends RedisClientDialog {
 
 				writer.close();
 				text.setText(out.getBuffer().toString());
-				shell.pack();
 			} catch (DocumentException e) {
 				textType.select(currentTextType);
-				throw new RuntimeException("xml syntax error");
+				throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.XMLEXCEPTION));
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
+			
 		}
+		shell.pack();
+		setMiddle();
 	}
 }

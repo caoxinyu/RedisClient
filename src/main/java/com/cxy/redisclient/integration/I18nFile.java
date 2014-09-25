@@ -211,6 +211,16 @@ public class I18nFile extends PropertyFile {
 	public static final String CMDEXCEPTION = "CMDEXCEPTION";
 	public static final String WATCH = "WATCH";
 	public static final String DATAWATCHER = "DATAWATCHER";
+	public static final String DATATYPE = "DATATYPE";
+	public static final String TEXT = "TEXT";
+	public static final String PLAINTEXT = "PLAINTEXT";
+	public static final String IMAGE = "IMAGE";
+	public static final String BASE64IMAGE = "BASE64IMAGE";
+	public static final String JSON = "JSON";
+	public static final String XML = "XML";
+	public static final String IMAGEEXCEPTION = "IMAGEEXCEPTION";
+	public static final String JSONEXCEPTION = "JSONEXCEPTION";
+	public static final String XMLEXCEPTION = "XMLEXCEPTION";
 		
 	
 	public I18nFile(){
