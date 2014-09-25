@@ -57,7 +57,7 @@ public class OptionsDialog extends RedisClientDialog {
 		btnOk.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseUp(MouseEvent arg0) {
-				if((boolean) t1.getData()){
+				if((Boolean) t1.getData()){
 					int time1;
 					try{
 						time1 = Integer.parseInt(t1.getText());
@@ -72,7 +72,7 @@ public class OptionsDialog extends RedisClientDialog {
 					JedisCommand.timeout = ConfigFile.getT1();
 				}
 				
-				if((boolean) t2.getData()){
+				if((Boolean) t2.getData()){
 					int time2;
 					try{
 						time2 = Integer.parseInt(t2.getText());
@@ -86,7 +86,7 @@ public class OptionsDialog extends RedisClientDialog {
 					ConfigFile.setT2(time2);
 				}
 				
-				if((boolean) separator.getData()){
+				if((Boolean) separator.getData()){
 					String sep = separator.getText();
 					if(sep.length() == 0)
 						sep = ConfigFile.SEP;
@@ -94,7 +94,7 @@ public class OptionsDialog extends RedisClientDialog {
 					ConfigFile.setSeparator(sep);
 				}
 				
-				if((boolean) size.getData()){
+				if((Boolean) size.getData()){
 					int psize;
 					try{
 						psize = Integer.parseInt(size.getText());

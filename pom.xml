@@ -4,7 +4,7 @@
 
 	<groupId>com.cxy</groupId>
 	<artifactId>redisclient</artifactId>
-	<version>win32.x86.1.8</version>
+	<version>win32.x86.2.0</version>
 	<packaging>jar</packaging>
 
 	<name>redisclient</name>
