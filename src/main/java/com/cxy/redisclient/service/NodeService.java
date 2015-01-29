@@ -9,6 +9,7 @@ import com.cxy.redisclient.domain.ContainerKey;
 import com.cxy.redisclient.domain.DataNode;
 import com.cxy.redisclient.domain.Node;
 import com.cxy.redisclient.domain.NodeType;
+import com.cxy.redisclient.domain.RedisObject;
 import com.cxy.redisclient.domain.RedisVersion;
 import com.cxy.redisclient.domain.Server;
 import com.cxy.redisclient.dto.Order;
@@ -18,6 +19,9 @@ import com.cxy.redisclient.integration.key.DumpKey;
 import com.cxy.redisclient.integration.key.Expire;
 import com.cxy.redisclient.integration.key.FindContainerKeys;
 import com.cxy.redisclient.integration.key.FindContainerKeysFactory;
+import com.cxy.redisclient.integration.key.GetEncoding;
+import com.cxy.redisclient.integration.key.GetIdletime;
+import com.cxy.redisclient.integration.key.GetRefcount;
 import com.cxy.redisclient.integration.key.GetSize;
 import com.cxy.redisclient.integration.key.IsKeyExist;
 import com.cxy.redisclient.integration.key.ListContainerKeys;
@@ -323,4 +327,16 @@ public class NodeService {
 		command1.execute();
 
 	}
+	public RedisObject getObjectInfo(int id, int db, String key){
+		GetRefcount command1 = new GetRefcount(id, db, key);
+		command1.execute();
+		GetIdletime command2 = new GetIdletime(id, db, key);
+		command2.execute();
+		GetEncoding command3 = new GetEncoding(id, db, key);
+		command3.execute();
+		
+		return new RedisObject(command1.getCount(), command3.getEncoding(), command2.getIdleTime());
+	}
+	
+	
 }
