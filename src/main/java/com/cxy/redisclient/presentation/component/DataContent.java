@@ -12,8 +12,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 
+import com.cxy.redisclient.domain.RedisObject;
 import com.cxy.redisclient.integration.I18nFile;
 import com.cxy.redisclient.presentation.RedisClient;
 import com.cxy.redisclient.service.NodeService;
@@ -21,6 +22,9 @@ import com.cxy.redisclient.service.NodeService;
 public abstract class DataContent extends NewDataContent {
 	private CTabItem tabItem;
 	protected Image image;
+	private TabItem objectTabItem;
+	private Label label1;
+	private Label label2;
 	
 	public CTabItem getTabItem() {
 		return tabItem;
@@ -31,8 +35,37 @@ public abstract class DataContent extends NewDataContent {
 	private Button btnRefresh;
 	
 	@Override
-	protected Composite initDataTabItem(TabFolder tabFolder) {
-		Composite composite = super.initDataTabItem(tabFolder);
+	public void initContents() {
+		super.initContents();
+		initObjectTabItem();
+	}
+
+	protected void initObjectTabItem() {
+		RedisObject object = service.getObjectInfo(id, db, key);
+		
+		objectTabItem = new TabItem(tabFolder, SWT.NONE);
+		objectTabItem.setText(RedisClient.i18nFile.getText(I18nFile.OBJECT));
+		
+		Composite objectComposite = new Composite(tabFolder, SWT.NONE);
+		objectTabItem.setControl(objectComposite);
+		objectComposite.setLayout(new GridLayout(4, true));
+		
+		label1 = new Label(objectComposite, SWT.NONE);
+		label1.setText(RedisClient.i18nFile.getText(I18nFile.REFCOUNT));
+
+		Label label_1 = new Label(objectComposite, SWT.NONE);
+		label_1.setText(object.getRefCount().toString());
+		
+		label2 = new Label(objectComposite, SWT.NONE);
+		label2.setText(RedisClient.i18nFile.getText(I18nFile.ENCODING));
+
+		Label label_2 = new Label(objectComposite, SWT.NONE);
+		label_2.setText(object.getEncoding());
+	}
+
+	@Override
+	protected Composite initDataTabItem() {
+		Composite composite = super.initDataTabItem();
 		inputKey.setEditable(false);
 		
 		return composite;
@@ -42,6 +75,10 @@ public abstract class DataContent extends NewDataContent {
 	public void refreshLangUI() {
 		btnApply.setText(RedisClient.i18nFile.getText(I18nFile.APPLY));
 		btnRefresh.setText(RedisClient.i18nFile.getText(I18nFile.REFRESH));
+		objectTabItem.setText(RedisClient.i18nFile.getText(I18nFile.OBJECT));
+		label1.setText(RedisClient.i18nFile.getText(I18nFile.REFCOUNT));
+		label2.setText(RedisClient.i18nFile.getText(I18nFile.ENCODING));
+		
 		super.refreshLangUI();
 	}
 
@@ -49,8 +86,8 @@ public abstract class DataContent extends NewDataContent {
 	 * @wbp.parser.entryPoint
 	 */
 	@Override
-	protected void initTTLTabItem(TabFolder tabFolder) {
-		super.initTTLTabItem(tabFolder);
+	protected void initTTLTabItem() {
+		super.initTTLTabItem();
 		new Label(ttlComposite, SWT.NONE);
 		
 		Composite composite = new Composite(ttlComposite, SWT.NONE);

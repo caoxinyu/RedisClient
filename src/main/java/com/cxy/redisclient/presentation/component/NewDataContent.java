@@ -47,6 +47,7 @@ public abstract class NewDataContent {
 	private Label label_2;
 
 	private Label lblKey;
+	protected TabFolder tabFolder;
 	
 	public NewDataContent(int id, String server, int db, String key, String dataTitle){
 		this.id = id;
@@ -60,16 +61,16 @@ public abstract class NewDataContent {
 		this.shell = shell;
 	}
 	public void initContents(){
-		TabFolder tabFolder = new TabFolder(shell, SWT.NONE);
+		tabFolder = new TabFolder(shell, SWT.NONE);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 		
-		Composite dataComposite = initDataTabItem(tabFolder);
+		Composite dataComposite = initDataTabItem();
 		initData(dataComposite);
 		
-		initTTLTabItem(tabFolder);
+		initTTLTabItem();
 	}
 
-	protected Composite initDataTabItem(TabFolder tabFolder){
+	protected Composite initDataTabItem(){
 		dataTabItem = new TabItem(tabFolder, SWT.NONE);
 		dataTabItem.setText(RedisClient.i18nFile.getText(dataTitle));
 
@@ -101,7 +102,7 @@ public abstract class NewDataContent {
 		return dataComposite;
 	}
 	
-	protected void initTTLTabItem(TabFolder tabFolder){
+	protected void initTTLTabItem(){
 		ttlTabItem = new TabItem(tabFolder, SWT.NONE);
 		ttlTabItem.setText(RedisClient.i18nFile.getText(I18nFile.TTL));
 		

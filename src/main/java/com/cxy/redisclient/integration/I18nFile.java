@@ -221,7 +221,10 @@ public class I18nFile extends PropertyFile {
 	public static final String IMAGEEXCEPTION = "IMAGEEXCEPTION";
 	public static final String JSONEXCEPTION = "JSONEXCEPTION";
 	public static final String XMLEXCEPTION = "XMLEXCEPTION";
-		
+	public static final String OBJECT = "OBJECT";
+	public static final String REFCOUNT = "REFCOUNT";
+	public static final String ENCODING = "ENCODING";
+	public static final String IDLETIME = "IDLETIME";	
 	
 	public I18nFile(){
 		propertyFile = getClass().getResourceAsStream("/i18n.properties");
