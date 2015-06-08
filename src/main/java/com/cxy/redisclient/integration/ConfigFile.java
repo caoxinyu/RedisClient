@@ -25,7 +25,7 @@ public class ConfigFile extends PropertyFile {
 
 	public static final String TIMEOUT1 = "timeout1";
 	public static final String TIMEOUT2 = "timeout2";
-	private static final int TIMEOUT = 100;
+	private static final int TIMEOUT = 10000;
 
 	public static final String SEPARATOR = "separator";
 	public static final String SEP = ":";
