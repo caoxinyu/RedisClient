@@ -18,7 +18,8 @@ public class RedisSession {
 	private static final String NEWLINE = "\r\n";
 	private String host;
 	private int port;
-
+	private boolean connected;
+	
 	Socket socket = null;
 	BufferedReader reader = null;
 	BufferedWriter writer = null;
@@ -35,6 +36,8 @@ public class RedisSession {
 		writer = new BufferedWriter(new OutputStreamWriter(
 				socket.getOutputStream(), CODEC));
 		socket.setSoTimeout(ConfigFile.getT2());
+		
+		connected = true;
 	}
 
 	public void disconnect() throws IOException {
@@ -44,6 +47,9 @@ public class RedisSession {
 	}
 
 	public Result execute(String command) throws IOException {
+		if(!connected)
+			connect();
+		
 		Pattern pattern = Pattern.compile("(\".*?\"\\s*)|(\\S+)");
 		Matcher matcher = pattern.matcher(command.trim());
 		int number = 0;
@@ -67,13 +73,19 @@ public class RedisSession {
 		String cmdStr1 = "*" + number + NEWLINE + cmd;
 		String cmdStr = cmdStr1;
 		
-		writer.write(cmdStr);
-		writer.flush();
+		try{
+			writer.write(cmdStr);
+			writer.flush();
 
-		String head = reader.readLine();
+			String head = reader.readLine();
 
-		ReplyParser parser = ReplyParser.getParser(head);
+			ReplyParser parser = ReplyParser.getParser(head);
 
-		return parser.parse(head, reader);
+			return parser.parse(head, reader);
+		} catch(IOException e){
+			connected = false;
+			throw e;
+		}
+		
 	}
 }
