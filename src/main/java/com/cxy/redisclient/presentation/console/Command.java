@@ -30,7 +30,7 @@ public class Command {
 		try {
 			result = console.getSession().execute(cmd);
 		} catch (IOException e1) {
-			throw new RuntimeException(e1.getLocalizedMessage());
+			throw new RuntimeException(e1.getLocalizedMessage(),e1);
 		}
 		end = System.currentTimeMillis();
 		console.getInputCmd().setFocus();
