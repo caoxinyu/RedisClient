@@ -3,7 +3,9 @@ package com.cxy.redisclient.integration.protocol;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.regex.Matcher;
@@ -21,8 +23,8 @@ public class RedisSession {
 	private boolean connected;
 	
 	Socket socket = null;
-	BufferedReader reader = null;
-	BufferedWriter writer = null;
+	InputStream byteReader = null;
+	OutputStream byteWriter = null;
 
 	public RedisSession(String host, int port) {
 		this.host = host;
@@ -31,18 +33,18 @@ public class RedisSession {
 
 	public void connect() throws IOException {
 		socket = new Socket(host, port);
-		reader = new BufferedReader(new InputStreamReader(
-				socket.getInputStream(), CODEC));
-		writer = new BufferedWriter(new OutputStreamWriter(
-				socket.getOutputStream(), CODEC));
+		
+		byteReader = socket.getInputStream();
+		byteWriter = socket.getOutputStream();
+		
 		socket.setSoTimeout(ConfigFile.getT2());
 		
 		connected = true;
 	}
 
 	public void disconnect() throws IOException {
-		reader.close();
-		writer.close();
+		byteReader.close();
+		byteWriter.close();
 		socket.close();
 	}
 
@@ -74,14 +76,13 @@ public class RedisSession {
 		String cmdStr = cmdStr1;
 		
 		try{
-			writer.write(cmdStr);
-			writer.flush();
+			byteWriter.write(cmdStr.getBytes(CODEC));
+			byteWriter.flush();
 
-			String head = reader.readLine();
-
+			String head = ReplyParser.getHeadString(byteReader, CODEC);
 			ReplyParser parser = ReplyParser.getParser(head);
 
-			return parser.parse(head, reader);
+			return parser.parse(head, byteReader,CODEC);
 		} catch(IOException e){
 			connected = false;
 			throw e;
