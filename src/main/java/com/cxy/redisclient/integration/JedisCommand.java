@@ -43,8 +43,8 @@ public abstract class JedisCommand implements Comparable<JedisCommand>{
 	protected void runCommand(){
 		RedisVersion version = getRedisVersion();
 		RedisVersion supportVersion = getSupportVersion();
-		if(supportVersion.getVersion() > version.getVersion())
-			throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.VERSIONNOTSUPPORT));
+//		if(supportVersion.getVersion() > version.getVersion())
+//			throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.VERSIONNOTSUPPORT));
 		
 		command();
 	}

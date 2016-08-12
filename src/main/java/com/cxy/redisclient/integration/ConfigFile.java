@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.cxy.redisclient.domain.Language;
 
 public class ConfigFile extends PropertyFile {
-	private final static String propertyFile = System.getProperty("user.home") + "\\.RedisClient.properties";
+	private final static String propertyFile = System.getProperty("user.home") + "/.RedisClient.properties";
 
 	public static final String PORT = "port";
 	public static final String HOST = "host";
