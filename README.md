@@ -35,7 +35,7 @@ This is a redis client GUI tool written based on Java SWT and Jedis. It's my obj
 ## Install & run for OSX
 (For Windows, please switch [branch](https://github.com/caoxinyu/RedisClient/tree/master))
  1. Download the runable jar file [redisclient-OSX.jar](https://github.com/caoxinyu/RedisClient/blob/OSX/release/redisclient-OSX.jar?raw=true)
- 2. Run the redisclient-OSX.jar, input `java -jar redisclient-OSX.jar`. 
+ 2. Run the redisclient-OSX.jar, input `java -XstartOnFirstThread -jar redisclient-OSX.jar`. 
 
 ## Donate
  
