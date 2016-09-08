@@ -4,7 +4,7 @@
 
 	<groupId>com.cxy</groupId>
 	<artifactId>redisclient</artifactId>
-	<version>win32.x86.2.0</version>
+	<version>OSX</version>
 	<packaging>jar</packaging>
 
 	<name>redisclient</name>
@@ -22,8 +22,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.swt.org.eclipse.swt.win32.win32.x86.4.3.swt</groupId>
-			<artifactId>org.eclipse.swt.win32.win32.x86</artifactId>
+			<groupId>org.eclipse.swt</groupId>
+			<artifactId>org.eclipse.swt.cocoa.macosx.x86_64</artifactId>
 			<version>4.3</version>
 		</dependency>
 		<dependency>
