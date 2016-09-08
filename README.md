@@ -36,7 +36,7 @@ This is a redis client GUI tool written based on Java SWT and Jedis. It's my obj
 
 
 ## Install & run for Windows
-(For Linux, please switch [branch](https://github.com/caoxinyu/RedisClient/tree/linux))
+(For Linux, please switch [branch](https://github.com/caoxinyu/RedisClient/tree/linux). For Mac, please switch [branch](https://github.com/caoxinyu/RedisClient/tree/OSX))
 ### If you don't want to install JDK
 
 1. Please download [redisclient-win32.x86.2.0.exe](https://raw.githubusercontent.com/caoxinyu/RedisClient/master/release/redisclient-win32.x86.2.0.exe)
