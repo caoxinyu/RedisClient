@@ -3,7 +3,7 @@
 
 This is a redis client GUI tool written based on Java SWT and Jedis. It's my objective to build the most convenient redis client GUI tool in the world. In the first place, it will facilitate in editing redis data, such as: add, update, delete, search, cut, copy, paste etc.
 
-![My image](https://github.com/caoxinyu/RedisClient/raw/master/src/main/resources/screen.png)
+![My image](https://github.com/caoxinyu/RedisClient/raw/OSX/src/main/resources/screen.png)
 
 --------
 
@@ -41,5 +41,5 @@ This is a redis client GUI tool written based on Java SWT and Jedis. It's my obj
  
 If you find this software useful and would like to support it, you can do so simply by scanning my Alipay two-dimension code and donating whatever you like.
 
-![My code](https://github.com/caoxinyu/RedisClient/raw/master/src/main/resources/code.png)
+![My code](https://github.com/caoxinyu/RedisClient/raw/OSX/src/main/resources/code.png)
  
