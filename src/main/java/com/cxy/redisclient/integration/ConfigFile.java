@@ -1,23 +1,24 @@
 package com.cxy.redisclient.integration;
 
+import java.io.File;
 import java.io.IOException;
 
 import com.cxy.redisclient.domain.Language;
 
 public class ConfigFile extends PropertyFile {
-	private final static String propertyFile = System.getProperty("user.home") + "\\.RedisClient.properties";
+	private final static String propertyFile = System.getProperty("user.home") + File.separatorChar +".RedisClient.properties";
 
 	public static final String PORT = "port";
 	public static final String HOST = "host";
 	public static final String NAME = "name";
 	public static final String PASSWORD = "password";
 	public static final String SERVER_MAXID = "server_maxid";
-	
+
 	public static final String FAVORITE = "favorite";
 	public static final String FAVORITE_NAME = "favorite_name";
 	public static final String FAVORITE_SERVER = "favorite_server";
 	public static final String FAVORITE_MAXID = "favorite_maxid";
-	
+
 	public static final String LANGUAGE = "language";
 	public static final String FLATVIEW = "flat_view";
 	private static final String HIER = "hier";
@@ -31,23 +32,23 @@ public class ConfigFile extends PropertyFile {
 	public static final String SEP = ":";
 	public static final String PAGESIZE = "pagesize";
 	private static final int SIZE = 20;
-	
+
 	public static String readMaxId(String maxid) throws IOException {
 		return readMaxId(propertyFile, maxid);
 	}
-	
+
 	public static String read(String key) throws IOException {
 		return read(propertyFile, key);
 	}
-	
+
 	public static void write(String key, String value) throws IOException {
 		write(propertyFile, key, value);
 	}
-	
+
 	public static void delete(String key) throws IOException {
 		delete(propertyFile, key);
 	}
-	
+
 	public static Language getLanguage(){
 		try {
 			String language = read(LANGUAGE);
@@ -59,13 +60,13 @@ public class ConfigFile extends PropertyFile {
 				return Language.Chinese;
 			else
 				return Language.English;
-				
+
 		} catch (IOException e) {
 			throw new RuntimeException(e.getLocalizedMessage());
 		}
-		
+
 	}
-	
+
 	public static void setLanguage(Language language){
 		try {
 			write(LANGUAGE, language.toString());
@@ -73,7 +74,7 @@ public class ConfigFile extends PropertyFile {
 			throw new RuntimeException(e.getLocalizedMessage());
 		}
 	}
-	
+
 	public static boolean getFlatView(){
 		try {
 			String flatView = read(FLATVIEW);
@@ -88,9 +89,9 @@ public class ConfigFile extends PropertyFile {
 		} catch (IOException e) {
 			throw new RuntimeException(e.getLocalizedMessage());
 		}
-		
+
 	}
-	
+
 	public static void setFlatView(boolean flatView){
 		String view;
 		if(flatView)
@@ -103,7 +104,7 @@ public class ConfigFile extends PropertyFile {
 			throw new RuntimeException(e.getLocalizedMessage());
 		}
 	}
-	
+
 	private static void setTimeout(int timeout, String time){
 		try {
 			write(time, Integer.toString(timeout));
@@ -111,7 +112,7 @@ public class ConfigFile extends PropertyFile {
 			throw new RuntimeException(e.getLocalizedMessage());
 		}
 	}
-	
+
 	private static int getTimeout(String time){
 		try {
 			String timeout = read(time);
@@ -122,25 +123,25 @@ public class ConfigFile extends PropertyFile {
 		} catch (IOException e) {
 			throw new RuntimeException(e.getLocalizedMessage());
 		}
-		
+
 	}
-	
+
 	public static void setT1(int timeout){
 		setTimeout(timeout, TIMEOUT1);
 	}
-	
+
 	public static int getT1(){
 		return getTimeout(TIMEOUT1);
 	}
-	
+
 	public static void setT2(int timeout){
 		setTimeout(timeout, TIMEOUT2);
 	}
-	
+
 	public static int getT2(){
 		return getTimeout(TIMEOUT2);
 	}
-	
+
 	public static void setPagesize(int size){
 		try {
 			write(PAGESIZE, Integer.toString(size));
@@ -148,7 +149,7 @@ public class ConfigFile extends PropertyFile {
 			throw new RuntimeException(e.getLocalizedMessage());
 		}
 	}
-	
+
 	public static int getPagesize(){
 		try {
 			String size = read(PAGESIZE);
@@ -159,7 +160,7 @@ public class ConfigFile extends PropertyFile {
 		} catch (IOException e) {
 			throw new RuntimeException(e.getLocalizedMessage());
 		}
-		
+
 	}
 	public static void setSeparator(String separator){
 		try {
@@ -168,7 +169,7 @@ public class ConfigFile extends PropertyFile {
 			throw new RuntimeException(e.getLocalizedMessage());
 		}
 	}
-	
+
 	public static String getSeparator(){
 		try {
 			String separator = read(SEPARATOR);
@@ -179,6 +180,6 @@ public class ConfigFile extends PropertyFile {
 		} catch (IOException e) {
 			throw new RuntimeException(e.getLocalizedMessage());
 		}
-		
+
 	}
 }

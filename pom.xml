@@ -4,7 +4,7 @@
 
 	<groupId>com.cxy</groupId>
 	<artifactId>redisclient</artifactId>
-	<version>win32.x86.2.0</version>
+	<version>${redisclient.version}</version>
 	<packaging>jar</packaging>
 
 	<name>redisclient</name>
@@ -12,44 +12,50 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<junit.version>3.8.1</junit.version>
+		<eclipse.jface.version>3.3.0-I20070606-0010</eclipse.jface.version>
+		<jedis.version>2.7.2</jedis.version>
+		<slf4j.log4j.version>1.7.2</slf4j.log4j.version>
+		<gson.version>2.3</gson.version>
+		<dom4j.version>1.6.1</dom4j.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.swt.org.eclipse.swt.win32.win32.x86.4.3.swt</groupId>
-			<artifactId>org.eclipse.swt.win32.win32.x86</artifactId>
-			<version>4.3</version>
+			<groupId>${swt.groupId}</groupId>
+			<artifactId>${swt.artifactId}</artifactId>
+			<version>${swt.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse</groupId>
 			<artifactId>jface</artifactId>
-			<version>3.3.0-I20070606-0010</version>
+			<version>${eclipse.jface.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
-			<version>2.7.2</version>
+			<version>${jedis.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.2</version>
+			<version>${slf4j.log4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>2.3</version>
+			<version>${gson.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
-			<version>1.6.1</version>
+			<version>${dom4j.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -88,4 +94,60 @@
 			</plugin>
 		</plugins>
 	</build>
+	<profiles>
+		<profile>
+			<id>win32</id>
+			<properties>
+				<redisclient.version>win32.x86.2.0</redisclient.version>
+				<swt.version>4.3</swt.version>
+				<swt.artifactId>org.eclipse.swt.win32.win32.x86</swt.artifactId>
+				<swt.groupId>org.eclipse.swt.org.eclipse.swt.win32.win32.x86.4.3.swt</swt.groupId>
+
+			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<profile>
+			<id>win64</id>
+			<properties>
+				<redisclient.version>win32.x86_64.2.0</redisclient.version>
+				<swt.version>4.3</swt.version>
+				<swt.artifactId>org.eclipse.swt.win32.win32.x86_64</swt.artifactId>
+				<swt.groupId>org.eclipse.swt.org.eclipse.swt.win32.win32.x86_64.4.3.swt</swt.groupId>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>linux.x86_64</id>
+			<properties>
+				<redisclient.version>linux.x86_64.2.0</redisclient.version>
+				<swt.version>4.3</swt.version>
+				<swt.artifactId>org.eclipse.swt.gtk.linux.x86_64</swt.artifactId>
+				<swt.groupId>org.eclipse.swt</swt.groupId>
+
+			</properties>
+		</profile>
+		<profile>
+			<id>linux.x86</id>
+			<properties>
+				<redisclient.version>linux.x86.2.0</redisclient.version>
+				<swt.version>4.3</swt.version>
+				<swt.artifactId>org.eclipse.swt.gtk.linux.x86</swt.artifactId>
+				<swt.groupId>org.eclipse.swt</swt.groupId>
+
+			</properties>
+		</profile>
+		<profile>
+			<id>osx</id>
+			<properties>
+				<redisclient.version>osx.2.0</redisclient.version>
+				<swt.version>4.3</swt.version>
+				<swt.artifactId>org.eclipse.swt.cocoa.macosx.x86_64</swt.artifactId>
+				<swt.groupId>org.eclipse.swt</swt.groupId>
+
+			</properties>
+		</profile>
+	</profiles>
+
 </project>
