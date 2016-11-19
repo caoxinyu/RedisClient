@@ -117,7 +117,9 @@ public abstract class JedisCommand implements Comparable<JedisCommand>{
 			return RedisVersion.REDIS_2_2;
 		else if (version.startsWith("2.0"))
 			return RedisVersion.REDIS_2_0;
-		else
+		else if (version.startsWith("1.0"))
 			return RedisVersion.REDIS_1_0;
+		else 
+			return RedisVersion.UNKNOWN;
 	}
 }
