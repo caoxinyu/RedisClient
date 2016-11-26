@@ -1,5 +1,6 @@
 package com.cxy.redisclient.integration.key;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
@@ -11,6 +12,7 @@ import com.cxy.redisclient.dto.Order;
 import com.cxy.redisclient.dto.OrderBy;
 import com.cxy.redisclient.integration.ConfigFile;
 import com.cxy.redisclient.integration.JedisCommand;
+import com.cxy.redisclient.service.task.OnNewDataNodeCreated;
 
 public class ListContainerKeys extends JedisCommand {
 	private int db;
@@ -19,9 +21,19 @@ public class ListContainerKeys extends JedisCommand {
 	private Order order;
 	private OrderBy orderBy;
 	private boolean flat;
+
+	private OnNewDataNodeCreated onNewDataNodeCreated;
 	
 	public Set<DataNode> getKeys() {
 		return keys;
+	}
+
+	public OnNewDataNodeCreated getOnNewDataNodeCreated() {
+		return onNewDataNodeCreated;
+	}
+
+	public void setOnNewDataNodeCreated(OnNewDataNodeCreated onNewDataNodeCreated) {
+		this.onNewDataNodeCreated = onNewDataNodeCreated;
 	}
 
 	public ListContainerKeys(int id, int db, String key, boolean flat, Order order, OrderBy orderBy) {
@@ -64,6 +76,7 @@ public class ListContainerKeys extends JedisCommand {
 			length = 0;
 		}
 
+		Set<DataNode> bufferSet = new TreeSet<DataNode>();
 		Iterator<String> it = nodekeys.iterator();
 		while (it.hasNext()) {
 			String nextKey = it.next();
@@ -77,9 +90,23 @@ public class ListContainerKeys extends JedisCommand {
 					node = new DataNode(id, db, ckey[0], nodeType, size, persist, order, orderBy);
 				else
 					node = new DataNode(id, db, nextKey, nodeType, size, persist, order, orderBy);
-				keys.add(node);
+				bufferSet.add(node);
+
+				if (bufferSet.size() >= 100) {
+					keys.addAll(bufferSet);
+					if (onNewDataNodeCreated != null && keys.size() < 500) {
+						onNewDataNodeCreated.onNewDataNodeCreated(bufferSet);
+					}
+					bufferSet.clear();
+				}
 			}
 		}
+
+		keys.addAll(bufferSet);
+		if (onNewDataNodeCreated != null) {
+			onNewDataNodeCreated.onNewDataNodeCreated(bufferSet);
+		}
+		bufferSet.clear();
 	}
 
 	@Override
