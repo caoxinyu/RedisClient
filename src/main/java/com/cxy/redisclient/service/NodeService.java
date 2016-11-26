@@ -94,6 +94,8 @@ public class NodeService {
 	public Set<DataNode> listContainerKeys(int id, int db, String key, boolean flat, Order order, OrderBy orderBy) {
 		ListContainerKeys command = new ListContainerKeys(id, db, key, flat, order, orderBy);
 		command.execute();
+
+		
 		return command.getKeys();
 	}
 	
