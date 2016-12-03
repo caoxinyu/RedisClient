@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.cxy.redisclient.service.task.OnNewDataNodeCreated;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -2650,58 +2649,47 @@ public class RedisClient {
 			}
 		}
 
-		service2.listContainerKeys(info.getId(),
+		Set<DataNode> knodes = service2.listContainerKeys(info.getId(),
 				info.getDb(), info.getContainerStr(), false, clientOrder,
-				clientOrderBy, new OnNewDataNodeCreated() {
-					public void onNewDataNodeCreated(final Set<DataNode> dataNodeSet) {
-						Display display = Display.getDefault();
-						display.syncExec(new Runnable() {
-							public void run() {
-								addDataNodeOnTreeItem(dataNodeSet);
-							}
-						});
-					}
-				});
-	}
+				clientOrderBy);
 
-	private void addDataNodeOnTreeItem(Set<DataNode> dataNodeSet) {
-		for (DataNode node1 : dataNodeSet) {
+		for (DataNode node1 : knodes) {
 			TableItem item = new TableItem(table, SWT.NONE);
 			item.setText(new String[] { node1.getKey(),
 					node1.getType().toString(), String.valueOf(node1.getSize()) });
 			switch (node1.getType()) {
-				case STRING:
-					if (node1.isPersist())
-						item.setImage(strImage);
-					else
-						item.setImage(strGrayImage);
-					break;
-				case SET:
-					if (node1.isPersist())
-						item.setImage(setImage);
-					else
-						item.setImage(setGrayImage);
-					break;
-				case LIST:
-					if (node1.isPersist())
-						item.setImage(listImage);
-					else
-						item.setImage(listGrayImage);
-					break;
-				case HASH:
-					if (node1.isPersist())
-						item.setImage(hashImage);
-					else
-						item.setImage(hashGrayImage);
-					break;
-				case SORTEDSET:
-					if (node1.isPersist())
-						item.setImage(zsetImage);
-					else
-						item.setImage(zsetGrayImage);
-					break;
-				default:
-					break;
+			case STRING:
+				if (node1.isPersist())
+					item.setImage(strImage);
+				else
+					item.setImage(strGrayImage);
+				break;
+			case SET:
+				if (node1.isPersist())
+					item.setImage(setImage);
+				else
+					item.setImage(setGrayImage);
+				break;
+			case LIST:
+				if (node1.isPersist())
+					item.setImage(listImage);
+				else
+					item.setImage(listGrayImage);
+				break;
+			case HASH:
+				if (node1.isPersist())
+					item.setImage(hashImage);
+				else
+					item.setImage(hashGrayImage);
+				break;
+			case SORTEDSET:
+				if (node1.isPersist())
+					item.setImage(zsetImage);
+				else
+					item.setImage(zsetGrayImage);
+				break;
+			default:
+				break;
 			}
 			item.setData(NODE_TYPE, node1.getType());
 		}

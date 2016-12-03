@@ -34,8 +34,6 @@ import com.cxy.redisclient.integration.server.QueryServerVersion;
 import com.cxy.redisclient.integration.string.AddString;
 import com.cxy.redisclient.integration.string.ReadString;
 import com.cxy.redisclient.integration.string.UpdateString;
-import com.cxy.redisclient.service.task.AsynchronousTask;
-import com.cxy.redisclient.service.task.OnNewDataNodeCreated;
 
 public class NodeService {
 	public void addString(int id, int db, String key, String value, int ttl) {
@@ -90,12 +88,13 @@ public class NodeService {
 		ListContainers command = new ListContainers(id, db, key, flat);
 		command.execute();
 		return command.getContainers();
+		
 	}
-
-	public void listContainerKeys(int id, int db, String key, boolean flat, Order order, OrderBy orderBy,
-										   OnNewDataNodeCreated onNewDataNodeCreated) {
-		AsynchronousTask task = new AsynchronousTask(id, db, key, flat, order, orderBy, onNewDataNodeCreated);
-		task.start();
+	
+	public Set<DataNode> listContainerKeys(int id, int db, String key, boolean flat, Order order, OrderBy orderBy) {
+		ListContainerKeys command = new ListContainerKeys(id, db, key, flat, order, orderBy);
+		command.execute();
+		return command.getKeys();
 	}
 	
 	public Set<DataNode> listContainerKeys(int id, int db, String key, boolean flat) {
@@ -338,5 +337,6 @@ public class NodeService {
 		
 		return new RedisObject(command1.getCount(), command3.getEncoding(), command2.getIdleTime());
 	}
-
+	
+	
 }
