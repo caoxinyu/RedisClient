@@ -5,6 +5,8 @@ import java.util.List;
 import com.cxy.redisclient.domain.RedisVersion;
 import com.cxy.redisclient.integration.JedisCommand;
 
+import redis.clients.jedis.exceptions.JedisException;
+
 public class QueryDBAmount extends JedisCommand {
 	private int dbAmount;
 
@@ -18,11 +20,13 @@ public class QueryDBAmount extends JedisCommand {
 
 	@Override
 	public void command() {
-		List<String> dbs = jedis.configGet("databases");
-		if(dbs.size() > 0)
-			dbAmount = Integer.parseInt(dbs.get(1));
-		else
+		try{
+			List<String> dbs = jedis.configGet("databases");
+			if(dbs.size() > 0)
+				dbAmount = Integer.parseInt(dbs.get(1));
+		}catch(JedisException e){
 			dbAmount = 15;
+		}
 	}
 
 	@Override
