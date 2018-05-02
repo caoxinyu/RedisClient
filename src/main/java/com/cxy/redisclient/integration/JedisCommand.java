@@ -10,7 +10,7 @@ import com.cxy.redisclient.service.ServerService;
 
 public abstract class JedisCommand implements Comparable<JedisCommand>{
 	public static int timeout = ConfigFile.getT1();
-	
+
 	public int compareTo(JedisCommand arg0) {
 		return this.getSupportVersion().compareTo(arg0.getSupportVersion()) * -1;
 	}
@@ -30,9 +30,9 @@ public abstract class JedisCommand implements Comparable<JedisCommand>{
 		this.jedis = new Jedis(server.getHost(), Integer.parseInt(server.getPort()), timeout);
 		if(server.getPassword() != null && server.getPassword().length() > 0)
 			jedis.auth(server.getPassword());
-		
+
 		runCommand();
-		
+
 		jedis.close();
 	}
 
@@ -45,7 +45,7 @@ public abstract class JedisCommand implements Comparable<JedisCommand>{
 		RedisVersion supportVersion = getSupportVersion();
 		if(supportVersion.getVersion() > version.getVersion())
 			throw new RuntimeException(RedisClient.i18nFile.getText(I18nFile.VERSIONNOTSUPPORT));
-		
+
 		command();
 	}
 	protected abstract void command();
@@ -84,7 +84,7 @@ public abstract class JedisCommand implements Comparable<JedisCommand>{
 			size = jedis.zcard(key);
 		return size;
 	}
-	
+
 	protected boolean isPersist(String key) {
 		long ttl = jedis.ttl(key);
 		if(ttl > 0)
@@ -96,7 +96,7 @@ public abstract class JedisCommand implements Comparable<JedisCommand>{
 		String info = jedis.info();
 		String[] infos = info.split("\r\n");
 		String version = null;
-		
+
 		for(int i = 0; i < infos.length; i++) {
 			if(infos[i].startsWith("redis_version:")){
 				String[] versionInfo = infos[i].split(":");
@@ -104,7 +104,9 @@ public abstract class JedisCommand implements Comparable<JedisCommand>{
 				break;
 			}
 		}
-		
+
+		if (version.startsWith("4.0"))
+			return RedisVersion.REDIS_4_0;
 		if (version.startsWith("3.0"))
 			return RedisVersion.REDIS_3_0;
 		else if (version.startsWith("2.8"))
